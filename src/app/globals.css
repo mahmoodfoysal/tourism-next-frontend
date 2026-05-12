@@ -1,26 +1,108 @@
 @import "tailwindcss";
+@plugin "daisyui" {
+    themes: light, dark;
+}
 
+@theme {
+    /* Integrated theme mapping */
+    --color-primary: var(--p-color);
+    --color-secondary: var(--s-color);
+    --color-accent: var(--a-color);
+    --color-base-100: var(--bg-color);
+    --color-base-content: var(--text-color);
+}
+
+/* Global Contrast & Theme Fixes */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light Mode - Enhanced Contrast */
+  --p-color: #0369a1; /* Slightly darker Ocean Blue for better text contrast on light bg */
+  --s-color: #15803d; /* Darker Forest Green */
+  --a-color: #c2410c; /* Darker Sunset Orange */
+  --bg-color: #ffffff;
+  --text-color: #0f172a; /* Slate 900 for sharpest readability */
+  
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  
+  --radius: 1rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="dark"] {
+  /* Dark Mode - High Visibility */
+  --p-color: #38bdf8; /* Vibrant Sky Blue */
+  --s-color: #4ade80; /* Energetic Mint */
+  --a-color: #fbbf24; /* Golden Amber */
+  --bg-color: #020617; /* Deepest Navy/Slate 950 for maximum contrast */
+  --text-color: #f8fafc; /* Slate 50 for pure clarity */
+  
+  --glass-bg: rgba(15, 23, 42, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Structural Consistency */
+/* Force Footer to use the same background color */
+footer {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+  transition: all 0.3s ease;
+}
+
+/* Sticky Navbar Logic */
+.sticky.top-0 {
+  /* Let component logic handle background */
+}
+
+/* Helper for Hero Overlays */
+.hero-overlay-custom {
+  background-color: color-mix(in srgb, var(--bg-color), transparent 100%);
+  backdrop-filter: blur(4px);
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+@utility glass-effect {
+    backdrop-filter: blur(16px);
+    background-color: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+}
+
+@utility section-container {
+    width: 92%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+@media (min-width: 1024px) {
+    .section-container {
+        width: 85%;
+        padding-top: 6rem;
+        padding-bottom: 6rem;
+    }
+}
+
+/* Form Controls Optimization */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+::selection {
+  background-color: var(--p-color);
+  color: white;
 }

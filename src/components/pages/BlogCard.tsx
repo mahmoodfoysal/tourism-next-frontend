@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface BlogInfo {
   _id: string | number;
@@ -87,7 +88,10 @@ const BlogCard: React.FC<BlogCardProps> = ({ info }) => {
         </div>
 
         <div className="pt-5 border-t border-base-content/5 mt-auto">
-          <button className="flex items-center gap-2 text-primary text-[12px] font-black uppercase tracking-widest group-hover:gap-3 transition-all">
+          <Link 
+            href={`/blogs/details/${info._id}`}
+            className="flex items-center gap-2 text-primary text-[12px] font-black uppercase tracking-widest group-hover:gap-3 transition-all"
+          >
             Read Article
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -103,7 +107,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ info }) => {
                 d="M17 8l4 4m0 0l-4 4m4-4H3"
               />
             </svg>
-          </button>
+          </Link>
         </div>
       </div>
     </div>

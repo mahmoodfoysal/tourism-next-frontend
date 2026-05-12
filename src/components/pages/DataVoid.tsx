@@ -1,7 +1,7 @@
 import React from "react";
 
 interface DataVoidProps {
-  onReset: () => void;
+  onReset?: () => void;
 }
 
 const DataVoid: React.FC<DataVoidProps> = ({ onReset }) => {
@@ -39,12 +39,14 @@ const DataVoid: React.FC<DataVoidProps> = ({ onReset }) => {
       <p className="text-base-content/40 font-medium max-w-sm mb-10 text-sm">
         No matching destinations found in our current database.
       </p>
-      <button
-        onClick={onReset}
-        className="btn btn-primary rounded-2xl px-10 shadow-lg shadow-primary/20 font-bold hover:scale-105 transition-all"
-      >
-        Clear All Filters
-      </button>
+      {onReset && (
+        <button
+          onClick={onReset}
+          className="btn btn-primary rounded-2xl px-10 shadow-lg shadow-primary/20 font-bold hover:scale-105 transition-all"
+        >
+          Clear All Filters
+        </button>
+      )}
     </div>
   );
 };

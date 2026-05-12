@@ -20,7 +20,7 @@ export const tourismApi = {
    */
   getPopularDestinations: async () => {
     const response = await axiosPublic.get(
-      "/api/popular-dest/get-popular-dest-list",
+      "/api/tourism/get-popular-dest-list",
     );
     return response.data?.list_data;
   },
@@ -29,10 +29,28 @@ export const tourismApi = {
    * Fetch all tour packages
    */
   getTourPackages: async () => {
-    const response = await axiosPublic.get(
-      "/api/package-dest/get-package-list",
-    );
+    const response = await axiosPublic.get("/api/tourism/get-package-list");
     return response.data?.list_data;
+  },
+
+  /**
+   * Fetch package/destination details by ID
+   */
+  getPackageDetails: async (id: string | number) => {
+    const response = await axiosPublic.get(
+      `/api/tourism/get-package-list/${id}`,
+    );
+    return response.data?.details_data;
+  },
+
+  /**
+   * Fetch destination details by ID
+   */
+  getDestinationDetails: async (id: string | number) => {
+    const response = await axiosPublic.get(
+      `/api/tourism/get-popular-dest-list/${id}`,
+    );
+    return response.data?.details_data;
   },
 
   /**
@@ -41,6 +59,14 @@ export const tourismApi = {
   getTravelBlogs: async () => {
     const response = await axiosPublic.get("/api/tourism/get-blog-list");
     return response.data?.list_data;
+  },
+
+  /**
+   * Fetch blog details by ID
+   */
+  getBlogDetails: async (id: string | number) => {
+    const response = await axiosPublic.get(`/api/tourism/get-blog-list/${id}`);
+    return response.data?.details_data;
   },
 
   /**

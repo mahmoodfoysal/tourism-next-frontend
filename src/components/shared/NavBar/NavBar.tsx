@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
 import { logoutUser, setUser } from '@/store/slices/authSlice';
@@ -161,8 +162,14 @@ const NavBar = () => {
                         {user ? (
                             <div className="dropdown dropdown-end">
                                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar online shadow-primary/20 shadow-md">
-                                    <div className="w-10 rounded-full">
-                                        <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName || 'User'}&background=random`} alt="profile" />
+                                    <div className="w-10 h-10 rounded-full relative overflow-hidden">
+                                        <Image 
+                                            src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName || 'User'}&background=random`} 
+                                            alt="profile" 
+                                            width={40}
+                                            height={40}
+                                            className="object-cover"
+                                        />
                                     </div>
                                 </label>
                                 <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow-2xl menu menu-sm dropdown-content bg-base-100 rounded-box w-52 border border-base-content/5 glass-effect">
@@ -219,8 +226,14 @@ const NavBar = () => {
                         {user && (
                             <div className="flex items-center gap-4 p-4 bg-primary/5 rounded-2xl mb-4">
                                 <div className="avatar">
-                                    <div className="w-12 rounded-xl">
-                                        <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName || 'User'}&background=random`} alt="profile" />
+                                    <div className="w-12 h-12 rounded-xl relative overflow-hidden">
+                                        <Image 
+                                            src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName || 'User'}&background=random`} 
+                                            alt="profile" 
+                                            width={48}
+                                            height={48}
+                                            className="object-cover"
+                                        />
                                     </div>
                                 </div>
                                 <div className="overflow-hidden">

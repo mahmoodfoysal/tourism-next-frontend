@@ -82,7 +82,15 @@ const LoginPage = () => {
                                 <div className="flex -space-x-3">
                                     {[1, 2, 3, 4].map((i) => (
                                         <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-base-300 overflow-hidden">
-                                            <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" />
+                                            <div className="w-10 h-10 rounded-full relative overflow-hidden">
+                                                <Image 
+                                                    src={`https://i.pravatar.cc/100?img=${i + 10}`} 
+                                                    alt="User" 
+                                                    width={40}
+                                                    height={40}
+                                                    className="object-cover"
+                                                />
+                                            </div>
                                         </div>
                                     ))}
                                 </div>

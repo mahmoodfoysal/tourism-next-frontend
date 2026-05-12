@@ -105,20 +105,23 @@ const WhyChooseUs = () => {
   return (
     <section className="py-24 bg-base-100 overflow-hidden">
       <div className="section-container">
-        <div className="max-w-4xl mx-auto text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-accent font-bold text-xs uppercase tracking-widest mb-4">
-            Why Choose Us
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-accent font-bold text-xs uppercase tracking-widest mb-4">
+              Our Distinction
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black text-base-content tracking-tight mb-6">
+              Why Choose <span className="text-primary">Aura Trip?</span>
+            </h2>
+            <p className="text-lg text-base-content/60 leading-relaxed">
+              With over a decade of expertise, we turn your travel dreams into
+              reality with personalized service and attention to every detail.
+            </p>
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-base-content tracking-tight mb-6">
-            We Provide the Best <br />
-            <span className="text-primary text-3xl md:text-4xl">
-              Travel Experience
-            </span>
-          </h2>
-          <p className="text-lg text-base-content/60 leading-relaxed max-w-2xl mx-auto">
-            With over a decade of expertise, we turn your travel dreams into
-            reality with personalized service and attention to every detail.
-          </p>
+          <button className="btn btn-primary rounded-2xl px-8 h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px] hidden md:flex items-center">
+            Learn More About Us
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

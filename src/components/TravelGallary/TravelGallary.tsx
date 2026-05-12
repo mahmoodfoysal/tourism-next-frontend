@@ -45,17 +45,22 @@ const TravelGallary = () => {
     <section className="py-24 bg-base-200/50">
       <div className="section-container">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest mb-4">
-            Visual Journey
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest mb-4">
+              Visual Journey
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black text-base-content tracking-tight mb-6">
+              Travel <span className="text-primary">Gallery</span>
+            </h2>
+            <p className="text-lg text-base-content/60 leading-relaxed">
+              Explore the beauty of the world through our lens. A collection of
+              unforgettable moments from our travelers.
+            </p>
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-base-content tracking-tight mb-6">
-            Travel <span className="text-primary">Gallery</span>
-          </h2>
-          <p className="text-lg text-base-content/60 leading-relaxed">
-            Explore the beauty of the world through our lens. A collection of
-            unforgettable moments from our travelers.
-          </p>
+          <button className="btn btn-primary rounded-2xl px-8 h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px] hidden md:flex items-center">
+            View All Photos
+          </button>
         </div>
 
         {/* Mosaic Grid */}

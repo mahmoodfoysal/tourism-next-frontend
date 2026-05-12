@@ -76,6 +76,17 @@ export const tourismApi = {
     const response = await axiosPublic.get("/api/tourism/get-review-list");
     return response.data?.list_data;
   },
+
+  /**
+   * Submit a new booking order
+   */
+  submitOrder: async (orderData: any, axiosInstance = axiosPublic) => {
+    const response = await axiosInstance.post(
+      "/api/tourism/insert-update-order-list",
+      orderData,
+    );
+    return response.data;
+  },
 };
 
 export default tourismApi;

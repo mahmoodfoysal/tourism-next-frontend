@@ -1,6 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { setBookingPackage } from "@/store/slices/bookingSlice";
 
 /**
  * Interface defining the structure of a tourism package.
@@ -23,6 +25,7 @@ interface PackageCardProps {
 }
 
 const PackageCard: React.FC<PackageCardProps> = ({ info }) => {
+  const dispatch = useDispatch();
   return (
     <div
       key={info.package_id}
@@ -115,9 +118,13 @@ const PackageCard: React.FC<PackageCardProps> = ({ info }) => {
           </div>
 
           <div className="flex gap-2">
-            <button className="flex-[1.5] btn btn-primary btn-sm rounded-xl font-black uppercase tracking-widest text-[9px] shadow-lg shadow-primary/20 h-10 min-h-0 border-none">
+            <Link 
+              href={`/booking?packageId=${info._id || info.package_id}`}
+              onClick={() => dispatch(setBookingPackage(info))}
+              className="flex-[1.5] btn btn-primary btn-sm rounded-xl font-black uppercase tracking-widest text-[9px] shadow-lg shadow-primary/20 h-10 min-h-0 border-none flex items-center justify-center"
+            >
               Book Now
-            </button>
+            </Link>
             <Link
               href={`/packages/details/${info._id}`}
               className="flex-1 btn btn-ghost btn-sm rounded-xl border border-base-content/10 font-black uppercase tracking-widest text-[9px] h-10 min-h-0 hover:bg-base-200 hover:border-transparent flex items-center justify-center"

@@ -2,7 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import PackageCard from "../pages/PackageCard";
+import SkeletonCard from "../pages/SkeletonCard";
 import tourismApi from "@/api/tourismApi";
+import Link from "next/link";
 
 interface TourPackage {
   _id: string | number;
@@ -46,23 +48,33 @@ const TourPackage = () => {
     <section className="py-24 bg-base-200/30">
       <div className="section-container">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/10 text-secondary font-bold text-xs uppercase tracking-widest mb-4">
-            Exclusive Deals
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest mb-4">
+              Premium Experiences
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black text-base-content tracking-tight mb-6">
+              Amazing <span className="text-primary">Tour Packages</span>
+            </h2>
+            <p className="text-lg text-base-content/60 leading-relaxed">
+              Discover our most sought-after adventures, hand-picked for their 
+              exceptional value and unforgettable experiences across the globe.
+            </p>
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-base-content tracking-tight mb-6">
-            Amazing <span className="text-secondary">Tour Packages</span>
-          </h2>
-          <p className="text-lg text-base-content/60 leading-relaxed">
-            Choose from our curated selection of all-inclusive packages designed
-            to provide the ultimate travel experience without any hassle.
-          </p>
+          <Link 
+            href="/packages"
+            className="btn btn-primary rounded-2xl px-8 h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px] hidden md:flex items-center"
+          >
+            Explore All Packages
+          </Link>
         </div>
 
         {/* Packages Grid */}
         {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <span className="loading loading-spinner loading-lg text-secondary"></span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+            {[...Array(4)].map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
@@ -75,14 +87,14 @@ const TourPackage = () => {
           </div>
         )}
 
-        {/* View All Bottom CTA */}
-        <div className="mt-20 text-center">
-          <p className="text-base-content/50 font-medium mb-6 italic">
-            Want something different? We can create a custom package for you!
-          </p>
-          <button className="btn btn-outline border-base-content/10 rounded-2xl px-12 hover:bg-secondary hover:border-secondary transition-all duration-300">
+        {/* Mobile View All Bottom CTA */}
+        <div className="mt-12 text-center md:hidden">
+          <Link 
+            href="/packages"
+            className="btn btn-primary w-full rounded-2xl h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px]"
+          >
             Explore All Packages
-          </button>
+          </Link>
         </div>
       </div>
     </section>

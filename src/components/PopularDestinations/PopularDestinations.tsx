@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import PopularCard from "../pages/PopularCard";
+import SkeletonCard from "../pages/SkeletonCard";
 import tourismApi from "@/api/tourismApi";
 import Link from "next/link";
 
@@ -53,31 +54,33 @@ const PopularDestinations = () => {
     <section className="py-24 bg-base-100">
       <div className="section-container">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest mb-4">
               Global Hotspots
             </div>
-            <h2 className="text-4xl md:text-5xl font-black text-base-content tracking-tight">
+            <h2 className="text-4xl md:text-5xl font-black text-base-content tracking-tight mb-6">
               Popular <span className="text-primary">Destinations</span>
             </h2>
-            <p className="mt-4 text-lg text-base-content/60 leading-relaxed">
+            <p className="text-lg text-base-content/60 leading-relaxed">
               Discover our handpicked collection of the worlds most sought-after
               travel spots, from serene beaches to majestic mountains.
             </p>
           </div>
           <Link
             href="/destinations"
-            className="btn btn-outline border-base-content/10 hover:bg-primary hover:border-primary px-8 rounded-2xl hidden md:flex transition-all duration-300 font-bold"
+            className="btn btn-primary rounded-2xl px-8 h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px] hidden md:flex items-center"
           >
-            View All Places
+            Explore All Places
           </Link>
         </div>
 
         {/* Destinations Grid */}
         {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <span className="loading loading-spinner loading-lg text-primary"></span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[...Array(4)].map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -86,6 +89,16 @@ const PopularDestinations = () => {
             ))}
           </div>
         )}
+
+        {/* Mobile View All Bottom CTA */}
+        <div className="mt-12 text-center md:hidden">
+          <Link
+            href="/destinations"
+            className="btn btn-primary w-full rounded-2xl h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px]"
+          >
+            Explore All Places
+          </Link>
+        </div>
       </div>
     </section>
   );

@@ -3,6 +3,9 @@
 import React, { useEffect, useState, use } from "react";
 import tourismApi from "@/api/tourismApi";
 import Image from "next/image";
+import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { setBookingPackage } from "@/store/slices/bookingSlice";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import DataVoid from "@/components/pages/DataVoid";
 import SkeletonDetails from "@/components/pages/SkeletonDetails";
@@ -42,6 +45,7 @@ interface PageProps {
 }
 
 const PackageDetailsPage = ({ params }: PageProps) => {
+  const dispatch = useDispatch();
   const resolvedParams = use(params);
   const { id } = resolvedParams;
 
@@ -380,9 +384,13 @@ const PackageDetailsPage = ({ params }: PageProps) => {
                     </div>
 
                     <div className="space-y-4">
-                      <button className="btn btn-primary w-full h-16 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all">
+                      <Link 
+                        href={`/booking?packageId=${details._id || details.package_id}`}
+                        onClick={() => dispatch(setBookingPackage(details))}
+                        className="btn btn-primary w-full h-16 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all flex items-center justify-center"
+                      >
                         Book This Trip
-                      </button>
+                      </Link>
                       <button className="btn btn-ghost w-full h-16 rounded-2xl font-black uppercase tracking-widest border border-base-content/10 hover:bg-base-200 transition-all">
                         Inquire Now
                       </button>

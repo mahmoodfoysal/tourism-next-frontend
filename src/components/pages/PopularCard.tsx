@@ -105,22 +105,6 @@ const PopularCard: React.FC<PopularCardProps> = ({ info }) => {
         </p>
 
         <div className="pt-6 border-t border-base-content/5 mt-auto flex items-center justify-between">
-          <div className="flex -space-x-2">
-            {info.moreImage.slice(0, 3).map((img, i) => (
-              <div
-                key={i}
-                className="w-8 h-8 rounded-full border-2 border-base-100 overflow-hidden relative shadow-sm"
-              >
-                <Image src={img} alt="explorer" fill className="object-cover" />
-              </div>
-            ))}
-            {info.moreImage.length > 3 && (
-              <div className="w-8 h-8 rounded-full bg-secondary text-white text-[10px] font-bold flex items-center justify-center border-2 border-base-100 shadow-sm">
-                +{info.moreImage.length - 3}
-              </div>
-            )}
-          </div>
-
           <Link
             href={`/destinations/details/${info._id}`}
             className="flex items-center gap-2 text-primary text-[11px] font-black uppercase tracking-widest group-hover:gap-3 transition-all"

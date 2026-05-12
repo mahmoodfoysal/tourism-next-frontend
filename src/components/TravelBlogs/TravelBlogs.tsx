@@ -2,7 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import SkeletonCard from "../pages/SkeletonCard";
 import tourismApi from "@/api/tourismApi";
+import Link from "next/link";
 
 interface Blog {
   _id: string | number;
@@ -49,28 +51,33 @@ const TravelBlogs = () => {
     <section className="py-24 bg-base-200/30">
       <div className="section-container">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/10 text-secondary font-bold text-xs uppercase tracking-widest mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest mb-4">
               Latest Articles
             </div>
-            <h2 className="text-4xl md:text-5xl font-black text-base-content tracking-tight">
-              Travel <span className="text-secondary">Insights</span>
+            <h2 className="text-4xl md:text-5xl font-black text-base-content tracking-tight mb-6">
+              Travel <span className="text-primary">Insights</span>
             </h2>
-            <p className="mt-4 text-lg text-base-content/60 leading-relaxed">
+            <p className="text-lg text-base-content/60 leading-relaxed">
               Stay updated with the latest travel trends, hidden gems, and
               expert advice from our professional explorers.
             </p>
           </div>
-          <button className="btn btn-ghost border-base-content/10 hover:bg-secondary hover:text-white px-8 rounded-2xl hidden md:flex font-bold">
-            View All Blogs
-          </button>
+          <Link 
+            href="/blogs"
+            className="btn btn-primary rounded-2xl px-8 h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px] hidden md:flex items-center"
+          >
+            Explore All Blogs
+          </Link>
         </div>
 
         {/* Blogs Grid */}
         {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <span className="loading loading-spinner loading-lg text-secondary"></span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[...Array(4)].map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -89,7 +96,7 @@ const TravelBlogs = () => {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                   <div className="absolute top-6 left-6">
-                    <span className="bg-secondary px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white shadow-lg">
+                    <span className="bg-primary px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white shadow-lg">
                       {blog.category}
                     </span>
                   </div>
@@ -104,7 +111,7 @@ const TravelBlogs = () => {
                 <div className="p-8 flex flex-col flex-1">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full relative overflow-hidden border border-secondary/20">
+                      <div className="w-8 h-8 rounded-full relative overflow-hidden border border-primary/20">
                         <Image
                           src={
                             blog.authorImage ||
@@ -124,7 +131,7 @@ const TravelBlogs = () => {
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-black text-base-content mb-4 group-hover:text-secondary transition-colors leading-tight line-clamp-2">
+                  <h3 className="text-2xl font-black text-base-content mb-4 group-hover:text-primary transition-colors leading-tight line-clamp-2">
                     {blog.title}
                   </h3>
 
@@ -136,7 +143,7 @@ const TravelBlogs = () => {
                     {blog.tags?.map((tag: string, i: number) => (
                       <span
                         key={i}
-                        className="text-[10px] font-bold text-secondary/60 bg-secondary/5 px-2 py-0.5 rounded-md"
+                        className="text-[10px] font-bold text-primary/60 bg-primary/5 px-2 py-0.5 rounded-md"
                       >
                         #{tag}
                       </span>
@@ -144,7 +151,10 @@ const TravelBlogs = () => {
                   </div>
 
                   <div className="pt-6 border-t border-base-content/5 mt-auto">
-                    <button className="flex items-center gap-2 text-secondary font-black group-hover:gap-4 transition-all">
+                    <Link 
+                      href={`/blogs/details/${blog._id}`}
+                      className="flex items-center gap-2 text-primary font-black group-hover:gap-4 transition-all"
+                    >
                       Read Full Article
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -160,7 +170,7 @@ const TravelBlogs = () => {
                           d="M17 8l4 4m0 0l-4 4m4-4H3"
                         />
                       </svg>
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>

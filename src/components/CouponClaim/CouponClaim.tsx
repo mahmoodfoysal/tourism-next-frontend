@@ -32,7 +32,7 @@ const CouponClaim = () => {
                                     On Your First Journey
                                 </h2>
                                 <p className="text-xl text-white/80 leading-relaxed mb-12 max-w-2xl mx-auto font-medium">
-                                    Subscribe to our newsletter and claim your exclusive welcome coupon today. Start your adventure with VoyageVista.
+                                    Subscribe to our newsletter and claim your exclusive welcome coupon today. Start your adventure with Aura Trip.
                                 </p>
 
                                 <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto">

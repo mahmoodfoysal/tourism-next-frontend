@@ -3,7 +3,7 @@ import React from 'react';
 const PopularDestinations = () => {
     const destinations = [
         {
-            id: 1,
+            pop_id: 1,
             name: "Bora Bora",
             location: "French Polynesia",
             image: "https://images.unsplash.com/photo-1506929113614-bb93ce044a94?q=80&w=800&auto=format&fit=crop",
@@ -14,7 +14,7 @@ const PopularDestinations = () => {
             longDescription: "Bora Bora is a small South Pacific island northwest of Tahiti in French Polynesia. Surrounded by sand-fringed motus and a turquoise lagoon protected by a coral reef, it’s known for its world-class scuba diving and iconic overwater bungalows."
         },
         {
-            id: 2,
+            pop_id: 2,
             name: "Santorini",
             location: "Greece",
             image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?q=80&w=800&auto=format&fit=crop",
@@ -25,7 +25,7 @@ const PopularDestinations = () => {
             longDescription: "Santorini is one of the Cyclades islands in the Aegean Sea. It was devastated by a volcanic eruption in the 16th century BC, forever shaping its rugged landscape. The giant, lagoon-edged caldera is overlooked by white, cubiform houses of Fira and Oia."
         },
         {
-            id: 3,
+            pop_id: 3,
             name: "Kyoto",
             location: "Japan",
             image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=800&auto=format&fit=crop",
@@ -36,7 +36,7 @@ const PopularDestinations = () => {
             longDescription: "Kyoto, once the capital of Japan, is a city on the island of Honshu. It's famous for its numerous classical Buddhist temples, as well as gardens, imperial palaces, Shinto shrines and traditional wooden houses. It’s also known for formal traditions such as kaiseki dining."
         },
         {
-            id: 4,
+            pop_id: 4,
             name: "Swiss Alps",
             location: "Switzerland",
             image: "https://images.unsplash.com/photo-1531310197839-ccf54634509e?q=80&w=800&auto=format&fit=crop",
@@ -47,7 +47,7 @@ const PopularDestinations = () => {
             longDescription: "The Alps are the highest and most extensive mountain range system that lies entirely in Europe, stretching approximately 1,200 km across eight Alpine countries. The Swiss portion offers unparalleled luxury ski resorts and summer hiking trails."
         },
         {
-            id: 5,
+            pop_id: 5,
             name: "Bali",
             location: "Indonesia",
             image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=800&auto=format&fit=crop",
@@ -58,7 +58,7 @@ const PopularDestinations = () => {
             longDescription: "Bali is an Indonesian island known for its forested volcanic mountains, iconic rice paddies, beaches and coral reefs. The island is home to religious sites such as cliffside Uluwatu Temple. To the south, the beachside city of Kuta has lively bars."
         },
         {
-            id: 6,
+            pop_id: 6,
             name: "Paris",
             location: "France",
             image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=800&auto=format&fit=crop",
@@ -94,7 +94,7 @@ const PopularDestinations = () => {
                 {/* Destinations Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {destinations.map((dest) => (
-                        <div key={dest.id} className="group cursor-pointer">
+                        <div key={dest.pop_id} className="group cursor-pointer">
                             <div className="relative aspect-[4/5] overflow-hidden rounded-3xl shadow-2xl border border-base-content/5 transition-all duration-500 hover:shadow-primary/30">
                                 {/* Image */}
                                 <img 

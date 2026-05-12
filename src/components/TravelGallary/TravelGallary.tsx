@@ -108,7 +108,7 @@ const TravelGallary = () => {
                     </div>
                     <div className="text-center md:text-left">
                         <div className="text-lg font-black text-base-content">Join 25,000+ happy travelers</div>
-                        <div className="text-sm text-base-content/60 font-medium">Follow us on Instagram <span className="text-primary font-bold cursor-pointer">@voyagevista</span></div>
+                        <div className="text-sm text-base-content/60 font-medium">Follow us on Instagram <span className="text-primary font-bold cursor-pointer">@Aura Trip</span></div>
                     </div>
                 </div>
             </div>

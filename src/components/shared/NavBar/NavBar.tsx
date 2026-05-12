@@ -95,7 +95,7 @@ const NavBar = () => {
                                 </svg>
                             </div>
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-base-content to-base-content/70">
-                                Voyage<span className="text-primary">Vista</span>
+                                Aura<span className="text-primary">Trip</span>
                             </span>
                         </Link>
                     </div>

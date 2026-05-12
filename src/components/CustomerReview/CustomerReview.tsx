@@ -8,7 +8,7 @@ const CustomerReview = () => {
             role: "Adventure Enthusiast",
             image: "https://i.pravatar.cc/150?u=sarah",
             rating: 5,
-            review: "VoyageVista made our honeymoon absolutely perfect. The attention to detail and the local guides were beyond our expectations. Truly a once-in-a-lifetime experience!",
+            review: "Aura Trip made our honeymoon absolutely perfect. The attention to detail and the local guides were beyond our expectations. Truly a once-in-a-lifetime experience!",
             destination: "Maldives"
         },
         {
@@ -26,7 +26,7 @@ const CustomerReview = () => {
             role: "Family Traveler",
             image: "https://i.pravatar.cc/150?u=elena",
             rating: 4,
-            review: "Traveling with three kids isn't easy, but the team at VoyageVista handled everything. The Swiss Alps family package was seamless and so much fun for the little ones.",
+            review: "Traveling with three kids isn't easy, but the team at Aura Trip handled everything. The Swiss Alps family package was seamless and so much fun for the little ones.",
             destination: "Swiss Alps"
         }
     ];

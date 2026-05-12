@@ -4,7 +4,7 @@ const FAQ = () => {
     const faqs = [
         {
             id: 1,
-            question: "How do I book a tour with VoyageVista?",
+            question: "How do I book a tour with Aura Trip?",
             answer: "Booking is simple! You can browse our destinations or packages, select your preferred dates, and click 'Book Now'. You can also contact our 24/7 support team for personalized assistance with your reservation."
         },
         {

@@ -38,10 +38,10 @@ const Footer = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <span>Voyage<span className="text-primary">Vista</span></span>
+                        <span>Aura<span className="text-primary"> Trip</span></span>
                     </Link>
                     <p className="opacity-70 leading-relaxed">
-                        Discover the worlds most beautiful destinations with VoyageVista. We provide premium travel experiences tailored to your dreams.
+                        Discover the worlds most beautiful destinations with Aura Trip. We provide premium travel experiences tailored to your dreams.
                     </p>
                     <div className="flex gap-4">
                         {['twitter', 'facebook', 'instagram', 'youtube'].map((social) => (
@@ -91,7 +91,7 @@ const Footer = () => {
             {/* Bottom Bar */}
             <div className="border-t border-base-content/10 bg-base-300/30">
                 <div className="section-container py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm opacity-50">
-                    <p>© {currentYear} VoyageVista Inc. All rights reserved.</p>
+                    <p>© {currentYear} Aura Trip Inc. All rights reserved.</p>
                     <div className="flex gap-8">
                         <Link href="/privacy" className="hover:text-base-content transition-colors">Privacy</Link>
                         <Link href="/terms" className="hover:text-base-content transition-colors">Terms</Link>

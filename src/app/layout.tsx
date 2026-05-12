@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VoyageVista | Premium Travel & Tourism Experiences",
-  description: "Discover the world's most beautiful destinations with VoyageVista. Tailored travel packages, flight bookings, and luxury hotel reservations.",
+  title: "Aura Trip | Premium Travel & Tourism Experiences",
+  description: "Discover the world's most beautiful destinations with Aura Trip. Tailored travel packages, flight bookings, and luxury hotel reservations.",
 };
 
 export default function RootLayout({

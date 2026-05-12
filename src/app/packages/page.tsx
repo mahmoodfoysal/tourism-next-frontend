@@ -2,37 +2,30 @@
 
 import React, { useEffect, useState } from "react";
 import tourismApi from "@/api/tourismApi";
-import PopularCard from "@/components/pages/PopularCard";
+import PackageCard from "@/components/pages/PackageCard";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import DataVoid from "@/components/pages/DataVoid";
-
 import Pagination from "@/components/pages/Pagination";
 import SkeletonCard from "@/components/pages/SkeletonCard";
 
-interface Destination {
+interface TourPackage {
   _id: string | number;
-  pop_id: string | number;
+  package_id: string | number;
   image: string;
-  name: string;
-  location: string;
-  price: number;
-  rating: number;
-  badge: string;
-  shortDescription: string;
-  longDescription: string;
-  moreImage: string[];
-  status: number;
+  title: string;
+  duration: string;
   discount: string;
-  itinerary: { day: number; title: string; activities: string[] }[];
-  bestTimeToVisit: string;
-  nearbyAttractions: string[];
+  location: string;
+  features: string[];
+  originalPrice: number | string;
+  price: number | string;
+  rating?: number;
+  category?: string; // Added for filtering
 }
 
-const DestinationsPage = () => {
-  const [allDestinations, setAllDestinations] = useState<Destination[]>([]);
-  const [filteredDestinations, setFilteredDestinations] = useState<
-    Destination[]
-  >([]);
+const PackagesPage = () => {
+  const [allPackages, setAllPackages] = useState<TourPackage[]>([]);
+  const [filteredPackages, setFilteredPackages] = useState<TourPackage[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Responsive Filter Toggle
@@ -40,8 +33,9 @@ const DestinationsPage = () => {
 
   // Filters State
   const [searchQuery, setSearchQuery] = useState("");
-  const [priceRange, setPriceRange] = useState(5000);
-  const [selectedBadges, setSelectedBadges] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState(10000);
+  const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("Featured");
 
   // Pagination State
@@ -50,19 +44,19 @@ const DestinationsPage = () => {
 
   useEffect(() => {
     const fetchAll = async () => {
-      console.log("🚀 DestinationsPage: Initiating API call...");
+      console.log("🚀 PackagesPage: Initiating API call...");
       setLoading(true);
       try {
-        const data = await tourismApi.getPopularDestinations();
+        const data = await tourismApi.getTourPackages();
         console.log(
-          "✅ DestinationsPage: API call successful, data received:",
+          "✅ PackagesPage: API call successful, data received:",
           data,
         );
         const result = Array.isArray(data) ? data : data?.data || [];
-        setAllDestinations(result);
-        setFilteredDestinations(result);
+        setAllPackages(result);
+        setFilteredPackages(result);
       } catch (error) {
-        console.error("❌ DestinationsPage: API call failed:", error);
+        console.error("❌ PackagesPage: API call failed:", error);
       } finally {
         setLoading(false);
       }
@@ -72,66 +66,101 @@ const DestinationsPage = () => {
 
   // Filter Logic
   useEffect(() => {
-    let filtered = allDestinations;
+    let filtered = allPackages;
 
-    // Search filter (searches name, location, descriptions, badge, and itinerary)
+    // Search filter (searches title, location, and features)
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        (dest) =>
-          dest.name.toLowerCase().includes(query) ||
-          dest.location.toLowerCase().includes(query) ||
-          dest.shortDescription.toLowerCase().includes(query) ||
-          dest.longDescription.toLowerCase().includes(query) ||
-          dest.badge.toLowerCase().includes(query) ||
-          dest.bestTimeToVisit.toLowerCase().includes(query) ||
-          dest.nearbyAttractions.some((attr) =>
-            attr.toLowerCase().includes(query),
-          ),
+        (pkg) =>
+          pkg.title.toLowerCase().includes(query) ||
+          pkg.location.toLowerCase().includes(query) ||
+          pkg.features.some((feature) => feature.toLowerCase().includes(query)),
       );
     }
 
     // Price filter
-    filtered = filtered.filter((dest) => dest.price <= priceRange);
+    filtered = filtered.filter((pkg) => {
+      const currentPrice =
+        typeof pkg.price === "string" ? parseFloat(pkg.price) : pkg.price;
+      return currentPrice <= priceRange;
+    });
 
-    // Badge filter (multi-select)
-    if (selectedBadges.length > 0) {
-      filtered = filtered.filter((dest) => selectedBadges.includes(dest.badge));
+    // Duration filter (multi-select)
+    if (selectedDurations.length > 0) {
+      filtered = filtered.filter((pkg) =>
+        selectedDurations.includes(pkg.duration),
+      );
+    }
+
+    // Category filter (multi-select)
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter(
+        (pkg) => pkg.category && selectedCategories.includes(pkg.category),
+      );
     }
 
     // Sort Logic
     const sorted = [...filtered];
     if (sortBy === "Price: Low to High") {
-      sorted.sort((a, b) => a.price - b.price);
+      sorted.sort((a, b) => {
+        const pA = typeof a.price === "string" ? parseFloat(a.price) : a.price;
+        const pB = typeof b.price === "string" ? parseFloat(b.price) : b.price;
+        return pA - pB;
+      });
     } else if (sortBy === "Price: High to Low") {
-      sorted.sort((a, b) => b.price - a.price);
-    } else if (sortBy === "Top Rated") {
-      sorted.sort((a, b) => b.rating - a.rating);
+      sorted.sort((a, b) => {
+        const pA = typeof a.price === "string" ? parseFloat(a.price) : a.price;
+        const pB = typeof b.price === "string" ? parseFloat(b.price) : b.price;
+        return pB - pA;
+      });
     }
 
     setTimeout(() => {
-      setFilteredDestinations(sorted);
+      setFilteredPackages(sorted);
       setCurrentPage(1);
     }, 0);
-  }, [searchQuery, priceRange, selectedBadges, sortBy, allDestinations]);
+  }, [
+    searchQuery,
+    priceRange,
+    selectedDurations,
+    selectedCategories,
+    sortBy,
+    allPackages,
+  ]);
 
-  // Toggle helper
-  const toggleBadge = (badge: string) => {
-    setSelectedBadges((prev) =>
-      prev.includes(badge) ? prev.filter((b) => b !== badge) : [...prev, badge],
+  // Toggle helpers
+  const toggleDuration = (duration: string) => {
+    setSelectedDurations((prev) =>
+      prev.includes(duration)
+        ? prev.filter((d) => d !== duration)
+        : [...prev, duration],
     );
   };
 
-  const badges = [...new Set(allDestinations.map((d) => d.badge))];
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category],
+    );
+  };
+
+  const durations = [...new Set(allPackages.map((p) => p.duration))];
+  const categories = [
+    ...new Set(
+      allPackages.filter((p) => p.category).map((p) => p.category as string),
+    ),
+  ];
 
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredDestinations.slice(
+  const currentItems = filteredPackages.slice(
     indexOfFirstItem,
     indexOfLastItem,
   );
-  const totalPages = Math.ceil(filteredDestinations.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredPackages.length / itemsPerPage);
 
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -140,23 +169,25 @@ const DestinationsPage = () => {
 
   const isFilterActive =
     searchQuery !== "" ||
-    priceRange !== 5000 ||
-    selectedBadges.length > 0 ||
+    priceRange !== 10000 ||
+    selectedDurations.length > 0 ||
+    selectedCategories.length > 0 ||
     sortBy !== "Featured";
 
   const resetFilters = () => {
     setSearchQuery("");
-    setPriceRange(5000);
-    setSelectedBadges([]);
+    setPriceRange(10000);
+    setSelectedDurations([]);
+    setSelectedCategories([]);
     setSortBy("Featured");
   };
 
   return (
     <main className="min-h-screen bg-base-100">
       <CommonHeader
-        title="Explore All"
-        highlightText="Destinations"
-        subtitle="Browse through our entire collection of world-class destinations and find your next adventure."
+        title="Exclusive"
+        highlightText="Tour Packages"
+        subtitle="Discover curated all-inclusive experiences designed for the ultimate traveler."
       />
 
       <section className="pb-12">
@@ -165,7 +196,7 @@ const DestinationsPage = () => {
           <div className="lg:hidden mb-8">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="btn btn-primary w-full rounded-2xl flex items-center justify-between px-6 shadow-lg shadow-primary/20 h-14"
+              className="btn btn-secondary w-full rounded-2xl flex items-center justify-between px-6 shadow-lg shadow-secondary/20 h-14"
             >
               <span className="flex items-center gap-3">
                 <svg
@@ -183,7 +214,7 @@ const DestinationsPage = () => {
                   />
                 </svg>
                 <span className="font-black uppercase tracking-widest text-xs">
-                  Filter Destinations
+                  Filter Packages
                 </span>
               </span>
               <svg
@@ -212,7 +243,7 @@ const DestinationsPage = () => {
                 {/* Search Card */}
                 <div className="bg-base-100 rounded-[2.5rem] border border-base-content/5 p-8 shadow-sm hover:shadow-md transition-all duration-300">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    <div className="w-8 h-8 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-4 w-4"
@@ -229,15 +260,15 @@ const DestinationsPage = () => {
                       </svg>
                     </div>
                     <h3 className="text-sm font-black uppercase tracking-widest text-base-content">
-                      Quick Search
+                      Find Package
                     </h3>
                   </div>
 
                   <div className="relative group">
                     <input
                       type="text"
-                      placeholder="Destination, activity..."
-                      className="input input-ghost w-full rounded-2xl bg-base-200/50 border-transparent focus:bg-base-100 focus:border-primary/20 px-6 font-medium placeholder:text-base-content/30"
+                      placeholder="Search title, location..."
+                      className="input input-ghost w-full rounded-2xl bg-base-200/50 border-transparent focus:bg-base-100 focus:border-secondary/20 px-6 font-medium placeholder:text-base-content/30"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -247,7 +278,7 @@ const DestinationsPage = () => {
                 {/* Price Range Card */}
                 <div className="bg-base-100 rounded-[2.5rem] border border-base-content/5 p-8 shadow-sm hover:shadow-md transition-all duration-300">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-8 h-8 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
+                    <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-4 w-4"
@@ -264,7 +295,7 @@ const DestinationsPage = () => {
                       </svg>
                     </div>
                     <h3 className="text-sm font-black uppercase tracking-widest text-base-content">
-                      Price Limit
+                      Budget Range
                     </h3>
                   </div>
 
@@ -272,24 +303,24 @@ const DestinationsPage = () => {
                     <input
                       type="range"
                       min="500"
-                      max="5000"
-                      step="100"
-                      className="range range-primary range-xs"
+                      max="10000"
+                      step="500"
+                      className="range range-secondary range-xs"
                       value={priceRange}
                       onChange={(e) => setPriceRange(parseInt(e.target.value))}
                     />
                     <div className="flex justify-between items-center bg-base-200/50 px-4 py-3 rounded-2xl">
                       <span className="text-[10px] font-black uppercase text-base-content/30 tracking-wider">
-                        Budget
+                        Max Price
                       </span>
-                      <span className="text-lg font-black text-primary">
+                      <span className="text-lg font-black text-secondary">
                         ${priceRange}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                {/* Categories Card */}
+                {/* Duration Filter Card */}
                 <div className="bg-base-100 rounded-[2.5rem] border border-base-content/5 p-8 shadow-sm hover:shadow-md transition-all duration-300">
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
@@ -305,17 +336,17 @@ const DestinationsPage = () => {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth="2.5"
-                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
                       </div>
                       <h3 className="text-sm font-black uppercase tracking-widest text-base-content">
-                        Categories
+                        Duration
                       </h3>
                     </div>
-                    {selectedBadges.length > 0 && (
+                    {selectedDurations.length > 0 && (
                       <button
-                        onClick={() => setSelectedBadges([])}
+                        onClick={() => setSelectedDurations([])}
                         className="text-[10px] font-black uppercase text-primary hover:underline"
                       >
                         Clear
@@ -324,20 +355,20 @@ const DestinationsPage = () => {
                   </div>
 
                   <div
-                    className={`flex flex-col gap-2 ${badges.length > 4 ? "max-h-[200px] overflow-y-auto pr-2 custom-scrollbar" : ""}`}
+                    className={`flex flex-col gap-2 ${durations.length > 4 ? "max-h-[200px] overflow-y-auto pr-2 custom-scrollbar" : ""}`}
                   >
-                    {badges.map((badge) => (
+                    {durations.map((duration) => (
                       <button
-                        key={badge}
-                        onClick={() => toggleBadge(badge)}
+                        key={duration}
+                        onClick={() => toggleDuration(duration)}
                         className={`flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-300 ${
-                          selectedBadges.includes(badge)
-                            ? "bg-primary/10 text-primary border border-primary/20"
+                          selectedDurations.includes(duration)
+                            ? "bg-accent/10 text-accent border border-accent/20"
                             : "bg-base-200/50 text-base-content/50 hover:bg-base-200 border border-transparent"
                         }`}
                       >
-                        <span>{badge}</span>
-                        {selectedBadges.includes(badge) && (
+                        <span>{duration}</span>
+                        {selectedDurations.includes(duration) && (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-4 w-4"
@@ -355,6 +386,75 @@ const DestinationsPage = () => {
                     ))}
                   </div>
                 </div>
+
+                {/* Category Filter Card */}
+                {categories.length > 0 && (
+                  <div className="bg-base-100 rounded-[2.5rem] border border-base-content/5 p-8 shadow-sm hover:shadow-md transition-all duration-300">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                            />
+                          </svg>
+                        </div>
+                        <h3 className="text-sm font-black uppercase tracking-widest text-base-content">
+                          Categories
+                        </h3>
+                      </div>
+                      {selectedCategories.length > 0 && (
+                        <button
+                          onClick={() => setSelectedCategories([])}
+                          className="text-[10px] font-black uppercase text-primary hover:underline"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+
+                    <div
+                      className={`flex flex-col gap-2 ${categories.length > 4 ? "max-h-[200px] overflow-y-auto pr-2 custom-scrollbar" : ""}`}
+                    >
+                      {categories.map((cat) => (
+                        <button
+                          key={cat}
+                          onClick={() => toggleCategory(cat)}
+                          className={`flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-300 ${
+                            selectedCategories.includes(cat)
+                              ? "bg-primary/10 text-primary border border-primary/20"
+                              : "bg-base-200/50 text-base-content/50 hover:bg-base-200 border border-transparent"
+                          }`}
+                        >
+                          <span>{cat}</span>
+                          {selectedCategories.includes(cat) && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </aside>
 
@@ -366,13 +466,13 @@ const DestinationsPage = () => {
                     Showing{" "}
                     <span className="text-base-content">
                       {indexOfFirstItem + 1}-
-                      {Math.min(indexOfLastItem, filteredDestinations.length)}
+                      {Math.min(indexOfLastItem, filteredPackages.length)}
                     </span>{" "}
                     of{" "}
                     <span className="text-base-content">
-                      {filteredDestinations.length}
+                      {filteredPackages.length}
                     </span>{" "}
-                    destinations
+                    tour packages
                   </p>
                   {isFilterActive && (
                     <button
@@ -398,7 +498,7 @@ const DestinationsPage = () => {
                   )}
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2 px-4 py-2 bg-base-100 border border-base-content/10 rounded-2xl shadow-sm focus-within:border-primary/30 transition-all w-60">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-base-100 border border-base-content/10 rounded-2xl shadow-sm focus-within:border-secondary/30 transition-all w-60">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-4 w-4 text-base-content/30"
@@ -430,9 +530,6 @@ const DestinationsPage = () => {
                       <option className="bg-base-100 text-base-content">
                         Price: High to Low
                       </option>
-                      <option className="bg-base-100 text-base-content">
-                        Top Rated
-                      </option>
                     </select>
                   </div>
                 </div>
@@ -443,12 +540,12 @@ const DestinationsPage = () => {
               ) : currentItems.length > 0 ? (
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    {currentItems.map((dest) => (
-                      <PopularCard key={dest.pop_id || dest._id} info={dest} />
+                    {currentItems.map((pkg) => (
+                      <PackageCard key={pkg.package_id || pkg._id} info={pkg} />
                     ))}
                   </div>
 
-                  {/* Ultra-Modern Floating Pagination */}
+                  {/* Pagination */}
                   {totalPages > 1 && (
                     <Pagination
                       currentPage={currentPage}
@@ -461,8 +558,9 @@ const DestinationsPage = () => {
                 <DataVoid
                   onReset={() => {
                     setSearchQuery("");
-                    setPriceRange(5000);
-                    setSelectedBadges([]);
+                    setPriceRange(10000);
+                    setSelectedDurations([]);
+                    setSelectedCategories([]);
                   }}
                 />
               )}
@@ -474,4 +572,4 @@ const DestinationsPage = () => {
   );
 };
 
-export default DestinationsPage;
+export default PackagesPage;

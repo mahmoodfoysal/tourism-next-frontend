@@ -51,33 +51,41 @@ const PackageCard: React.FC<PackageCardProps> = ({ info }) => {
             </div>
 
             {/* Content */}
-            <div className="p-8 flex flex-col flex-1">
-                <h3 className="text-2xl font-black text-base-content mb-4 group-hover:text-primary transition-colors">
+            <div className="p-5 flex flex-col flex-1">
+                <h3 className="text-lg font-black text-base-content mb-3 group-hover:text-primary transition-colors leading-tight">
                     {info.title}
                 </h3>
                 
                 {/* Features */}
-                <div className="grid grid-cols-2 gap-y-3 gap-x-2 mb-8">
+                <div className="grid grid-cols-2 gap-y-2 gap-x-2 mb-6">
                     {info.features?.map((feature, i) => (
                         <div key={i} className="flex items-center gap-2 text-base-content/60">
-                            <div className="w-5 h-5 rounded-full bg-secondary/10 flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                            <div className="w-4 h-4 rounded-full bg-secondary/10 flex items-center justify-center shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-2.5 w-2.5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
-                            <span className="text-sm font-medium">{feature}</span>
+                            <span className="text-[12px] font-bold truncate">{feature}</span>
                         </div>
                     ))}
                 </div>
 
-                <div className="mt-auto pt-6 border-t border-base-content/5 flex items-center justify-between">
-                    <div className="flex flex-col">
-                        <span className="text-sm text-base-content/40 line-through font-bold">${info.originalPrice}</span>
-                        <span className="text-3xl font-black text-primary">${info.price}</span>
+                <div className="mt-auto pt-5 border-t border-base-content/5">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex flex-col">
+                            <span className="text-[10px] text-base-content/40 line-through font-black tracking-widest uppercase">${info.originalPrice}</span>
+                            <span className="text-xl font-black text-primary tracking-tighter">${info.price}</span>
+                        </div>
                     </div>
-                    <button className="btn btn-primary rounded-2xl px-8 shadow-lg shadow-primary/20">
-                        Book Deal
-                    </button>
+                    
+                    <div className="flex gap-2">
+                        <button className="flex-[1.5] btn btn-primary btn-sm rounded-xl font-black uppercase tracking-widest text-[9px] shadow-lg shadow-primary/20 h-10 min-h-0 border-none">
+                            Book Now
+                        </button>
+                        <button className="flex-1 btn btn-ghost btn-sm rounded-xl border border-base-content/10 font-black uppercase tracking-widest text-[9px] h-10 min-h-0 hover:bg-base-200 hover:border-transparent">
+                            Details
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

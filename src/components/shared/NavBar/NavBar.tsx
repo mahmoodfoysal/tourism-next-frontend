@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
 import { logoutUser, setUser } from '@/store/slices/authSlice';
 import { showSuccess, showError, showProcessing, closeAlert } from '@/components/pages/Alert';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 const NavBar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -17,6 +17,7 @@ const NavBar = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { user } = useSelector((state: RootState) => state.auth);
     const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -68,6 +69,7 @@ const NavBar = () => {
         { name: 'Home', href: '/' },
         { name: 'Destinations', href: '/destinations' },
         { name: 'Packages', href: '/packages' },
+        { name: 'Blogs', href: '/blogs' },
         { name: 'About', href: '/about' },
         { name: 'Contact', href: '/contact' },
     ];
@@ -126,17 +128,24 @@ const NavBar = () => {
                     {/* Desktop Navigation Links */}
                     <div className="navbar-center hidden lg:flex">
                         <ul className="menu menu-horizontal gap-2 p-0">
-                            {navLinks.map((link) => (
-                                <li key={link.name}>
-                                    <Link 
-                                        href={link.href} 
-                                        className="px-4 py-2 text-[15px] font-semibold text-base-content/70 hover:text-primary hover:bg-primary/5 rounded-full transition-all duration-300 relative group"
-                                    >
-                                        {link.name}
-                                        <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary rounded-full transition-all duration-300 group-hover:w-1/2"></span>
-                                    </Link>
-                                </li>
-                            ))}
+                            {navLinks.map((link) => {
+                                const isActive = pathname === link.href;
+                                return (
+                                    <li key={link.name}>
+                                        <Link 
+                                            href={link.href} 
+                                            className={`px-4 py-2 text-[15px] font-semibold transition-all duration-300 relative group ${
+                                                isActive ? 'text-primary' : 'text-base-content/70 hover:text-primary hover:bg-primary/5'
+                                            } rounded-full`}
+                                        >
+                                            {link.name}
+                                            <span className={`absolute bottom-1.5 left-1/2 -translate-x-1/2 h-0.5 bg-primary rounded-full transition-all duration-300 ${
+                                                isActive ? 'w-1/2' : 'w-0 group-hover:w-1/2'
+                                            }`}></span>
+                                        </Link>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
 
@@ -243,17 +252,22 @@ const NavBar = () => {
                             </div>
                         )}
                         <ul className="menu menu-lg gap-2">
-                            {navLinks.map((link) => (
-                                <li key={link.name}>
-                                    <Link 
-                                        href={link.href}
-                                        onClick={() => setIsMenuOpen(false)}
-                                        className="text-lg font-semibold py-3 px-4 hover:text-primary rounded-xl"
-                                    >
-                                        {link.name}
-                                    </Link>
-                                </li>
-                            ))}
+                            {navLinks.map((link) => {
+                                const isActive = pathname === link.href;
+                                return (
+                                    <li key={link.name}>
+                                        <Link 
+                                            href={link.href}
+                                            onClick={() => setIsMenuOpen(false)}
+                                            className={`text-lg font-semibold py-3 px-4 rounded-xl transition-colors ${
+                                                isActive ? 'bg-primary/10 text-primary' : 'hover:text-primary'
+                                            }`}
+                                        >
+                                            {link.name}
+                                        </Link>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                     <div className="p-6 border-t border-base-200 space-y-3">

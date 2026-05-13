@@ -7,13 +7,15 @@ import { axiosPublic } from "@/hooks/useAxiosPublic";
 interface Review {
   _id?: string;
   id: string | number;
-  name: string;
-  role: string;
-  image: string;
+  full_name: string;
+  email?: string;
+  image_url: string;
   rating: number;
-  review: string;
-  destination: string;
-  status: number;
+  comment: string;
+  package_id?: string;
+  tour_place: string;
+  role?: string;
+  status?: number;
 }
 
 const CustomerReview = () => {
@@ -38,6 +40,35 @@ const CustomerReview = () => {
     fetchReviews();
   }, []);
 
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+
+    const itemWidth = scrollContainer.querySelector(".review-card")?.clientWidth || 300;
+    const scrollAmount = direction === 'left' ? -(itemWidth + 32) : (itemWidth + 32);
+    
+    if (direction === 'right' && scrollContainer.scrollLeft >= (scrollContainer.scrollWidth - scrollContainer.clientWidth - 50)) {
+        scrollContainer.scrollTo({ left: 0, behavior: "smooth" });
+    } else if (direction === 'left' && scrollContainer.scrollLeft <= 10) {
+        scrollContainer.scrollTo({ left: scrollContainer.scrollWidth, behavior: "smooth" });
+    } else {
+        scrollContainer.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer || loading || reviews.length === 0) return;
+
+    const interval = setInterval(() => {
+      scroll('right');
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [loading, reviews.length]);
+
   return (
     <section className="py-24 bg-base-100">
       <div className="section-container">
@@ -56,9 +87,28 @@ const CustomerReview = () => {
               adventurers.
             </p>
           </div>
-          <button className="btn btn-primary rounded-2xl px-8 h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px] hidden md:flex items-center">
-            Share Your Story
-          </button>
+          
+          {/* Navigation Controls */}
+          <div className="flex gap-4">
+            <button 
+              onClick={() => scroll('left')}
+              className="w-14 h-14 rounded-2xl bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all shadow-lg border border-base-content/5 group"
+              aria-label="Previous review"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 transition-transform group-active:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button 
+              onClick={() => scroll('right')}
+              className="w-14 h-14 rounded-2xl bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all shadow-lg border border-base-content/5 group"
+              aria-label="Next review"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 transition-transform group-active:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Reviews Grid */}
@@ -67,85 +117,94 @@ const CustomerReview = () => {
             <span className="loading loading-spinner loading-lg text-primary"></span>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {reviews.map((review) => (
-              <div key={review.id || review._id} className="relative group">
-                {/* Quote Icon Background */}
-                <div className="absolute -top-4 -right-4 text-primary opacity-10 group-hover:opacity-20 transition-opacity">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-24 w-24"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11M3.01704 21L3.01704 18C3.01704 16.8954 3.91243 16 5.01704 16H8.01704C8.56933 16 9.01704 15.5523 9.01704 15V9C9.01704 8.44772 8.56933 8 8.01704 8H4.01704C3.46476 8 3.01704 8.44772 3.01704 9V11" />
-                  </svg>
-                </div>
-
-                <div className="bg-base-200/50 p-8 rounded-[2.5rem] border border-base-content/5 shadow-xl hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
-                  {/* Stars */}
-                  <div className="flex items-center gap-1 text-accent mb-6">
-                    {[...Array(5)].map((_, i) => (
-                      <svg
-                        key={i}
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`h-5 w-5 ${i < review.rating ? "fill-current" : "opacity-20"}`}
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
+          <div className="relative group/slider">
+            <div 
+              ref={scrollRef}
+              className="flex gap-8 overflow-x-auto custom-scrollbar scroll-smooth snap-x snap-mandatory pb-10 -mb-10"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {reviews.map((review) => (
+                <div 
+                  key={review.id || review._id} 
+                  className="review-card flex-none w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] snap-start relative group"
+                >
+                  {/* Quote Icon Background */}
+                  <div className="absolute -top-4 -right-4 text-primary opacity-10 group-hover:opacity-20 transition-opacity">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-24 w-24"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11M3.01704 21L3.01704 18C3.01704 16.8954 3.91243 16 5.01704 16H8.01704C8.56933 16 9.01704 15.5523 9.01704 15V9C9.01704 8.44772 8.56933 8 8.01704 8H4.01704C3.46476 8 3.01704 8.44772 3.01704 9V11" />
+                    </svg>
                   </div>
 
-                  {/* Review Text */}
-                  <p className="text-base-content/80 text-lg italic leading-relaxed mb-8 flex-1">
-                    {review.review}
-                  </p>
-
-                  {/* User Info */}
-                  <div className="flex items-center gap-4 pt-6 border-t border-base-content/5">
-                    <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/20 shadow-lg relative">
-                      <Image
-                        src={
-                          review.image ||
-                          `https://ui-avatars.com/api/?name=${review.name}&background=random`
-                        }
-                        alt={review.name}
-                        fill
-                        className="object-cover"
-                        sizes="56px"
-                      />
-                    </div>
-                    <div>
-                      <h4 className="font-black text-base-content">
-                        {review.name}
-                      </h4>
-                      <div className="text-sm text-base-content/50 font-bold uppercase tracking-wider">
-                        {review.role}
-                      </div>
-                      <div className="flex items-center gap-1 text-primary text-[10px] font-bold mt-1 uppercase">
+                  <div className="bg-base-200/50 p-8 rounded-[2.5rem] border border-base-content/5 shadow-xl hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
+                    {/* Stars */}
+                    <div className="flex items-center gap-1 text-accent mb-6">
+                      {[...Array(5)].map((_, i) => (
                         <svg
+                          key={i}
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-3 w-3"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
+                          className={`h-5 w-5 ${i < review.rating ? "fill-current" : "opacity-20"}`}
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="3"
-                            d="M9 12l2 2 4-4"
-                          />
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
-                        Verified Trip to {review.destination}
+                      ))}
+                    </div>
+
+                    {/* Review Text */}
+                    <p className="text-base-content/80 text-lg italic leading-relaxed mb-8 flex-1">
+                      {review.comment}
+                    </p>
+
+                    {/* User Info */}
+                    <div className="flex items-center gap-4 pt-6 border-t border-base-content/5">
+                      <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/20 shadow-lg relative">
+                        <Image
+                          src={
+                            review.image_url ||
+                            `https://ui-avatars.com/api/?name=${review.full_name}&background=random`
+                          }
+                          alt={review.full_name}
+                          fill
+                          className="object-cover"
+                          sizes="56px"
+                        />
+                      </div>
+                      <div>
+                        <h4 className="font-black text-base-content">
+                          {review.full_name}
+                        </h4>
+                        <div className="text-sm text-base-content/50 font-bold uppercase tracking-wider">
+                          {review.role || "Traveler"}
+                        </div>
+                        <div className="flex items-center gap-1 text-primary text-[10px] font-bold mt-1 uppercase">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-3 w-3"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="3"
+                              d="M9 12l2 2 4-4"
+                            />
+                          </svg>
+                          Verified Trip to {review.tour_place}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
 

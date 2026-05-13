@@ -188,17 +188,10 @@ const TravelGallary = () => {
                 />
 
                 {/* Image Meta Info Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
-                  <h3 className="text-white text-3xl font-black uppercase tracking-tight">
+                <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparen hidden md:block">
+                  <h3 className="text-white text-base md:text-3xl font-black uppercase tracking-tight">
                     {selectedPhoto.title}
                   </h3>
-                  <p className="text-primary font-bold text-xs uppercase tracking-widest mt-1">
-                    Visual Collection •{" "}
-                    {selectedPhoto.more_image?.length
-                      ? selectedPhoto.more_image.length + 1
-                      : 1}{" "}
-                    Total Assets
-                  </p>
                 </div>
               </div>
 

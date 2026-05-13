@@ -124,7 +124,7 @@ const PackageCard: React.FC<PackageCardProps> = ({ info }) => {
               onClick={() => dispatch(setBookingPackage(info))}
               className="flex-[1.5] btn btn-primary btn-sm rounded-xl font-black uppercase tracking-widest text-[9px] shadow-lg shadow-primary/20 h-10 min-h-0 border-none flex items-center justify-center"
             >
-              Book Now
+              Booking
             </Link>
             <Link
               href={`/packages/details/${info._id}`}

@@ -3,6 +3,7 @@ import React from "react";
 interface BookingItem {
   _id: string;
   full_name: string;
+  order_id: string;
   email: string;
   phone_no: string;
   passport_no: string;
@@ -41,19 +42,13 @@ const Invoice = ({ selectedBooking }: { selectedBooking: BookingItem }) => {
             </p>
           </div>
           <div className="text-right">
-            <h2 className="text-2xl font-black uppercase">Voyage Manifest</h2>
+            <h2 className="text-2xl font-black uppercase">Invoice</h2>
             <p className="text-sm font-bold tracking-widest mt-1">
-              ARCHIVAL REF: VOY-
-              {new Date(selectedBooking.createdAt)
-                .getTime()
-                .toString()
-                .slice(-6)}
+              Order No: #{selectedBooking.order_id}
             </p>
             <div className="mt-4 p-2 bg-black text-white text-[10px] font-black uppercase tracking-widest">
               Status:{" "}
-              {selectedBooking.order_status === "C"
-                ? "Confirmed"
-                : "Authorized"}
+              {selectedBooking.order_status === "BP" ? "Booking" : "Approved"}
             </div>
           </div>
         </div>
@@ -68,7 +63,7 @@ const Invoice = ({ selectedBooking }: { selectedBooking: BookingItem }) => {
               <div className="space-y-4">
                 <div>
                   <p className="text-[8px] font-bold uppercase text-gray-400">
-                    Lead Voyager
+                    Lead Traveller
                   </p>
                   <p className="text-sm font-black uppercase">
                     {selectedBooking.full_name}
@@ -84,13 +79,13 @@ const Invoice = ({ selectedBooking }: { selectedBooking: BookingItem }) => {
                 </div>
                 <div>
                   <p className="text-[8px] font-bold uppercase text-gray-400">
-                    Digital Signature / Email
+                    Email
                   </p>
                   <p className="text-sm font-bold">{selectedBooking.email}</p>
                 </div>
                 <div>
                   <p className="text-[8px] font-bold uppercase text-gray-400">
-                    Primary Contact
+                    Phone Number
                   </p>
                   <p className="text-sm font-bold">
                     {selectedBooking.phone_no}
@@ -143,7 +138,7 @@ const Invoice = ({ selectedBooking }: { selectedBooking: BookingItem }) => {
                     Group Size
                   </p>
                   <p className="text-sm font-black">
-                    {selectedBooking.person} Voyagers
+                    {selectedBooking.person} Person
                   </p>
                 </div>
               </div>
@@ -155,15 +150,15 @@ const Invoice = ({ selectedBooking }: { selectedBooking: BookingItem }) => {
               </h3>
               <div className="space-y-2">
                 <div className="flex justify-between text-[10px] font-bold">
-                  <span>Base Value</span>
+                  <span>Sub Total</span>
                   <span>${selectedBooking.sub_total?.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-[10px] font-bold">
-                  <span>Strategic Tax (10%)</span>
+                  <span>Tax (10%)</span>
                   <span>${selectedBooking.tax_total.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-[10px] font-bold">
-                  <span>Service Premium</span>
+                  <span>Service Charge</span>
                   <span>${selectedBooking.service_charge.toFixed(2)}</span>
                 </div>
                 <div className="border-t-2 border-black pt-2 mt-2 flex justify-between items-baseline">

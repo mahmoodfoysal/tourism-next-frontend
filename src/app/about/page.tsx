@@ -113,15 +113,6 @@ const AboutPage = () => {
     },
   ];
 
-  const team = [
-    {
-      name: "Foysal Mahmo",
-      role: "CEO & Founder",
-      image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400",
-    },
-  ];
-
   return (
     <main className="min-h-screen bg-base-100">
       <CommonHeader

@@ -3,18 +3,10 @@
 import React, { useState, useEffect, useMemo } from "react";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import Image from "next/image";
-import { axiosPublic } from "@/hooks/useAxiosPublic";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
-import { useRouter } from "next/navigation";
-import {
-  showError,
-  showConfirmation,
-  showProcessing,
-  showSuccess,
-  closeAlert,
-} from "@/components/pages/Alert";
+import { showError } from "@/components/pages/Alert";
 
 interface BookingItem {
   _id: string;
@@ -51,7 +43,6 @@ import PrivateRoutes from "@/routes/PrivateRoutes";
 import Invoice from "@/components/pages/Invoice";
 
 const BookingHistoryPage = () => {
-  const router = useRouter();
   const { user } = useSelector((state: RootState) => state.auth);
   const axiosSecure = useAxiosSecure();
   const [bookings, setBookings] = useState<BookingItem[]>([]);
@@ -97,9 +88,9 @@ const BookingHistoryPage = () => {
     if (activeFilter === "all") return bookings;
     return bookings.filter((booking) => {
       const status = booking.order_status.toUpperCase();
-      if (activeFilter === "active") return status === "P" || status === "C";
-      if (activeFilter === "completed") return status === "CO";
-      if (activeFilter === "cancelled") return status === "X";
+      if (activeFilter === "active") return status === "BP" || status === "B";
+      if (activeFilter === "completed") return status === "C";
+      if (activeFilter === "cancelled") return status === "R";
       return true;
     });
   }, [bookings, activeFilter]);
@@ -154,8 +145,8 @@ const BookingHistoryPage = () => {
 
         <div className="print:hidden">
           <CommonHeader
-            title="Voyage"
-            highlightText="Archives"
+            title="Booking"
+            highlightText="History"
             subtitle="Access your digital boarding passes and expedition manifests through our secure travel archival system."
           />
         </div>
@@ -285,7 +276,7 @@ const BookingHistoryPage = () => {
                           }}
                           className="btn btn-primary flex-1 h-14 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] group-hover:shadow-2xl group-hover:shadow-primary/30 transition-all duration-500"
                         >
-                          Retrieve Manifest
+                          See Details
                         </button>
                         <button
                           onClick={() => {
@@ -338,10 +329,10 @@ const BookingHistoryPage = () => {
                 <div className="flex flex-col sm:flex-row justify-between items-start gap-12 mb-16 border-b border-base-content/5 pb-16">
                   <div className="space-y-4">
                     <div className="w-20 h-2 bg-primary"></div>
-                    <h2 className="text-5xl font-black text-base-content tracking-tighter uppercase leading-none">
-                      Official Voyage
+                    <h2 className="text-3xl font-black text-base-content tracking-tighter uppercase leading-none">
+                      Booking
                       <br />
-                      <span className="text-primary italic">Manifest</span>
+                      <span className="text-primary italic">History</span>
                     </h2>
                     <div className="flex items-center gap-4 pt-2">
                       <span className="text-[10px] font-black uppercase tracking-[0.4em] text-base-content/40">
@@ -383,7 +374,7 @@ const BookingHistoryPage = () => {
                         <div className="grid grid-cols-2 gap-8">
                           <div className="space-y-1">
                             <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">
-                              Lead Voyager
+                              Full Name
                             </p>
                             <p className="text-sm font-black text-base-content uppercase">
                               {selectedBooking.full_name}
@@ -485,10 +476,10 @@ const BookingHistoryPage = () => {
                 {/* Bottom Print Action */}
                 <div className="mt-20 flex justify-center">
                   <button
-                    className="btn btn-primary px-12 h-16 rounded-[2rem] font-black uppercase tracking-[0.4em] text-xs shadow-2xl shadow-primary/30 hover:scale-105 transition-all"
+                    className="btn btn-primary px-12 h-16 rounded-2xl font-black uppercase tracking-[0.4em] text-xs shadow-2xl shadow-primary/30 hover:scale-105 transition-all"
                     onClick={() => window.print()}
                   >
-                    Authorize & Print Manifest
+                    Print Booking
                   </button>
                 </div>
               </div>

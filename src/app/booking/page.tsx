@@ -18,7 +18,9 @@ import {
 import { useRouter } from "next/navigation";
 
 interface TourPackage {
-  id?: string | number;
+  package_id?: string | number;
+  pop_id?: string | number;
+  name?: string | number;
   _id?: string | number;
   title: string;
   price: number;
@@ -26,6 +28,7 @@ interface TourPackage {
   duration: string;
   category: string;
   image: string;
+  tour_date?: string;
   features: string[];
 }
 
@@ -95,16 +98,39 @@ const BookingContent = () => {
     const fetchData = async () => {
       try {
         if (packageId) {
-          const response = await axiosPublic.get(
-            `/api/tourism/get-package-list/${packageId}`,
+          // Attempt 1: Standard Package Endpoint
+          try {
+            const packageRes = await axiosPublic.get(
+              `/api/tourism/get-package-list/${packageId}`,
+            );
+            const packageData = packageRes.data?.details_data;
+            if (packageData) {
+              setSelectedPackage(packageData);
+              setLoading(false);
+              return;
+            }
+          } catch (e) {
+            console.log("Not a standard package, trying destinations...");
+          }
+
+          // Attempt 2: Popular Destination Endpoint
+          const destRes = await axiosPublic.get(
+            `/api/tourism/get-popular-dest-list/${packageId}`,
           );
-          const data = response.data?.details_data;
-          if (data) {
-            setSelectedPackage(data);
+          const destData = destRes.data?.details_data;
+
+          if (destData) {
+            // Map destination structure to TourPackage structure
+            setSelectedPackage({
+              ...destData,
+              title: destData.name || destData.title,
+              duration: destData.duration || "Flexible",
+              category: destData.category || "Popular Destination",
+              features: destData.features || ["Top Rated", "Best Experience"],
+            });
           }
         } else {
-          // Fallback: If no ID, we might still want to fetch the list to get a default
-          // but since the user specifically asked to use the detail endpoint:
+          // Fallback: Default package if no ID
           const response = await axiosPublic.get(
             "/api/tourism/get-package-list",
           );
@@ -216,13 +242,14 @@ const BookingContent = () => {
         grand_total: Number((totalPriceValue * 1.1 + 25).toFixed(2)),
         order_status: "BP",
         package_info: {
-          package_id: selectedPackage.id || selectedPackage._id,
+          package_id: selectedPackage.package_id || selectedPackage.pop_id,
           price: selectedPackage.price,
           category: selectedPackage.category,
           features: selectedPackage.features,
           image: selectedPackage.image,
-          originalPrice: selectedPackage.originalPrice,
-          title: selectedPackage.title,
+          originalPrice: selectedPackage.originalPrice || 0,
+          title: selectedPackage.title || selectedPackage.name,
+          tour_date: selectedPackage.tour_date,
         },
       };
 

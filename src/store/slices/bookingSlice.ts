@@ -9,6 +9,7 @@ export interface TourPackage {
   duration: string;
   category: string;
   image: string;
+  tour_date?: string;
   features: string[];
 }
 

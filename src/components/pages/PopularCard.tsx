@@ -1,6 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { setBookingPackage } from "@/store/slices/bookingSlice";
 
 interface PopularCardProps {
   info: {
@@ -24,6 +26,8 @@ interface PopularCardProps {
 }
 
 const PopularCard: React.FC<PopularCardProps> = ({ info }) => {
+  const dispatch = useDispatch();
+
   return (
     <div
       key={info.pop_id}
@@ -104,15 +108,35 @@ const PopularCard: React.FC<PopularCardProps> = ({ info }) => {
           {info.shortDescription}
         </p>
 
-        <div className="pt-6 border-t border-base-content/5 mt-auto flex items-center justify-between">
+        <div className="pt-6 border-t border-base-content/5 mt-auto flex items-center justify-between gap-4">
+          <Link
+            href={`/booking?packageId=${info._id || info.pop_id}`}
+            onClick={() =>
+              dispatch(
+                setBookingPackage({
+                  _id: info._id,
+                  id: info.pop_id,
+                  title: info.name,
+                  price: info.price,
+                  image: info.image,
+                  duration: "Flexible",
+                  category: "Popular Destination",
+                  features: ["Top Rated", "Best Price"],
+                }),
+              )
+            }
+            className="btn btn-primary btn-sm rounded-xl px-5 h-10 font-black uppercase tracking-widest text-[10px] shadow-lg shadow-primary/20"
+          >
+            Booking
+          </Link>
           <Link
             href={`/destinations/details/${info._id}`}
-            className="flex items-center gap-2 text-primary text-[11px] font-black uppercase tracking-widest group-hover:gap-3 transition-all"
+            className="flex items-center gap-1.5 text-primary text-[10px] font-black uppercase tracking-widest group-hover:gap-2 transition-all"
           >
-            Explore Now
+            Explore
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
+              className="h-3.5 w-3.5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

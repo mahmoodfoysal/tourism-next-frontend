@@ -79,6 +79,16 @@ const CustomerReview = () => {
     return () => clearInterval(interval);
   }, [loading, reviews.length]);
 
+  const totalReviewsCount = reviews.length;
+  const averageRating = totalReviewsCount > 0
+    ? (reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / totalReviewsCount).toFixed(1)
+    : "0.0";
+
+  const recommendations = reviews.filter((r) => (r.rating || 0) >= 4).length;
+  const recommendationRate = totalReviewsCount > 0
+    ? Math.round((recommendations / totalReviewsCount) * 100)
+    : 0;
+
   return (
     <section className="py-24 bg-base-100">
       <div className="section-container">
@@ -241,21 +251,29 @@ const CustomerReview = () => {
         {/* Bottom Stats */}
         <div className="mt-20 py-12 rounded-[3rem] bg-gradient-to-r from-primary/10 via-base-200 to-secondary/10 border border-base-content/5 flex flex-wrap justify-around gap-10 items-center px-8 text-center">
           <div>
-            <div className="text-4xl font-black text-primary mb-1">4.9/5</div>
+            <div className="text-4xl font-black text-primary mb-1">
+              {averageRating}/5
+            </div>
             <div className="text-xs font-bold uppercase tracking-widest text-base-content/50">
               Average Rating
             </div>
           </div>
           <div className="w-px h-12 bg-base-content/10 hidden md:block"></div>
           <div>
-            <div className="text-4xl font-black text-secondary mb-1">10k+</div>
+            <div className="text-4xl font-black text-secondary mb-1">
+              {totalReviewsCount > 1000
+                ? `${(totalReviewsCount / 1000).toFixed(1)}k+`
+                : `${totalReviewsCount}+`}
+            </div>
             <div className="text-xs font-bold uppercase tracking-widest text-base-content/50">
               Verified Reviews
             </div>
           </div>
           <div className="w-px h-12 bg-base-content/10 hidden md:block"></div>
           <div>
-            <div className="text-4xl font-black text-accent mb-1">98%</div>
+            <div className="text-4xl font-black text-accent mb-1">
+              {recommendationRate}%
+            </div>
             <div className="text-xs font-bold uppercase tracking-widest text-base-content/50">
               Recommendation Rate
             </div>

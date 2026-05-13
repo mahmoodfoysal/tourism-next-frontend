@@ -43,6 +43,14 @@ interface PendingItem {
   createdAt?: string;
 }
 
+interface Coupon {
+  _id: string;
+  coupon_code: string;
+  per_dis_amt: string;
+  flag: number;
+  expiry_date?: string;
+}
+
 const ProfilePage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -54,6 +62,7 @@ const ProfilePage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [pendingItems, setPendingItems] = useState<PendingItem[]>([]);
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
 
   const [profileData, setProfileData] = useState<ProfileData>({
     full_name: user?.displayName || "",
@@ -98,13 +107,15 @@ const ProfilePage = () => {
 
       try {
         setLoading(true);
-        const [profileRes, pendingRes] = await Promise.all([
+        const [profileRes, pendingRes, couponRes] = await Promise.all([
           axiosSecure.get(`/api/tourism/get-user-list/${user.email}`),
           axiosSecure.get(`/api/tourism/get-booking-list/${user.email}`),
+          axiosSecure.get(`/api/tourism/get-coupon-list/${user.email}`),
         ]);
 
         const profile = profileRes.data?.list_data;
         const pending = pendingRes.data?.list_data;
+        const couponsData = couponRes.data?.list_data;
 
         if (profile && Array.isArray(profile) && profile.length > 0) {
           const userData = profile[0];
@@ -133,6 +144,10 @@ const ProfilePage = () => {
 
         if (pending) {
           setPendingItems(pending);
+        }
+
+        if (couponsData) {
+          setCoupons(couponsData);
         }
       } catch (error: unknown) {
         const err = error as AxiosError;
@@ -194,7 +209,10 @@ const ProfilePage = () => {
         await updatePassword(currentUser, newPassword);
       }
 
-      await axiosSecure.post("/api/tourism/insert-update-user-list", dataToSubmit);
+      await axiosSecure.post(
+        "/api/tourism/insert-update-user-list",
+        dataToSubmit,
+      );
 
       dispatch(
         setUser({
@@ -243,7 +261,12 @@ const ProfilePage = () => {
       icon: "🚚",
       color: "text-blue-500",
     },
-    { label: "COUPON", value: 3, icon: "✨", color: "text-yellow-500" },
+    {
+      label: "COUPON",
+      value: coupons.length,
+      icon: "✨",
+      color: "text-yellow-500",
+    },
     { label: "WISHLIST", value: 0, icon: "❤️", color: "text-red-500" },
   ];
 
@@ -510,24 +533,84 @@ const ProfilePage = () => {
               )}
 
               {activeTab === "coupon" && (
-                <div className="flex flex-col items-center justify-center text-center space-y-8 py-20 animate-in zoom-in-95 duration-700">
-                  <div className="w-32 h-32 bg-yellow-500/10 rounded-full flex items-center justify-center text-5xl">
-                    🎉
-                  </div>
+                <div className="space-y-12 animate-in zoom-in-95 duration-700">
                   <div className="space-y-3">
-                    <h3 className="text-3xl font-black uppercase italic">
-                      No Active Coupons
-                    </h3>
-                    <p className="text-sm font-medium text-white/20">
-                      Complete more voyages to unlock exclusive elite discounts.
+                    <h2 className="text-4xl font-black uppercase tracking-tight">
+                      Available{" "}
+                      <span className="text-primary italic">Coupons</span>
+                    </h2>
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">
+                      Your exclusive travel incentives and discounts
                     </p>
                   </div>
-                  <button
-                    onClick={() => router.push("/my-bookings")}
-                    className="btn btn-ghost border-white/10 h-14 px-10 rounded-2xl font-black uppercase tracking-widest text-[10px]"
-                  >
-                    View Booking History
-                  </button>
+
+                  {coupons.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {coupons.map((coupon) => (
+                        <div
+                          key={coupon._id}
+                          className="bg-[#0a0f1c]/50 border-2 border-dashed border-primary/20 rounded-[2.5rem] p-8 relative overflow-hidden group hover:border-primary transition-all duration-500"
+                        >
+                          <div className="absolute top-0 right-0 bg-primary text-[#0a0f1c] px-6 py-2 rounded-bl-3xl font-black text-[10px] uppercase tracking-widest">
+                            {coupon.flag === 0 ? "Active" : "Used"}
+                          </div>
+                          <div className="space-y-4">
+                            <div className="text-3xl font-black text-primary">
+                              ${coupon.per_dis_amt?.replace(".", "")} % OFF
+                            </div>
+                            <div className="bg-white/5 border border-white/10 p-4 rounded-2xl flex items-center justify-between">
+                              <span className="text-xl font-black tracking-[0.2em] font-mono">
+                                {coupon.coupon_code}
+                              </span>
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(
+                                    coupon.coupon_code,
+                                  );
+                                  showSuccess(
+                                    "Copied!",
+                                    "Coupon code copied to clipboard.",
+                                  );
+                                }}
+                                className="text-primary hover:scale-110 transition-transform"
+                              >
+                                📋
+                              </button>
+                            </div>
+                            {coupon.expiry_date && (
+                              <p className="text-[10px] font-black uppercase tracking-widest text-white/30">
+                                Expires:{" "}
+                                {new Date(
+                                  coupon.expiry_date,
+                                ).toLocaleDateString()}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-center space-y-8 py-10">
+                      <div className="w-32 h-32 bg-yellow-500/10 rounded-full flex items-center justify-center text-5xl">
+                        🎉
+                      </div>
+                      <div className="space-y-3">
+                        <h3 className="text-3xl font-black uppercase italic">
+                          No Active Coupons
+                        </h3>
+                        <p className="text-sm font-medium text-white/20">
+                          Complete more voyages to unlock exclusive elite
+                          discounts.
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => router.push("/my-bookings")}
+                        className="btn btn-ghost border-white/10 h-14 px-10 rounded-2xl font-black uppercase tracking-widest text-[10px]"
+                      >
+                        View Booking History
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

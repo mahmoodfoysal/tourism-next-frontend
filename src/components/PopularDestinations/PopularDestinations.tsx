@@ -28,21 +28,23 @@ interface Destination {
 const PopularDestinations = () => {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDestinations = async () => {
+      setLoading(true);
+      setError(null);
       try {
         const response = await axiosPublic.get("/api/tourism/get-popular-dest-list");
         const data = response.data?.list_data;
-        // Handle both direct array and nested data object
         const result = Array.isArray(data) ? data : data?.data || [];
-        // Shuffle and take 4 random items
         const shuffled = [...result]
           .sort(() => 0.5 - Math.random())
           .slice(0, 4);
         setDestinations(shuffled);
-      } catch (error) {
-        console.error("Error fetching destinations:", error);
+      } catch (err) {
+        console.error("Error fetching destinations:", err);
+        setError("We could not retrieve the tactical details for this voyage. Please check your connection and retry.");
       } finally {
         setLoading(false);
       }
@@ -77,7 +79,36 @@ const PopularDestinations = () => {
         </div>
 
         {/* Destinations Grid */}
-        {loading ? (
+        {error ? (
+          <div className="flex flex-col items-center justify-center py-20 bg-base-200/50 rounded-[3rem] border border-dashed border-base-content/20 text-center px-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-16 w-16 text-error mb-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+            <h3 className="text-xl font-black text-base-content mb-2">
+              Connection Interrupted
+            </h3>
+            <p className="text-base-content/60 max-w-md leading-relaxed">
+              {error}
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="btn btn-outline btn-primary mt-8 rounded-xl px-8 h-12 font-black uppercase tracking-widest text-[10px]"
+            >
+              Retry Connection
+            </button>
+          </div>
+        ) : loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[...Array(4)].map((_, i) => (
               <SkeletonCard key={i} />

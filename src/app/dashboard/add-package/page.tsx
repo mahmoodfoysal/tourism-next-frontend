@@ -139,7 +139,7 @@ const AddPackagePage = () => {
         price: pkg.price.toString(),
         originalPrice: pkg.originalPrice.toString(),
         features: pkg.features || [],
-        discount: pkg.discount.toString(),
+        discount: pkg?.discount?.toString(),
         status: pkg.status,
         category: pkg.category || "",
         tour_date: pkg.tour_date || "",

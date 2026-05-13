@@ -12,7 +12,7 @@ const FAQ = () => {
       id: 2,
       question: "What is your cancellation policy?",
       answer:
-        "We offer flexible cancellation policies. For most packages, you can cancel up to 14 days before departure for a full refund. Specific terms may vary based on the destination and seasonal demand.",
+        "We offer flexible cancellation policies. For most packages, you can cancel up to 72 hours before departure for a full refund. Specific terms may vary based on the destination and seasonal demand.",
     },
     {
       id: 3,
@@ -30,7 +30,7 @@ const FAQ = () => {
       id: 5,
       question: "Can I customize a travel package?",
       answer:
-        "We love creating unique experiences! You can work with our travel experts to customize any existing package or build a completely new itinerary from scratch based on your interests and budget.",
+        "We love creating unique experiences! You can work with our travel experts to customize any existing package or build a completely new itinerary from scratch based on your interests and budget. Please contact with us",
     },
   ];
 

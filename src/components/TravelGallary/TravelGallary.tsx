@@ -88,9 +88,9 @@ const TravelGallary = () => {
               unforgettable moments from our travelers.
             </p>
           </div>
-          <button className="btn btn-primary rounded-2xl px-8 h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px] hidden md:flex items-center">
+          {/* <button className="btn btn-primary rounded-2xl px-8 h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px] hidden md:flex items-center">
             View All Photos
-          </button>
+          </button> */}
         </div>
 
         {/* Mosaic Grid */}
@@ -247,37 +247,6 @@ const TravelGallary = () => {
             </div>
           </div>
         )}
-
-        {/* Instagram Style Footer */}
-        <div className="mt-16 flex flex-col md:flex-row items-center justify-center gap-8 border-t border-base-content/5 pt-16">
-          <div className="flex -space-x-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                className="w-12 h-12 rounded-full border-4 border-base-100 overflow-hidden shadow-lg relative"
-              >
-                <Image
-                  src={`https://i.pravatar.cc/100?img=${i + 10}`}
-                  alt="user"
-                  fill
-                  className="object-cover"
-                  sizes="48px"
-                />
-              </div>
-            ))}
-          </div>
-          <div className="text-center md:text-left">
-            <div className="text-lg font-black text-base-content">
-              Join 25,000+ happy travelers
-            </div>
-            <div className="text-sm text-base-content/60 font-medium">
-              Follow us on Instagram{" "}
-              <span className="text-primary font-bold cursor-pointer">
-                @Aura Trip
-              </span>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

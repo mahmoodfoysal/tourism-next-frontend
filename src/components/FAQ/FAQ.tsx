@@ -43,24 +43,24 @@ const FAQ = () => {
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-accent font-bold text-xs uppercase tracking-widest mb-4">
               Need Help?
             </div>
-            <h2 className="text-4xl md:text-5xl font-black text-base-content tracking-tight mb-6">
+            <h2 className="text-3xl md:text-4xl font-black text-base-content tracking-tight mb-6">
               Frequently Asked <br />
               <span className="text-primary">Questions</span>
             </h2>
-            <p className="text-lg text-base-content/60 leading-relaxed mb-10">
+            <p className="text-base text-base-content/60 leading-relaxed mb-10">
               Everything you need to know about our tours, bookings, and
               policies. Cant find the answer? Feel free to reach out.
             </p>
 
             <div className="p-8 rounded-3xl bg-base-200/50 border border-base-content/5">
-              <h4 className="text-xl font-black text-base-content mb-2">
+              <h4 className="text-lg font-black text-base-content mb-2">
                 Still have questions?
               </h4>
               <p className="text-sm text-base-content/50 mb-6">
                 Our support team is here to help you 24 hours a day, 7 days a
                 week.
               </p>
-              <button className="btn btn-primary rounded-2xl px-8 w-full shadow-lg shadow-primary/20">
+              <button className="btn btn-primary rounded-2xl px-8 w-full shadow-lg shadow-primary/20 text-xs uppercase font-black tracking-widest">
                 Contact Support
               </button>
             </div>
@@ -78,11 +78,11 @@ const FAQ = () => {
                   name="my-accordion-3"
                   defaultChecked={index === 0}
                 />
-                <div className="collapse-title text-xl font-black text-base-content px-8 py-6 group-hover:text-primary transition-colors">
+                <div className="collapse-title text-lg font-black text-base-content px-8 py-5 group-hover:text-primary transition-colors">
                   {faq.question}
                 </div>
                 <div className="collapse-content px-8 pb-6">
-                  <p className="text-base-content/60 leading-relaxed font-medium">
+                  <p className="text-sm text-base-content/60 leading-relaxed font-medium">
                     {faq.answer}
                   </p>
                 </div>

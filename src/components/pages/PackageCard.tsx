@@ -9,15 +9,16 @@ import { setBookingPackage } from "@/store/slices/bookingSlice";
  */
 interface PackageInfo {
   _id: string | number;
-  package_id: string | number;
+  package_id?: string | number;
   image: string;
   title: string;
   duration: string;
-  discount: string;
+  category: string;
+  discount: number | string;
   location: string;
   features: string[];
-  originalPrice: number | string;
-  price: number | string;
+  originalPrice: number;
+  price: number;
 }
 
 interface PackageCardProps {

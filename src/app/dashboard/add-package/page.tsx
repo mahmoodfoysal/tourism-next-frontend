@@ -26,7 +26,7 @@ interface TourPackage {
   features: string[];
   discount: number;
   status: number;
-  category?: string;
+  category: string;
   tour_date?: string;
   details?: {
     description: string;

@@ -14,13 +14,13 @@ interface TourPackage {
   image: string;
   title: string;
   duration: string;
-  discount: string;
+  discount: number | string;
   location: string;
   features: string[];
-  originalPrice: number | string;
-  price: number | string;
+  originalPrice: number;
+  price: number;
   rating?: number;
-  category?: string; // Added for filtering
+  category: string;
 }
 
 const PackagesPage = () => {

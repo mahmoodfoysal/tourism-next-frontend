@@ -12,11 +12,12 @@ interface TourPackage {
   image: string;
   title: string;
   duration: string;
-  discount: string;
+  category: string;
+  discount: number | string;
   location: string;
   features: string[];
-  originalPrice: number | string;
-  price: number | string;
+  originalPrice: number;
+  price: number;
 }
 
 const TourPackage = () => {

@@ -775,12 +775,11 @@ const AddPackagePage = () => {
                     Tour Date
                   </label>
                   <input
-                    type="text"
+                    type="date"
                     name="tour_date"
                     value={formData.tour_date}
                     onChange={handleInputChange}
                     className="w-full h-11 px-5 rounded-xl bg-base-200/50 border border-base-content/5 text-xs font-bold focus:outline-none focus:border-primary/30"
-                    placeholder="June 05, 2026"
                   />
                 </div>
               </div>

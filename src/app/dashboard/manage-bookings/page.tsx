@@ -16,6 +16,7 @@ import Invoice from "@/components/pages/Invoice";
 
 interface BookingItem {
   _id: string;
+  order_id: string;
   full_name: string;
   email: string;
   phone_no: string;

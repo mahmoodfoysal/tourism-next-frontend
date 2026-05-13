@@ -6,6 +6,9 @@ import Image from "next/image";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import DataVoid from "@/components/pages/DataVoid";
 import SkeletonDetails from "@/components/pages/SkeletonDetails";
+import { useDispatch } from "react-redux";
+import { setBookingPackage } from "@/store/slices/bookingSlice";
+import Link from "next/link";
 
 interface DestinationDetails {
   _id: string | number;
@@ -32,6 +35,7 @@ interface PageProps {
 }
 
 const DestinationDetailsPage = ({ params }: PageProps) => {
+  const dispatch = useDispatch();
   const resolvedParams = use(params);
   const { id } = resolvedParams;
 
@@ -43,7 +47,9 @@ const DestinationDetailsPage = ({ params }: PageProps) => {
     const fetchDetails = async () => {
       setLoading(true);
       try {
-        const response = await axiosPublic.get(`/api/tourism/get-popular-dest-list/${id}`);
+        const response = await axiosPublic.get(
+          `/api/tourism/get-popular-dest-list/${id}`,
+        );
         const data = response.data?.details_data;
         setDetails(data);
         if (data?.image) setActiveImage(data.image);
@@ -84,7 +90,7 @@ const DestinationDetailsPage = ({ params }: PageProps) => {
                     priority
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                  
+
                   {/* Overlay Info */}
                   <div className="absolute bottom-10 left-10 right-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div>
@@ -108,7 +114,9 @@ const DestinationDetailsPage = ({ params }: PageProps) => {
                       >
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
-                      <span className="text-lg font-black">{details.rating}</span>
+                      <span className="text-lg font-black">
+                        {details.rating}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -140,7 +148,8 @@ const DestinationDetailsPage = ({ params }: PageProps) => {
               <div className="space-y-8 px-4 md:px-0">
                 <div className="flex flex-col gap-4">
                   <h2 className="text-3xl font-black text-base-content tracking-tight">
-                    Explore <span className="text-primary">{details.location}</span>
+                    Explore{" "}
+                    <span className="text-primary">{details.location}</span>
                   </h2>
                 </div>
 
@@ -212,9 +221,25 @@ const DestinationDetailsPage = ({ params }: PageProps) => {
                     </div>
 
                     <div className="space-y-4">
-                      <button className="btn btn-primary w-full h-16 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all">
-                        Plan My Trip
-                      </button>
+                      <Link
+                        href={`/booking?packageId=${details._id || details.pop_id}`}
+                        onClick={() =>
+                          dispatch(
+                            setBookingPackage({
+                              _id: details._id || details.pop_id,
+                              title: details.name,
+                              price: details.price,
+                              image: details.image,
+                              duration: "4 Days / 3 Nights",
+                              category: details.badge || "Premium",
+                              features: details.nearbyAttractions || [],
+                            }),
+                          )
+                        }
+                        className="btn btn-primary w-full h-16 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all flex items-center justify-center"
+                      >
+                        Book This Trip
+                      </Link>
                     </div>
 
                     <div className="mt-8 pt-8 border-t border-base-content/5 space-y-6">

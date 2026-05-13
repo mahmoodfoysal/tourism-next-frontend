@@ -57,7 +57,9 @@ const PackageDetailsPage = ({ params }: PageProps) => {
     const fetchDetails = async () => {
       setLoading(true);
       try {
-        const response = await axiosPublic.get(`/api/tourism/get-package-list/${id}`);
+        const response = await axiosPublic.get(
+          `/api/tourism/get-package-list/${id}`,
+        );
         const data = response.data?.details_data;
         setDetails(data);
         if (data?.image) setActiveImage(data.image);
@@ -385,16 +387,13 @@ const PackageDetailsPage = ({ params }: PageProps) => {
                     </div>
 
                     <div className="space-y-4">
-                      <Link 
+                      <Link
                         href={`/booking?packageId=${details._id || details.package_id}`}
                         onClick={() => dispatch(setBookingPackage(details))}
                         className="btn btn-primary w-full h-16 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all flex items-center justify-center"
                       >
                         Book This Trip
                       </Link>
-                      <button className="btn btn-ghost w-full h-16 rounded-2xl font-black uppercase tracking-widest border border-base-content/10 hover:bg-base-200 transition-all">
-                        Inquire Now
-                      </button>
                     </div>
 
                     <div className="mt-8 pt-8 border-t border-base-content/5 space-y-6">

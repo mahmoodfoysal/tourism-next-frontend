@@ -5,6 +5,7 @@ import NavBar from "@/components/shared/NavBar/NavBar";
 import Footer from "@/components/shared/Footer/Footer";
 import ReduxProvider from "@/store/ReduxProvider";
 import NextTopLoader from "nextjs-toploader";
+import ScrollToTop from "@/components/shared/ScrollToTop/ScrollToTop";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,7 @@ export default function RootLayout({
           <NavBar />
           {children}
           <Footer />
+          <ScrollToTop />
         </ReduxProvider>
         </body>
     </html>

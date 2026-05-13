@@ -48,6 +48,7 @@ interface BookingItem {
 type FilterStatus = "all" | "active" | "completed" | "cancelled";
 
 import PrivateRoutes from "@/routes/PrivateRoutes";
+import Invoice from "@/components/pages/Invoice";
 
 const BookingHistoryPage = () => {
   const router = useRouter();
@@ -67,7 +68,9 @@ const BookingHistoryPage = () => {
 
       try {
         setLoading(true);
-        const response = await axiosSecure.get(`/api/tourism/get-booking-list/${user.email}`);
+        const response = await axiosSecure.get(
+          `/api/tourism/get-booking-list/${user.email}`,
+        );
         const data = response.data?.list_data;
         if (Array.isArray(data)) {
           const sorted = [...data].sort(
@@ -103,16 +106,30 @@ const BookingHistoryPage = () => {
 
   const getStatusBadge = (status: string) => {
     switch (status.toUpperCase()) {
-      case "P":
-        return <span className="px-3 py-1 bg-warning/20 text-warning text-[8px] font-black uppercase tracking-[0.2em] rounded-md border border-warning/30">Pending Archive</span>;
+      case "B":
+        return (
+          <span className="px-3 py-1 bg-success/20 text-success text-[8px] font-black uppercase tracking-[0.2em] rounded-md border border-success/30">
+            Booking Confirm
+          </span>
+        );
       case "C":
-        return <span className="px-3 py-1 bg-success/20 text-success text-[8px] font-black uppercase tracking-[0.2em] rounded-md border border-success/30">Confirmed</span>;
-      case "CO":
-        return <span className="px-3 py-1 bg-info/20 text-info text-[8px] font-black uppercase tracking-[0.2em] rounded-md border border-info/30">Completed</span>;
-      case "X":
-        return <span className="px-3 py-1 bg-error/20 text-error text-[8px] font-black uppercase tracking-[0.2em] rounded-md border border-error/30">Cancelled</span>;
+        return (
+          <span className="px-3 py-1 bg-info/20 text-info text-[8px] font-black uppercase tracking-[0.2em] rounded-md border border-info/30">
+            Completed
+          </span>
+        );
+      case "R":
+        return (
+          <span className="px-3 py-1 bg-error/20 text-error text-[8px] font-black uppercase tracking-[0.2em] rounded-md border border-error/30">
+            Cancelled
+          </span>
+        );
       default:
-        return <span className="px-3 py-1 bg-base-content/10 text-base-content/40 text-[8px] font-black uppercase tracking-[0.2em] rounded-md">Processing</span>;
+        return (
+          <span className="px-3 py-1 bg-base-content/10 text-base-content/40 text-[8px] font-black uppercase tracking-[0.2em] rounded-md">
+            Processing
+          </span>
+        );
     }
   };
 
@@ -120,16 +137,20 @@ const BookingHistoryPage = () => {
     <PrivateRoutes>
       <main className="min-h-screen bg-base-100 dark:bg-base-300/50 print:bg-white print:min-h-0">
         {/* GLOBAL PRINT OVERRIDE */}
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
           @media print {
-            body, html { background: white !important; margin: 0 !important; padding: 0 !important; height: auto !important; }
+            body, html { background: white !important; margin: 0 !important; padding: 0 !important; height: auto !important; overflow: hidden !important; }
             main { padding: 0 !important; margin: 0 !important; min-height: 0 !important; }
             main > section, main > div.print\\:hidden, header, footer, .navbar { display: none !important; }
             .manifest-modal-wrapper { display: none !important; }
             .print-only-manifest { display: block !important; visibility: visible !important; padding: 0 !important; margin: 0 !important; width: 100% !important; }
             @page { margin: 0.5cm; size: A4; }
           }
-        `}} />
+        `,
+          }}
+        />
 
         <div className="print:hidden">
           <CommonHeader
@@ -160,7 +181,9 @@ const BookingHistoryPage = () => {
 
             {filteredBookings.length === 0 ? (
               <div className="bg-base-100 rounded-3xl p-24 text-center border-2 border-dashed border-base-content/5 animate-in fade-in duration-700">
-                <h2 className="text-3xl font-black text-base-content/20 uppercase tracking-widest">No Active Passes Found</h2>
+                <h2 className="text-3xl font-black text-base-content/20 uppercase tracking-widest">
+                  No Active Passes Found
+                </h2>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -177,14 +200,18 @@ const BookingHistoryPage = () => {
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[3s]"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                      
+
                       <div className="absolute top-6 left-6">
                         {getStatusBadge(booking.order_status)}
                       </div>
 
                       <div className="absolute bottom-6 left-6 right-6">
-                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-1">Boarding Pass</p>
-                        <h3 className="text-xl font-black text-white tracking-tight uppercase leading-none">{booking.package_info.title}</h3>
+                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-1">
+                          Boarding Pass
+                        </p>
+                        <h3 className="text-xl font-black text-white tracking-tight uppercase leading-none">
+                          {booking.package_info.title}
+                        </h3>
                       </div>
                     </div>
 
@@ -198,14 +225,26 @@ const BookingHistoryPage = () => {
                       <div className="space-y-6">
                         <div className="grid grid-cols-2 gap-6">
                           <div className="space-y-1">
-                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">Departs</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">
+                              Departs
+                            </p>
                             <p className="text-sm font-black text-base-content">
-                              {new Date(booking.joining_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                              {new Date(
+                                booking.joining_date,
+                              ).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              })}
                             </p>
                           </div>
                           <div className="space-y-1 text-right">
-                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">Class</p>
-                            <p className="text-sm font-black text-base-content uppercase">Elite</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">
+                              Class
+                            </p>
+                            <p className="text-sm font-black text-base-content uppercase">
+                              Elite
+                            </p>
                           </div>
                         </div>
 
@@ -213,14 +252,27 @@ const BookingHistoryPage = () => {
 
                         <div className="flex justify-between items-end">
                           <div className="space-y-1">
-                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">Total Value</p>
-                            <p className="text-3xl font-black text-primary tracking-tighter">${booking.grand_total.toFixed(2)}</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">
+                              Total Value
+                            </p>
+                            <p className="text-3xl font-black text-primary tracking-tighter">
+                              ${booking.grand_total.toFixed(2)}
+                            </p>
                           </div>
                           <div className="bg-base-200 p-2 rounded-lg">
-                             <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-base-content/20" viewBox="0 0 20 20" fill="currentColor">
-                               <path fillRule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM13 3a1 1 0 00-1 1v3a1 1 0 001 1h3a1 1 0 001-1V4a1 1 0 00-1-1h-3zm1 2v1h1V5h-1z" clipRule="evenodd" />
-                               <path d="M11 4a1 1 0 10-2 0v1a1 1 0 002 0V4zM10 7a1 1 0 011 1v1h2a1 1 0 110 2h-3a1 1 0 01-1-1V8a1 1 0 011-1zM16 9a1 1 0 100 2 1 1 0 000-2zM9 13a1 1 0 011-1h1a1 1 0 110 2H10a1 1 0 01-1-1zM7 11a1 1 0 100-2H6a1 1 0 100 2h1zM11 13a1 1 0 100-2H9v1a1 1 0 001 1h1zM14 14a1 1 0 100-2h-1v1a1 1 0 001 1h1zM16 15a1 1 0 100 2h1a1 1 0 100-2h-1zM12 15a1 1 0 110 2h-1v-1a1 1 0 011-1zM10 16a1 1 0 100 2h1a1 1 0 100-2h-1zM8 17a1 1 0 100-2H6a1 1 0 100 2h2zM14 17a1 1 0 100-2h-2v1a1 1 0 001 1h1z" />
-                             </svg>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-8 w-8 text-base-content/20"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM13 3a1 1 0 00-1 1v3a1 1 0 001 1h3a1 1 0 001-1V4a1 1 0 00-1-1h-3zm1 2v1h1V5h-1z"
+                                clipRule="evenodd"
+                              />
+                              <path d="M11 4a1 1 0 10-2 0v1a1 1 0 002 0V4zM10 7a1 1 0 011 1v1h2a1 1 0 110 2h-3a1 1 0 01-1-1V8a1 1 0 011-1zM16 9a1 1 0 100 2 1 1 0 000-2zM9 13a1 1 0 011-1h1a1 1 0 110 2H10a1 1 0 01-1-1zM7 11a1 1 0 100-2H6a1 1 0 100 2h1zM11 13a1 1 0 100-2H9v1a1 1 0 001 1h1zM14 14a1 1 0 100-2h-1v1a1 1 0 001 1h1zM16 15a1 1 0 100 2h1a1 1 0 100-2h-1zM12 15a1 1 0 110 2h-1v-1a1 1 0 011-1zM10 16a1 1 0 100 2h1a1 1 0 100-2h-1zM8 17a1 1 0 100-2H6a1 1 0 100 2h2zM14 17a1 1 0 100-2h-2v1a1 1 0 001 1h1z" />
+                            </svg>
                           </div>
                         </div>
                       </div>
@@ -276,31 +328,45 @@ const BookingHistoryPage = () => {
               className="absolute inset-0 bg-base-300/90 backdrop-blur-2xl"
               onClick={() => setIsModalOpen(false)}
             ></div>
-            
+
             <div className="bg-base-100 w-full max-w-4xl rounded-none sm:rounded-3xl shadow-2xl border-0 sm:border border-base-content/10 relative overflow-y-auto max-h-full sm:max-h-[90vh] animate-in zoom-in-95 duration-500">
               {/* Header Stripe */}
               <div className="h-6 bg-primary w-full"></div>
-              
+
               <div className="p-8 sm:p-20">
                 {/* Top Section */}
                 <div className="flex flex-col sm:flex-row justify-between items-start gap-12 mb-16 border-b border-base-content/5 pb-16">
                   <div className="space-y-4">
                     <div className="w-20 h-2 bg-primary"></div>
                     <h2 className="text-5xl font-black text-base-content tracking-tighter uppercase leading-none">
-                      Official Voyage<br/>
+                      Official Voyage
+                      <br />
                       <span className="text-primary italic">Manifest</span>
                     </h2>
                     <div className="flex items-center gap-4 pt-2">
-                       <span className="text-[10px] font-black uppercase tracking-[0.4em] text-base-content/40">Secure Travel Document</span>
+                      <span className="text-[10px] font-black uppercase tracking-[0.4em] text-base-content/40">
+                        Secure Travel Document
+                      </span>
                     </div>
                   </div>
-                  
+
                   <button
                     onClick={() => setIsModalOpen(false)}
                     className="w-14 h-14 rounded-2xl bg-base-200 flex items-center justify-center hover:bg-error/10 hover:text-error transition-all shadow-sm"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="3"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -310,32 +376,52 @@ const BookingHistoryPage = () => {
                   <div className="space-y-12">
                     <section className="space-y-6">
                       <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary flex items-center gap-3">
-                         <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                         Traveler Identity
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                        Traveler Identity
                       </h3>
                       <div className="grid grid-cols-1 gap-6 p-10 bg-base-100/50 dark:bg-base-200/50 rounded-2xl border border-base-content/5">
                         <div className="grid grid-cols-2 gap-8">
                           <div className="space-y-1">
-                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">Lead Voyager</p>
-                            <p className="text-sm font-black text-base-content uppercase">{selectedBooking.full_name}</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">
+                              Lead Voyager
+                            </p>
+                            <p className="text-sm font-black text-base-content uppercase">
+                              {selectedBooking.full_name}
+                            </p>
                           </div>
                           <div className="space-y-1 text-right">
-                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">Passport Serial</p>
-                            <p className="text-sm font-black text-base-content">{selectedBooking.passport_no}</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">
+                              Passport Serial
+                            </p>
+                            <p className="text-sm font-black text-base-content">
+                              {selectedBooking.passport_no}
+                            </p>
                           </div>
                         </div>
                         <div className="space-y-1">
-                          <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">Digital Signature</p>
-                          <p className="text-sm font-bold text-base-content">{selectedBooking.email}</p>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">
+                            Digital Signature
+                          </p>
+                          <p className="text-sm font-bold text-base-content">
+                            {selectedBooking.email}
+                          </p>
                         </div>
                         <div className="grid grid-cols-2 gap-8">
                           <div className="space-y-1">
-                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">Primary Contact</p>
-                            <p className="text-sm font-bold text-base-content">{selectedBooking.phone_no}</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">
+                              Primary Contact
+                            </p>
+                            <p className="text-sm font-bold text-base-content">
+                              {selectedBooking.phone_no}
+                            </p>
                           </div>
                           <div className="space-y-1 text-right">
-                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">Emergency Uplink</p>
-                            <p className="text-sm font-bold text-base-content">{selectedBooking.emergency_no}</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">
+                              Emergency Uplink
+                            </p>
+                            <p className="text-sm font-bold text-base-content">
+                              {selectedBooking.emergency_no}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -344,34 +430,52 @@ const BookingHistoryPage = () => {
 
                   {/* Right Column: Financial & Verification */}
                   <div className="space-y-12">
-                     <section className="space-y-6">
+                    <section className="space-y-6">
                       <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary flex items-center gap-3">
-                         <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                         Security Verification
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                        Security Verification
                       </h3>
                       <div className="grid grid-cols-2 gap-8 p-10 bg-base-100/50 dark:bg-base-200/50 rounded-2xl border border-base-content/5">
                         <div className="space-y-1">
-                          <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">Archival Ref</p>
-                          <p className="text-sm font-black text-base-content tracking-widest">VOY-{new Date(selectedBooking.createdAt).getTime().toString().slice(-6)}</p>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">
+                            Archival Ref
+                          </p>
+                          <p className="text-sm font-black text-base-content tracking-widest">
+                            VOY-
+                            {new Date(selectedBooking.createdAt)
+                              .getTime()
+                              .toString()
+                              .slice(-6)}
+                          </p>
                         </div>
                         <div className="space-y-1 text-right">
-                          <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">Deployment</p>
-                          <p className="text-sm font-black text-base-content">{new Date(selectedBooking.joining_date).toLocaleDateString()}</p>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">
+                            Deployment
+                          </p>
+                          <p className="text-sm font-black text-base-content">
+                            {new Date(
+                              selectedBooking.joining_date,
+                            ).toLocaleDateString()}
+                          </p>
                         </div>
                       </div>
                     </section>
 
                     <section className="space-y-6">
                       <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary flex items-center gap-3">
-                         <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                         Strategic Settlement
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                        Strategic Settlement
                       </h3>
                       <div className="p-10 border border-base-content/5 rounded-2xl bg-base-100/50 dark:bg-base-200/20">
                         <div className="flex justify-between items-end">
-                           <div className="space-y-1">
-                              <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">Total Settlement</p>
-                              <p className="text-4xl font-black text-primary tracking-tighter leading-none">${selectedBooking.grand_total.toFixed(2)}</p>
-                           </div>
+                          <div className="space-y-1">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30">
+                              Total Settlement
+                            </p>
+                            <p className="text-4xl font-black text-primary tracking-tighter leading-none">
+                              ${selectedBooking.grand_total.toFixed(2)}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </section>
@@ -393,126 +497,7 @@ const BookingHistoryPage = () => {
         )}
 
         {/* PRINT-ONLY COMPACT MANIFEST (Optimized for One A4 Page) */}
-        {selectedBooking && (
-          <div className="print-only-manifest hidden p-10 font-sans text-black bg-white min-h-screen">
-            <div className="border-4 border-black p-8 relative min-h-[25cm]">
-              {/* Header */}
-              <div className="flex justify-between items-start border-b-4 border-black pb-8 mb-10">
-                <div>
-                  <h1 className="text-4xl font-black uppercase tracking-tighter leading-none">AuraTrip<br/><span className="text-2xl font-bold">Executive Travel</span></h1>
-                  <p className="text-[10px] font-bold uppercase tracking-widest mt-2 text-gray-500">Official Strategic Document</p>
-                </div>
-                <div className="text-right">
-                  <h2 className="text-2xl font-black uppercase">Voyage Manifest</h2>
-                  <p className="text-sm font-bold tracking-widest mt-1">ARCHIVAL REF: VOY-{new Date(selectedBooking.createdAt).getTime().toString().slice(-6)}</p>
-                  <div className="mt-4 p-2 bg-black text-white text-[10px] font-black uppercase tracking-widest">
-                    Status: {selectedBooking.order_status === "C" ? "Confirmed" : "Authorized"}
-                  </div>
-                </div>
-              </div>
-
-              {/* Information Grid */}
-              <div className="grid grid-cols-2 gap-10 mb-12">
-                <div className="space-y-8">
-                  <section>
-                    <h3 className="text-xs font-black uppercase border-b-2 border-black pb-1 mb-4">Traveler Identity</h3>
-                    <div className="space-y-4">
-                      <div>
-                        <p className="text-[8px] font-bold uppercase text-gray-400">Lead Voyager</p>
-                        <p className="text-sm font-black uppercase">{selectedBooking.full_name}</p>
-                      </div>
-                      <div>
-                        <p className="text-[8px] font-bold uppercase text-gray-400">Passport Number</p>
-                        <p className="text-sm font-bold">{selectedBooking.passport_no}</p>
-                      </div>
-                      <div>
-                        <p className="text-[8px] font-bold uppercase text-gray-400">Digital Signature / Email</p>
-                        <p className="text-sm font-bold">{selectedBooking.email}</p>
-                      </div>
-                      <div>
-                        <p className="text-[8px] font-bold uppercase text-gray-400">Primary Contact</p>
-                        <p className="text-sm font-bold">{selectedBooking.phone_no}</p>
-                      </div>
-                    </div>
-                  </section>
-
-                  <section>
-                    <h3 className="text-xs font-black uppercase border-b-2 border-black pb-1 mb-4">Registered Residency</h3>
-                    <p className="text-xs font-bold leading-relaxed">{selectedBooking.full_address}, {selectedBooking.country}</p>
-                  </section>
-                </div>
-
-                <div className="space-y-8">
-                  <section>
-                    <h3 className="text-xs font-black uppercase border-b-2 border-black pb-1 mb-4">Expedition Specs</h3>
-                    <div className="space-y-4">
-                      <div>
-                        <p className="text-[8px] font-bold uppercase text-gray-400">Deployment Date</p>
-                        <p className="text-sm font-black">{new Date(selectedBooking.joining_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-                      </div>
-                      <div>
-                        <p className="text-[8px] font-bold uppercase text-gray-400">Tour Package</p>
-                        <p className="text-sm font-black uppercase">{selectedBooking.package_info.title}</p>
-                      </div>
-                      <div>
-                        <p className="text-[8px] font-bold uppercase text-gray-400">Group Size</p>
-                        <p className="text-sm font-black">{selectedBooking.person} Voyagers</p>
-                      </div>
-                    </div>
-                  </section>
-
-                  <section>
-                    <h3 className="text-xs font-black uppercase border-b-2 border-black pb-1 mb-4">Financial Summary</h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-[10px] font-bold">
-                        <span>Base Value</span>
-                        <span>${selectedBooking.sub_total.toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between text-[10px] font-bold">
-                        <span>Strategic Tax (10%)</span>
-                        <span>${selectedBooking.tax_total.toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between text-[10px] font-bold">
-                        <span>Service Premium</span>
-                        <span>${selectedBooking.service_charge.toFixed(2)}</span>
-                      </div>
-                      <div className="border-t-2 border-black pt-2 mt-2 flex justify-between items-baseline">
-                        <span className="text-xs font-black uppercase">Grand Total</span>
-                        <span className="text-2xl font-black tracking-tighter">${selectedBooking.grand_total.toFixed(2)}</span>
-                      </div>
-                    </div>
-                  </section>
-                </div>
-              </div>
-
-              {/* Verification Section */}
-              <div className="mt-auto pt-10 border-t-4 border-black grid grid-cols-3 gap-8 items-end">
-                <div>
-                  <p className="text-[8px] font-bold uppercase text-gray-400 mb-6">Authorized Signature</p>
-                  <div className="border-b border-black w-full h-8"></div>
-                  <p className="text-[8px] font-black uppercase mt-2">AuraTrip Executive Concierge</p>
-                </div>
-                <div className="flex justify-center">
-                   <div className="w-24 h-24 border-2 border-black flex items-center justify-center p-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-black" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM13 3a1 1 0 00-1 1v3a1 1 0 001 1h3a1 1 0 001-1V4a1 1 0 00-1-1h-3zm1 2v1h1V5h-1z" clipRule="evenodd" />
-                        <path d="M11 4a1 1 0 10-2 0v1a1 1 0 002 0V4zM10 7a1 1 0 011 1v1h2a1 1 0 110 2h-3a1 1 0 01-1-1V8a1 1 0 011-1zM16 9a1 1 0 100 2 1 1 0 000-2zM9 13a1 1 0 011-1h1a1 1 0 110 2H10a1 1 0 01-1-1zM7 11a1 1 0 100-2H6a1 1 0 100 2h1zM11 13a1 1 0 100-2H9v1a1 1 0 001 1h1zM14 14a1 1 0 100-2h-1v1a1 1 0 001 1h1zM16 15a1 1 0 100 2h1a1 1 0 100-2h-1zM12 15a1 1 0 110 2h-1v-1a1 1 0 011-1zM10 16a1 1 0 100 2h1a1 1 0 100-2h-1zM8 17a1 1 0 100-2H6a1 1 0 100 2h2zM14 17a1 1 0 100-2h-2v1a1 1 0 001 1h1z" />
-                      </svg>
-                   </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-[8px] font-bold uppercase text-gray-400">Issue Date & Archival Code</p>
-                  <p className="text-[10px] font-black">{new Date().toLocaleDateString()} / {new Date(selectedBooking.createdAt).getTime().toString().slice(-6).toUpperCase()}</p>
-                </div>
-              </div>
-
-              {/* Subtle Disclaimer Footer */}
-              <div className="absolute bottom-4 left-8 right-8 text-center">
-                 <p className="text-[7px] font-bold uppercase tracking-[0.3em] text-gray-300">This manifest is a legal proof of reservation. All voyages are subject to AuraTrip Executive Terms & Conditions. Secure Archive ID: {selectedBooking._id}</p>
-              </div>
-            </div>
-          </div>
-        )}
+        {selectedBooking && <Invoice selectedBooking={selectedBooking} />}
       </main>
     </PrivateRoutes>
   );

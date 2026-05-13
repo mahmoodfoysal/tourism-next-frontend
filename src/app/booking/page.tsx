@@ -94,7 +94,9 @@ const BookingPage = () => {
     const fetchData = async () => {
       try {
         if (packageId) {
-          const response = await axiosPublic.get(`/api/tourism/get-package-list/${packageId}`);
+          const response = await axiosPublic.get(
+            `/api/tourism/get-package-list/${packageId}`,
+          );
           const data = response.data?.details_data;
           if (data) {
             setSelectedPackage(data);
@@ -102,7 +104,9 @@ const BookingPage = () => {
         } else {
           // Fallback: If no ID, we might still want to fetch the list to get a default
           // but since the user specifically asked to use the detail endpoint:
-          const response = await axiosPublic.get("/api/tourism/get-package-list");
+          const response = await axiosPublic.get(
+            "/api/tourism/get-package-list",
+          );
           const data = response.data?.list_data;
           const result = Array.isArray(data) ? data : data?.data || [];
           if (result.length > 0) setSelectedPackage(result[0]);
@@ -209,7 +213,7 @@ const BookingPage = () => {
         tax_total: Number((totalPrice * 0.1).toFixed(2)),
         service_charge: 25,
         grand_total: Number((totalPrice * 1.1 + 25).toFixed(2)),
-        order_status: "P",
+        order_status: "BP",
         package_info: {
           package_id: selectedPackage.id || selectedPackage._id,
           price: selectedPackage.price,
@@ -221,7 +225,10 @@ const BookingPage = () => {
         },
       };
 
-      const response = await axiosSecure.post("/api/tourism/insert-update-order-list", orderData);
+      const response = await axiosSecure.post(
+        "/api/tourism/insert-update-order-list",
+        orderData,
+      );
       const result = response.data;
 
       if (result) {

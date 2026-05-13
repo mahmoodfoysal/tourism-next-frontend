@@ -1,8 +1,14 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const Footer = () => {
+    const pathname = usePathname();
     const currentYear = new Date().getFullYear();
+
+    if (pathname?.startsWith("/dashboard")) return null;
 
     const footerLinks = {
         services: [
@@ -26,7 +32,7 @@ const Footer = () => {
     };
 
     return (
-        <footer className="bg-base-200 text-base-content/70 border-t border-base-content/5">
+        <footer className="bg-base-200 text-base-content/70 border-t border-base-content/5 print:hidden">
 
             {/* Main Footer Links */}
             <div className="section-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 py-16">

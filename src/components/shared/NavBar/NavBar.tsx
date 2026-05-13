@@ -105,10 +105,12 @@ const NavBar = () => {
     filteredNavLinks.push({ name: "Dashboard", href: "/dashboard" });
   }
 
+  if (pathname?.startsWith("/dashboard")) return null;
+
   return (
     <>
       <header
-        className={`sticky top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`sticky top-0 left-0 right-0 z-50 transition-all duration-500 print:hidden ${
           isScrolled
             ? "bg-base-100/90 backdrop-blur-2xl border-b border-base-content/10 shadow-lg"
             : "bg-transparent border-b border-transparent"

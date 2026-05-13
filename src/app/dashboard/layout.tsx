@@ -2,37 +2,47 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import PrivateRoutes from "@/routes/PrivateRoutes";
 import AdminRoute from "@/routes/AdminRoute";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/store";
+import { logoutUser, setUser } from "@/store/slices/authSlice";
+import { useRouter, usePathname } from "next/navigation";
+import {
+  showSuccess,
+  showError,
+  showProcessing,
+  closeAlert,
+} from "@/components/pages/Alert";
 import Image from "next/image";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
   const { isAdmin } = useSelector((state: RootState) => state.admin);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const handleLogout = async () => {
+    showProcessing("Signing Out", "Ending your administrative session...");
+    const result = await dispatch(logoutUser());
+    closeAlert();
+    if (logoutUser.fulfilled.match(result)) {
+      dispatch(setUser(null));
+      showSuccess("Logged Out", "You have been signed out successfully.");
+      router.push("/");
+    } else {
+      showError("Logout Failed", "Something went wrong. Please try again.");
+    }
+  };
 
   const menuItems = [
     {
       name: "Overview",
       path: "/dashboard",
       icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
         </svg>
       ),
     },
@@ -40,19 +50,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       name: "Make Admin",
       path: "/dashboard/make-admin",
       icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
         </svg>
       ),
     },
@@ -60,19 +59,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       name: "Add Package",
       path: "/dashboard/add-package",
       icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
     },
@@ -80,19 +68,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       name: "Add Destinations",
       path: "/dashboard/add-destinations",
       icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
       ),
     },
@@ -100,19 +78,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       name: "Add Blog",
       path: "/dashboard/add-blog",
       icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v10a2 2 0 01-2 2z" />
         </svg>
       ),
     },
@@ -120,19 +87,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       name: "Manage Coupons",
       path: "/dashboard/manage-coupon",
       icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
         </svg>
       ),
     },
@@ -140,59 +96,26 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       name: "Manage Reviews",
       path: "/dashboard/manage-review",
       icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
         </svg>
       ),
     },
     {
-      name: "My Bookings",
-      path: "/dashboard/my-bookings",
+      name: "Manage Galary",
+      path: "/dashboard/manage-galary",
       icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2-2v12a2 2 0 002 2z" />
         </svg>
       ),
     },
     {
-      name: "Profile Settings",
-      path: "/dashboard/profile",
+      name: "Manage Bookings",
+      path: "/dashboard/manage-bookings",
       icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
         </svg>
       ),
     },
@@ -200,12 +123,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AdminRoute>
-      <div className="flex min-h-screen bg-base-100 dark:bg-[#0a0f1c] transition-colors duration-500">
+      <div className="flex h-screen overflow-hidden bg-base-100 dark:bg-[#0a0f1c] transition-colors duration-500">
         {/* Sidebar */}
         <aside
           className={`${
             isSidebarOpen ? "w-80" : "w-24"
-          } bg-base-200/50 dark:bg-base-300/30 backdrop-blur-xl border-r border-base-content/5 transition-all duration-500 ease-in-out relative flex flex-col z-50`}
+          } bg-base-200/50 dark:bg-base-300/30 backdrop-blur-xl border-r border-base-content/5 transition-all duration-500 ease-in-out relative flex flex-col z-50 print:hidden`}
         >
           {/* Sidebar Header */}
           <div className="p-8 flex items-center justify-between">
@@ -256,7 +179,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-1 px-4 space-y-2">
+          <nav className="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar">
             {menuItems
               .filter((item) => {
                 if (item.name === "Admin" && !isAdmin) return false;
@@ -280,7 +203,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                       {item.icon}
                     </div>
                     {isSidebarOpen && (
-                      <span className="text-sm font-black uppercase tracking-widest leading-none">
+                      <span className="text-[10px] font-black uppercase tracking-widest leading-none">
                         {item.name}
                       </span>
                     )}
@@ -288,6 +211,62 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 );
               })}
           </nav>
+
+          {/* Bottom Actions */}
+          <div className="p-4 mt-auto border-t border-base-content/5 space-y-2">
+            <Link
+              href="/"
+              className={`flex items-center gap-4 px-4 h-11 rounded-xl text-base-content/50 hover:bg-primary/5 hover:text-primary transition-all duration-300 ${!isSidebarOpen && "justify-center px-0"}`}
+            >
+              <div className="shrink-0 transition-transform group-hover:scale-110">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                  />
+                </svg>
+              </div>
+              {isSidebarOpen && (
+                <span className="text-[10px] font-black uppercase tracking-widest">
+                  Back to Home
+                </span>
+              )}
+            </Link>
+            <button
+              onClick={handleLogout}
+              className={`flex items-center gap-4 px-4 h-11 rounded-xl text-error/60 hover:bg-error/5 hover:text-error transition-all duration-300 w-full ${!isSidebarOpen && "justify-center px-0"}`}
+            >
+              <div className="shrink-0 transition-transform group-hover:scale-110">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+              </div>
+              {isSidebarOpen && (
+                <span className="text-[10px] font-black uppercase tracking-widest">
+                  Logout System
+                </span>
+              )}
+            </button>
+          </div>
 
           {/* Sidebar Toggle Button */}
           <button
@@ -314,7 +293,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         {/* Main Content Area (Outlet) */}
         <main className="flex-1 flex flex-col min-w-0 bg-base-100 dark:bg-[#0a0f1c]">
           {/* Dashboard Header */}
-          <header className="h-24 px-8 flex items-center justify-between border-b border-base-content/5 sticky top-0 bg-base-100/80 dark:bg-[#0a0f1c]/80 backdrop-blur-xl z-40">
+          <header className="h-24 px-8 flex items-center justify-between border-b border-base-content/5 sticky top-0 bg-base-100/80 dark:bg-[#0a0f1c]/80 backdrop-blur-xl z-40 print:hidden">
             <div>
               <h2 className="text-2xl font-black text-base-content tracking-tight uppercase">
                 {menuItems.find((item) => item.path === pathname)?.name ||

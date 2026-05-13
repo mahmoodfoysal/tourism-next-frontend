@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import tourismApi from "@/api/tourismApi";
+import { axiosPublic } from "@/hooks/useAxiosPublic";
 import PopularCard from "@/components/pages/PopularCard";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import DataVoid from "@/components/pages/DataVoid";
@@ -53,7 +53,8 @@ const DestinationsPage = () => {
       console.log("🚀 DestinationsPage: Initiating API call...");
       setLoading(true);
       try {
-        const data = await tourismApi.getPopularDestinations();
+        const response = await axiosPublic.get("/api/tourism/get-popular-dest-list");
+        const data = response.data?.list_data;
         console.log(
           "✅ DestinationsPage: API call successful, data received:",
           data,

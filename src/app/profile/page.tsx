@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
 import { setUser } from "@/store/slices/authSlice";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
-import tourismApi from "@/api/tourismApi";
+import { axiosPublic } from "@/hooks/useAxiosPublic";
 import {
   showSuccess,
   showError,
@@ -65,6 +66,18 @@ const ProfilePage = () => {
     user_info: user?.email || "",
   });
 
+  const [profileImg, setProfileImg] = useState<string>(
+    profileData.photo_url || "https://i.ibb.co/5GzXkwq/user.png",
+  );
+
+  useEffect(() => {
+    setTimeout(() => {
+      setProfileImg(
+        profileData.photo_url || "https://i.ibb.co/5GzXkwq/user.png",
+      );
+    }, 0);
+  }, [profileData.photo_url]);
+
   useEffect(() => {
     if (user) {
       setTimeout(() => {
@@ -85,10 +98,13 @@ const ProfilePage = () => {
 
       try {
         setLoading(true);
-        const [profile, pending] = await Promise.all([
-          tourismApi.getUserProfile(user.email, axiosSecure),
-          tourismApi.getBookingList(user.email, axiosSecure),
+        const [profileRes, pendingRes] = await Promise.all([
+          axiosSecure.get(`/api/tourism/get-user-list/${user.email}`),
+          axiosSecure.get(`/api/tourism/get-booking-list/${user.email}`),
         ]);
+
+        const profile = profileRes.data?.list_data;
+        const pending = pendingRes.data?.list_data;
 
         if (profile && Array.isArray(profile) && profile.length > 0) {
           const userData = profile[0];
@@ -178,7 +194,7 @@ const ProfilePage = () => {
         await updatePassword(currentUser, newPassword);
       }
 
-      await tourismApi.updateUserProfile(dataToSubmit, axiosSecure);
+      await axiosSecure.post("/api/tourism/insert-update-user-list", dataToSubmit);
 
       dispatch(
         setUser({
@@ -242,13 +258,15 @@ const ProfilePage = () => {
             <div className="relative group">
               <div className="w-48 h-48 md:w-56 md:h-56 rounded-full border-[6px] border-primary/20 p-2 relative">
                 <div className="w-full h-full rounded-full border-[6px] border-white/10 p-1 relative overflow-hidden">
-                  <img
-                    src={
-                      profileData.photo_url ||
-                      "https://i.ibb.co/5GzXkwq/user.png"
-                    }
+                  <Image
+                    src={profileImg}
                     alt={profileData.full_name}
+                    width={224}
+                    height={224}
                     className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-700"
+                    onError={() => {
+                      setProfileImg("https://i.ibb.co/5GzXkwq/user.png");
+                    }}
                   />
                 </div>
                 <button className="absolute bottom-4 right-4 w-12 h-12 bg-white text-[#0a0f1c] rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all border-4 border-[#0a0f1c]">

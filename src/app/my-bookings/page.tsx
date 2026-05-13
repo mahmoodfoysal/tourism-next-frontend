@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
-import tourismApi from "@/api/tourismApi";
+import Image from "next/image";
+import { axiosPublic } from "@/hooks/useAxiosPublic";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
@@ -66,7 +67,8 @@ const BookingHistoryPage = () => {
 
       try {
         setLoading(true);
-        const data = await tourismApi.getBookingList(user.email, axiosSecure);
+        const response = await axiosSecure.get(`/api/tourism/get-booking-list/${user.email}`);
+        const data = response.data?.list_data;
         if (Array.isArray(data)) {
           const sorted = [...data].sort(
             (a, b) =>
@@ -168,9 +170,10 @@ const BookingHistoryPage = () => {
                     className="group relative flex flex-col h-full animate-in fade-in slide-in-from-bottom-10 duration-700"
                   >
                     <div className="relative h-56 bg-base-100 rounded-t-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-x border-t border-base-content/5">
-                      <img
+                      <Image
                         src={booking.package_info.image}
                         alt={booking.package_info.title}
+                        fill
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[3s]"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>

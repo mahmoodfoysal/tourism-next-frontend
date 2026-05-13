@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import tourismApi from "@/api/tourismApi";
+import { axiosPublic } from "@/hooks/useAxiosPublic";
 import PackageCard from "@/components/pages/PackageCard";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import DataVoid from "@/components/pages/DataVoid";
@@ -47,7 +47,8 @@ const PackagesPage = () => {
       console.log("🚀 PackagesPage: Initiating API call...");
       setLoading(true);
       try {
-        const data = await tourismApi.getTourPackages();
+        const response = await axiosPublic.get("/api/tourism/get-package-list");
+        const data = response.data?.list_data;
         console.log(
           "✅ PackagesPage: API call successful, data received:",
           data,

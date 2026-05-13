@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, use } from "react";
-import tourismApi from "@/api/tourismApi";
+import { axiosPublic } from "@/hooks/useAxiosPublic";
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
@@ -57,7 +57,8 @@ const PackageDetailsPage = ({ params }: PageProps) => {
     const fetchDetails = async () => {
       setLoading(true);
       try {
-        const data = await tourismApi.getPackageDetails(id);
+        const response = await axiosPublic.get(`/api/tourism/get-package-list/${id}`);
+        const data = response.data?.details_data;
         setDetails(data);
         if (data?.image) setActiveImage(data.image);
       } catch (error) {

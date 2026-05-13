@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import tourismApi from "@/api/tourismApi";
+import { axiosPublic } from "@/hooks/useAxiosPublic";
 
 interface Review {
   _id?: string;
@@ -23,7 +23,8 @@ const CustomerReview = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const data = await tourismApi.getReviewList();
+        const response = await axiosPublic.get("/api/tourism/get-review-list");
+        const data = response.data?.list_data;
         // Handle both direct array and nested data object
         const result = Array.isArray(data) ? data : data?.data || [];
         setReviews(result);

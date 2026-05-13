@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import SkeletonCard from "../pages/SkeletonCard";
-import tourismApi from "@/api/tourismApi";
+import { axiosPublic } from "@/hooks/useAxiosPublic";
 import Link from "next/link";
 
 interface Blog {
@@ -29,7 +29,8 @@ const TravelBlogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const data = await tourismApi.getTravelBlogs();
+        const response = await axiosPublic.get("/api/tourism/get-blog-list");
+        const data = response.data?.list_data;
         // Handle both direct array and nested data object
         const result = Array.isArray(data) ? data : data?.data || [];
         // Shuffle and take 4 random items

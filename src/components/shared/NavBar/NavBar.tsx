@@ -21,8 +21,28 @@ const NavBar = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
+  const { isAdmin } = useSelector((state: RootState) => state.admin);
   const router = useRouter();
   const pathname = usePathname();
+
+  const [profileImg, setProfileImg] = useState<string>(
+    user?.photoURL ||
+      `https://ui-avatars.com/api/?name=${user?.displayName || "User"}&background=random`,
+  );
+
+  useEffect(() => {
+    if (user?.photoURL) {
+      setTimeout(() => {
+        setProfileImg(user.photoURL as string);
+      }, 0);
+    } else {
+      setTimeout(() => {
+        setProfileImg(
+          `https://ui-avatars.com/api/?name=${user?.displayName || "User"}&background=random`,
+        );
+      }, 0);
+    }
+  }, [user]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,6 +98,12 @@ const NavBar = () => {
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
+
+  // Conditional links
+  const filteredNavLinks = [...navLinks];
+  if (isAdmin) {
+    filteredNavLinks.push({ name: "Dashboard", href: "/dashboard" });
+  }
 
   return (
     <>
@@ -144,7 +170,7 @@ const NavBar = () => {
           {/* Desktop Navigation Links */}
           <div className="navbar-center hidden lg:flex">
             <ul className="menu menu-horizontal gap-2 p-0">
-              {navLinks.map((link) => {
+              {filteredNavLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <li key={link.name}>
@@ -217,16 +243,16 @@ const NavBar = () => {
                   className="btn btn-ghost btn-circle avatar online shadow-primary/20 shadow-md"
                 >
                   <div className="w-10 h-10 rounded-full relative overflow-hidden">
-                    <img
-                      src={
-                        user.photoURL ||
-                        `https://ui-avatars.com/api/?name=${user.displayName || "User"}&background=random`
-                      }
+                    <Image
+                      src={profileImg}
                       alt="profile"
+                      width={40}
+                      height={40}
                       className="w-10 h-10 object-cover rounded-full"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = `https://ui-avatars.com/api/?name=${user.displayName || "User"}&background=random`;
+                      onError={() => {
+                        setProfileImg(
+                          `https://ui-avatars.com/api/?name=${user?.displayName || "User"}&background=random`,
+                        );
                       }}
                     />
                   </div>
@@ -312,16 +338,16 @@ const NavBar = () => {
               <div className="flex items-center gap-4 p-4 bg-primary/5 rounded-2xl mb-4">
                 <div className="avatar">
                   <div className="w-12 h-12 rounded-xl relative overflow-hidden">
-                    <img
-                      src={
-                        user.photoURL ||
-                        `https://ui-avatars.com/api/?name=${user.displayName || "User"}&background=random`
-                      }
+                    <Image
+                      src={profileImg}
                       alt="profile"
+                      width={48}
+                      height={48}
                       className="w-12 h-12 object-cover rounded-xl"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = `https://ui-avatars.com/api/?name=${user.displayName || "User"}&background=random`;
+                      onError={() => {
+                        setProfileImg(
+                          `https://ui-avatars.com/api/?name=${user?.displayName || "User"}&background=random`,
+                        );
                       }}
                     />
                   </div>
@@ -337,7 +363,7 @@ const NavBar = () => {
               </div>
             )}
             <ul className="menu menu-lg gap-2">
-              {navLinks.map((link) => {
+              {filteredNavLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <li key={link.name}>

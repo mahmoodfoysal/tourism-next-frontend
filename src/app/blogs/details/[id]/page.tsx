@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, use } from "react";
-import tourismApi from "@/api/tourismApi";
+import { axiosPublic } from "@/hooks/useAxiosPublic";
 import Image from "next/image";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import DataVoid from "@/components/pages/DataVoid";
@@ -40,7 +40,8 @@ const BlogDetailsPage = ({ params }: PageProps) => {
     const fetchBlogDetails = async () => {
       setLoading(true);
       try {
-        const data = await tourismApi.getBlogDetails(id);
+        const response = await axiosPublic.get(`/api/tourism/get-blog-list/${id}`);
+        const data = response.data?.details_data;
         setBlog(data);
       } catch (error) {
         console.error("Error fetching blog details:", error);

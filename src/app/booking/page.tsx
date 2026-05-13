@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import Image from "next/image";
-import tourismApi from "@/api/tourismApi";
+import { axiosPublic } from "@/hooks/useAxiosPublic";
 import { useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -94,14 +94,16 @@ const BookingPage = () => {
     const fetchData = async () => {
       try {
         if (packageId) {
-          const data = await tourismApi.getPackageDetails(packageId);
+          const response = await axiosPublic.get(`/api/tourism/get-package-list/${packageId}`);
+          const data = response.data?.details_data;
           if (data) {
             setSelectedPackage(data);
           }
         } else {
           // Fallback: If no ID, we might still want to fetch the list to get a default
           // but since the user specifically asked to use the detail endpoint:
-          const data = await tourismApi.getTourPackages();
+          const response = await axiosPublic.get("/api/tourism/get-package-list");
+          const data = response.data?.list_data;
           const result = Array.isArray(data) ? data : data?.data || [];
           if (result.length > 0) setSelectedPackage(result[0]);
         }
@@ -219,7 +221,8 @@ const BookingPage = () => {
         },
       };
 
-      const result = await tourismApi.submitOrder(orderData, axiosSecure);
+      const response = await axiosSecure.post("/api/tourism/insert-update-order-list", orderData);
+      const result = response.data;
 
       if (result) {
         closeAlert();

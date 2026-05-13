@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import PopularCard from "../pages/PopularCard";
 import SkeletonCard from "../pages/SkeletonCard";
-import tourismApi from "@/api/tourismApi";
+import { axiosPublic } from "@/hooks/useAxiosPublic";
 import Link from "next/link";
 
 interface Destination {
@@ -32,7 +32,8 @@ const PopularDestinations = () => {
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
-        const data = await tourismApi.getPopularDestinations();
+        const response = await axiosPublic.get("/api/tourism/get-popular-dest-list");
+        const data = response.data?.list_data;
         // Handle both direct array and nested data object
         const result = Array.isArray(data) ? data : data?.data || [];
         // Shuffle and take 4 random items

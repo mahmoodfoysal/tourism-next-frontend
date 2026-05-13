@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import PackageCard from "../pages/PackageCard";
 import SkeletonCard from "../pages/SkeletonCard";
-import tourismApi from "@/api/tourismApi";
+import { axiosPublic } from "@/hooks/useAxiosPublic";
 import Link from "next/link";
 
 interface TourPackage {
@@ -26,7 +26,8 @@ const TourPackage = () => {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const data = await tourismApi.getTourPackages();
+        const response = await axiosPublic.get("/api/tourism/get-package-list");
+        const data = response.data?.list_data;
         // Handle both direct array and nested data object
         const result = Array.isArray(data) ? data : data?.data || [];
         // Shuffle and take 4 random items

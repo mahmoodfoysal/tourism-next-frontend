@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@/firebase/firebase.init";
 import { axiosSecure } from "@/hooks/useAxiosSecure";
+import { axiosPublic } from "@/hooks/useAxiosPublic";
 
 // Define the User state
 interface UserState {
@@ -25,7 +26,7 @@ interface UserState {
 
 const initialState: UserState = {
   user: null,
-  loading: false,
+  loading: true,
   error: null,
 };
 
@@ -41,11 +42,24 @@ const authenticateAndSync = async (
 ) => {
   try {
     // 1. Fetch JWT Token
-    const tokenRes = await axiosSecure.post("/get-token", { email });
+    const tokenRes = await axiosPublic.post("/get-token", { email });
     const token = tokenRes.data.token;
 
     if (token) {
       sessionStorage.setItem("token", token);
+
+      // 1.5 Check if Admin
+      let isAdmin = false;
+      try {
+        const adminRes = await axiosSecure.get(`/admin/get-admin-list/${email}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (adminRes.data && adminRes.data.admin === true && adminRes.data.email === email) {
+          isAdmin = true;
+        }
+      } catch (error) {
+        console.error("Admin check failed in sync:", error);
+      }
 
       // 2. Sync with backend
       if (shouldSync) {
@@ -59,12 +73,12 @@ const authenticateAndSync = async (
           { headers: { Authorization: `Bearer ${token}` } },
         );
       }
-      return true;
+      return { success: true, isAdmin };
     }
-    return false;
+    return { success: false, isAdmin: false };
   } catch (error) {
     console.error("Authentication synchronization failed:", error);
-    return false;
+    return { success: false, isAdmin: false };
   }
 };
 
@@ -94,7 +108,7 @@ export const registerUser = createAsyncThunk(
         displayName,
         photoURL,
       } = userCredential.user;
-      await authenticateAndSync(email, fullName, photoURL || "", true);
+      const syncResult = await authenticateAndSync(email, fullName, photoURL || "", true);
 
       return { uid, email: userEmail, displayName, photoURL };
     } catch (error) {
@@ -119,13 +133,13 @@ export const loginWithGoogle = createAsyncThunk(
 
       // Sync ONLY if the user is logging in for the first time
       const { uid, email, displayName, photoURL } = user;
-      await authenticateAndSync(
+      const syncResult = await authenticateAndSync(
         user.email || "",
         user.displayName || "Google User",
         photoURL || "",
         isNewUser,
       );
-
+      
       return { uid, email, displayName, photoURL };
     } catch (error) {
       const errorMessage =
@@ -149,7 +163,7 @@ export const loginWithEmail = createAsyncThunk(
       );
 
       // For standard email login, we just fetch the token (sync was done during register)
-      await authenticateAndSync(email, "", "", false);
+      const syncResult = await authenticateAndSync(email, "", "", false);
 
       const {
         uid,

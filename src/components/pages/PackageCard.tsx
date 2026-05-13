@@ -118,7 +118,7 @@ const PackageCard: React.FC<PackageCardProps> = ({ info }) => {
           </div>
 
           <div className="flex gap-2">
-            <Link 
+            <Link
               href={`/booking?packageId=${info._id || info.package_id}`}
               onClick={() => dispatch(setBookingPackage(info))}
               className="flex-[1.5] btn btn-primary btn-sm rounded-xl font-black uppercase tracking-widest text-[9px] shadow-lg shadow-primary/20 h-10 min-h-0 border-none flex items-center justify-center"

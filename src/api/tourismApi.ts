@@ -78,6 +78,37 @@ export const tourismApi = {
   },
 
   /**
+   * Fetch user booking list
+   */
+  getBookingList: async (email: string, axiosInstance = axiosPublic) => {
+    const response = await axiosInstance.get(
+      `/api/tourism/get-booking-list/${email}`,
+    );
+    return response.data?.list_data;
+  },
+
+  /**
+   * Fetch user profile data
+   */
+  getUserProfile: async (email: string, axiosInstance = axiosPublic) => {
+    const response = await axiosInstance.get(
+      `/api/tourism/get-user-list/${email}`,
+    );
+    return response.data?.list_data;
+  },
+
+  /**
+   * Update user profile data
+   */
+  updateUserProfile: async (profileData: any, axiosInstance = axiosPublic) => {
+    const response = await axiosInstance.post(
+      "/api/tourism/insert-update-user-list",
+      profileData,
+    );
+    return response.data;
+  },
+
+  /**
    * Submit a new booking order
    */
   submitOrder: async (orderData: any, axiosInstance = axiosPublic) => {

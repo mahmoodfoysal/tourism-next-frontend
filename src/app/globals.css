@@ -138,3 +138,12 @@ input[type="number"] {
     background: color-mix(in srgb, var(--text-color), transparent 70%);
   }
 }
+/* Top Loading Bar Customization */
+#nprogress .bar {
+  top: 64px !important;
+  z-index: 10000 !important;
+}
+
+#nprogress .peg {
+  box-shadow: none !important;
+}

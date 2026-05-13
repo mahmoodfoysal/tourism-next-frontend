@@ -4,6 +4,7 @@ import "./globals.css";
 import NavBar from "@/components/shared/NavBar/NavBar";
 import Footer from "@/components/shared/Footer/Footer";
 import ReduxProvider from "@/store/ReduxProvider";
+import NextTopLoader from "nextjs-toploader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <NextTopLoader color="#38bdf8" showSpinner={false} height={3} shadow="0 0 10px #38bdf8,0 0 5px #38bdf8" />
         <ReduxProvider>
           <NavBar />
           {children}

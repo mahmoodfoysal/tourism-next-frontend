@@ -40,7 +40,7 @@ const PackagesPage = () => {
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const itemsPerPage = 12;
 
   useEffect(() => {
     const fetchAll = async () => {

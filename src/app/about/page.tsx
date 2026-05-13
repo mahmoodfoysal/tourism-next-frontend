@@ -1,15 +1,49 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import Link from "next/link";
+import { axiosPublic } from "@/hooks/useAxiosPublic";
 
 const AboutPage = () => {
+  const [avgRating, setAvgRating] = useState(4.9);
+  const [reviewCount, setReviewCount] = useState(10000);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await axiosPublic.get("/api/tourism/get-review-list");
+        const data = response.data?.list_data;
+        const result = Array.isArray(data) ? data : data?.data || [];
+
+        if (result.length > 0) {
+          const totalRating = result.reduce(
+            (acc: number, rev: any) => acc + (rev.rating || 0),
+            0,
+          );
+          const avg = totalRating / result.length;
+          setAvgRating(Number(avg.toFixed(1)));
+          setReviewCount(result.length);
+        }
+      } catch (error) {
+        console.error("Error fetching reviews for About page:", error);
+      }
+    };
+    fetchReviews();
+  }, []);
+
   const stats = [
-    { label: "Years Experience", value: "12+", color: "primary" },
-    { label: "Happy Travelers", value: "50k+", color: "secondary" },
-    { label: "Destinations", value: "250+", color: "accent" },
+    { label: "Years Experience", value: "4+", color: "primary" },
+    {
+      label: "Happy Travelers",
+      value:
+        reviewCount > 1000
+          ? `${(reviewCount / 1000).toFixed(1)}k+`
+          : `${reviewCount}+`,
+      color: "secondary",
+    },
+    { label: "Destinations", value: "50+", color: "accent" },
     { label: "Local Guides", value: "150+", color: "primary" },
   ];
 
@@ -81,28 +115,10 @@ const AboutPage = () => {
 
   const team = [
     {
-      name: "Marcus Thorne",
+      name: "Foysal Mahmo",
       role: "CEO & Founder",
       image:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400",
-    },
-    {
-      name: "Sarah Jenkins",
-      role: "Head of Operations",
-      image:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400",
-    },
-    {
-      name: "David Chen",
-      role: "Chief Travel Explorer",
-      image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400",
-    },
-    {
-      name: "Elena Rodriguez",
-      role: "Sustainability Lead",
-      image:
-        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400",
     },
   ];
 
@@ -115,7 +131,7 @@ const AboutPage = () => {
       />
 
       {/* Story Section */}
-      <section className="py-24">
+      <section className="pb-10">
         <div className="route-container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <div className="relative h-[600px] rounded-[3rem] overflow-hidden shadow-2xl group">
@@ -127,7 +143,7 @@ const AboutPage = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/40 via-transparent to-transparent"></div>
               <div className="absolute bottom-10 left-10 flex items-center gap-4 bg-white/20 backdrop-blur-xl p-6 rounded-3xl border border-white/20">
-                <div className="text-4xl font-black text-white">12</div>
+                <div className="text-4xl font-black text-white">4</div>
                 <div className="text-xs font-black uppercase tracking-widest text-white/80 leading-tight">
                   Years of <br /> Excellence
                 </div>
@@ -173,7 +189,7 @@ const AboutPage = () => {
       </section>
 
       {/* Values Pattern Section */}
-      <section className="py-24 bg-base-200/50">
+      <section className="py-10 bg-base-200/50">
         <div className="route-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
             <div className="max-w-2xl">
@@ -211,91 +227,188 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-24">
+      {/* Team Section - Premium Founder Spotlight */}
+      <section className="py-10 bg-base-200/30 overflow-hidden">
         <div className="route-container">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/10 text-secondary font-bold text-xs uppercase tracking-widest mb-4">
-                The Explorers
-              </div>
-              <h2 className="text-4xl md:text-5xl font-black text-base-content tracking-tight mb-6">
-                Meet the <span className="text-secondary">Visionaries</span>
-              </h2>
-              <p className="text-lg text-base-content/60 leading-relaxed">
-                A diverse team of world-class travelers, logistics experts, and
-                storytellers dedicated to your discovery.
-              </p>
-            </div>
-            <button className="btn btn-secondary rounded-2xl px-8 h-14 shadow-lg shadow-secondary/20 font-black uppercase tracking-widest text-[10px] hidden md:flex items-center">
-              Join Our Team
-            </button>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            {/* Left: Artistic Portrait */}
+            <div className="lg:col-span-5 relative">
+              <div className="absolute -top-10 -left-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-secondary/10 rounded-full blur-3xl animate-pulse delay-700"></div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, i) => (
-              <div key={i} className="group relative">
-                <div className="relative h-[400px] rounded-[3rem] overflow-hidden shadow-xl mb-6">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    className="object-cover transition-all duration-700 group-hover:scale-110 group-hover:grayscale-[0.5]"
+              <div className="relative z-10">
+                <div className="aspect-[4/5] rounded-[4rem] overflow-hidden shadow-2xl border-8 border-base-100 relative group">
+                  <img
+                    src="https://i.ibb.co.com/0RHQVcLS/Gemini-Generated-Image-4avo104avo104avo.png"
+                    alt="Foysal Mahmood Picture"
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
-                    <div className="flex gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary transition-colors cursor-pointer">
-                        <svg
-                          className="h-5 w-5"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent"></div>
                 </div>
-                <h4 className="text-xl font-black text-base-content group-hover:text-primary transition-colors">
-                  {member.name}
-                </h4>
-                <p className="text-xs font-bold uppercase tracking-widest text-base-content/40">
-                  {member.role}
+
+                {/* Decorative Element */}
+                <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-secondary rounded-[2rem] -z-10 rotate-12"></div>
+              </div>
+            </div>
+
+            {/* Right: Visionary Narrative */}
+            <div className="lg:col-span-7 space-y-10">
+              <div className="space-y-6">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/10 text-secondary font-bold text-xs uppercase tracking-widest">
+                  The Visionary
+                </div>
+                <h2 className="text-5xl md:text-7xl font-black text-base-content tracking-tighter leading-tight">
+                  Driving the <br />
+                  <span className="text-secondary">Future of Travel</span>
+                </h2>
+              </div>
+
+              <div className="relative">
+                <span className="absolute -top-10 -left-8 text-9xl text-base-content/5 font-serif"></span>
+                <p className="text-2xl font-medium text-base-content/80 leading-relaxed italic relative z-10">
+                  Travel is not just about seeing new places; it is about
+                  returning with a new perspective. Our mission at Aura Trip is
+                  to bridge the gap between curiosity and discovery.
                 </p>
               </div>
-            ))}
+
+              <div className="space-y-4 pt-4">
+                <div>
+                  <h4 className="text-3xl font-black text-base-content tracking-tight">
+                    Foysal Mahmood
+                  </h4>
+                  <p className="text-sm font-black uppercase tracking-widest text-secondary">
+                    CEO & Founder
+                  </p>
+                </div>
+
+                <div className="flex gap-6">
+                  <div className="flex flex-col">
+                    <span className="text-2xl font-black text-base-content">
+                      4+
+                    </span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-base-content/40">
+                      Years Exp
+                    </span>
+                  </div>
+                  <div className="w-px h-10 bg-base-content/10"></div>
+                  <div className="flex flex-col">
+                    <span className="text-2xl font-black text-base-content">
+                      142
+                    </span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-base-content/40">
+                      Expeditions
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-8">
+                <button
+                  onClick={() =>
+                    window.open("https://foysalmahmood.netlify.app/", "_blank")
+                  }
+                  className="group flex items-center gap-4 text-sm font-black uppercase tracking-widest text-base-content hover:text-secondary transition-colors cursor-pointer"
+                >
+                  <span>Founders Full Story</span>
+                  <div className="w-12 h-12 rounded-full border border-base-content/20 flex items-center justify-center group-hover:border-secondary group-hover:translate-x-2 transition-all">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2.5"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24">
+      {/* CTA Section - Immersive Design */}
+      <section className="py-24 relative overflow-hidden">
         <div className="route-container">
-          <div className="relative rounded-[4rem] bg-primary overflow-hidden p-12 md:p-24 text-center">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48 blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/10 rounded-full -ml-48 -mb-48 blur-3xl"></div>
+          <div className="relative rounded-[4rem] min-h-[600px] flex items-center justify-center overflow-hidden shadow-2xl">
+            {/* Background Image with Parallax-like feel */}
+            <Image
+              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000"
+              alt="Adventure Background"
+              fill
+              className="object-cover"
+            />
 
-            <div className="relative max-w-3xl mx-auto space-y-8">
-              <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight">
-                Ready to Start Your <br /> Next Story?
-              </h2>
-              <p className="text-xl text-white/80 font-medium">
-                Join our community of elite explorers and discover the world
-                like never before.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
-                <Link
-                  href="/packages"
-                  className="btn bg-white border-none text-primary hover:bg-white/90 rounded-2xl px-12 h-16 font-black uppercase tracking-widest shadow-2xl shadow-black/20"
-                >
-                  Browse Packages
-                </Link>
-                <Link
-                  href="/destinations"
-                  className="btn btn-ghost text-white border-white/20 hover:bg-white/10 rounded-2xl px-12 h-16 font-black uppercase tracking-widest"
-                >
-                  Explore Places
-                </Link>
+            {/* Tactical Overlays */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+            <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]"></div>
+
+            <div className="relative z-10 w-full px-12 md:px-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              <div className="text-left space-y-8">
+                <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-black uppercase tracking-[0.2em]">
+                  <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                  Start Your Journey
+                </div>
+
+                <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-[1.1]">
+                  Ready to Start Your <br />
+                  <span className="text-primary">Next Story?</span>
+                </h2>
+
+                <p className="text-xl text-white/70 font-medium max-w-xl leading-relaxed">
+                  Join 50,000+ elite explorers who have discovered the worlds
+                  most hidden gems with our curated expeditions.
+                </p>
+
+                <div className="flex flex-col sm:flex-row items-center gap-6 pt-4">
+                  <Link
+                    href="/packages"
+                    className="btn btn-primary btn-lg rounded-2xl px-10 h-16 font-black uppercase tracking-widest shadow-xl shadow-primary/30 w-full sm:w-auto"
+                  >
+                    View Packages
+                  </Link>
+                  <Link
+                    href="/destinations"
+                    className="btn btn-ghost btn-lg text-white border-white/20 bg-white/5 backdrop-blur-md hover:bg-white/10 rounded-2xl px-10 h-16 font-black uppercase tracking-widest w-full sm:w-auto"
+                  >
+                    Explore Places
+                  </Link>
+                </div>
+              </div>
+
+              {/* Decorative "Badge" or Social Proof */}
+              <div className="hidden lg:flex justify-end">
+                <div className="w-64 h-64 rounded-full border border-white/10 flex items-center justify-center relative p-8 backdrop-blur-3xl bg-white/5">
+                  <div className="absolute inset-0 rounded-full border-t-2 border-primary/50 animate-spin duration-[10s]"></div>
+                  <div className="text-center space-y-2">
+                    <div className="text-4xl font-black text-white">
+                      {avgRating}/5
+                    </div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-white/60">
+                      Explorer Rating
+                    </div>
+                    <div className="flex justify-center gap-1">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <svg
+                          key={s}
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3 w-3 text-primary"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

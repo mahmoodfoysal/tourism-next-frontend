@@ -46,14 +46,16 @@ const DestinationsPage = () => {
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const itemsPerPage = 12;
 
   useEffect(() => {
     const fetchAll = async () => {
       console.log("🚀 DestinationsPage: Initiating API call...");
       setLoading(true);
       try {
-        const response = await axiosPublic.get("/api/tourism/get-popular-dest-list");
+        const response = await axiosPublic.get(
+          "/api/tourism/get-popular-dest-list",
+        );
         const data = response.data?.list_data;
         console.log(
           "✅ DestinationsPage: API call successful, data received:",

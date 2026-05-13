@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "i.ibb.co.com",
+      },
+      {
+        protocol: "https",
         hostname: "**.fbcdn.net",
       },
     ],

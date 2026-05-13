@@ -97,6 +97,26 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       ),
     },
     {
+      name: "Add Blog",
+      path: "/dashboard/add-blog",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+          />
+        </svg>
+      ),
+    },
+    {
       name: "My Bookings",
       path: "/dashboard/my-bookings",
       icon: (
@@ -249,26 +269,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               />
             </svg>
           </button>
-
-          {/* Bottom Branding */}
-          {isSidebarOpen && (
-            <div className="p-8">
-              <div className="p-6 rounded-3xl bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden group">
-                <div className="relative z-10">
-                  <h4 className="text-sm font-black uppercase tracking-widest mb-1">
-                    Go Premium
-                  </h4>
-                  <p className="text-[10px] font-bold text-white/70 mb-4">
-                    Unlock exclusive luxury destinations
-                  </p>
-                  <button className="w-full py-2 bg-white/20 backdrop-blur-md rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/30 hover:bg-white hover:text-primary transition-all">
-                    Upgrade Now
-                  </button>
-                </div>
-                <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-1000"></div>
-              </div>
-            </div>
-          )}
         </aside>
 
         {/* Main Content Area (Outlet) */}

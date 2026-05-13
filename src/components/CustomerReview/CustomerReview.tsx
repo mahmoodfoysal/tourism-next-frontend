@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
+import SkeletonCard from "../pages/SkeletonCard";
 
 interface Review {
   _id?: string;
@@ -42,19 +43,28 @@ const CustomerReview = () => {
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
-  const scroll = (direction: 'left' | 'right') => {
+  const scroll = (direction: "left" | "right") => {
     const scrollContainer = scrollRef.current;
     if (!scrollContainer) return;
 
-    const itemWidth = scrollContainer.querySelector(".review-card")?.clientWidth || 300;
-    const scrollAmount = direction === 'left' ? -(itemWidth + 32) : (itemWidth + 32);
-    
-    if (direction === 'right' && scrollContainer.scrollLeft >= (scrollContainer.scrollWidth - scrollContainer.clientWidth - 50)) {
-        scrollContainer.scrollTo({ left: 0, behavior: "smooth" });
-    } else if (direction === 'left' && scrollContainer.scrollLeft <= 10) {
-        scrollContainer.scrollTo({ left: scrollContainer.scrollWidth, behavior: "smooth" });
+    const itemWidth =
+      scrollContainer.querySelector(".review-card")?.clientWidth || 300;
+    const scrollAmount =
+      direction === "left" ? -(itemWidth + 32) : itemWidth + 32;
+
+    if (
+      direction === "right" &&
+      scrollContainer.scrollLeft >=
+        scrollContainer.scrollWidth - scrollContainer.clientWidth - 50
+    ) {
+      scrollContainer.scrollTo({ left: 0, behavior: "smooth" });
+    } else if (direction === "left" && scrollContainer.scrollLeft <= 10) {
+      scrollContainer.scrollTo({
+        left: scrollContainer.scrollWidth,
+        behavior: "smooth",
+      });
     } else {
-        scrollContainer.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      scrollContainer.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
 
@@ -63,7 +73,7 @@ const CustomerReview = () => {
     if (!scrollContainer || loading || reviews.length === 0) return;
 
     const interval = setInterval(() => {
-      scroll('right');
+      scroll("right");
     }, 5000);
 
     return () => clearInterval(interval);
@@ -87,25 +97,47 @@ const CustomerReview = () => {
               adventurers.
             </p>
           </div>
-          
+
           {/* Navigation Controls */}
           <div className="flex gap-4">
-            <button 
-              onClick={() => scroll('left')}
+            <button
+              onClick={() => scroll("left")}
               className="w-14 h-14 rounded-2xl bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all shadow-lg border border-base-content/5 group"
               aria-label="Previous review"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 transition-transform group-active:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 transition-transform group-active:-translate-x-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2.5"
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
-            <button 
-              onClick={() => scroll('right')}
+            <button
+              onClick={() => scroll("right")}
               className="w-14 h-14 rounded-2xl bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all shadow-lg border border-base-content/5 group"
               aria-label="Next review"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 transition-transform group-active:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 transition-transform group-active:translate-x-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2.5"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </button>
           </div>
@@ -113,19 +145,17 @@ const CustomerReview = () => {
 
         {/* Reviews Grid */}
         {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <span className="loading loading-spinner loading-lg text-primary"></span>
-          </div>
+          <SkeletonCard></SkeletonCard>
         ) : (
           <div className="relative group/slider">
-            <div 
+            <div
               ref={scrollRef}
               className="flex gap-8 overflow-x-auto custom-scrollbar scroll-smooth snap-x snap-mandatory pb-10 -mb-10"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               {reviews.map((review) => (
-                <div 
-                  key={review.id || review._id} 
+                <div
+                  key={review.id || review._id}
                   className="review-card flex-none w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] snap-start relative group"
                 >
                   {/* Quote Icon Background */}

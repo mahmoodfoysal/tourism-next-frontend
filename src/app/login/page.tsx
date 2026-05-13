@@ -59,13 +59,15 @@ const LoginPage = () => {
       "Please wait while we verify your credentials...",
     );
     const result = await dispatch(loginWithEmail({ email, password }));
-    
+
     if (loginWithEmail.fulfilled.match(result)) {
       closeAlert();
       showSuccess("Welcome Back!", "Successfully logged in to your account.");
     } else if (loginWithEmail.rejected.match(result)) {
       closeAlert();
-      const errorMessage = result.payload as string || "Invalid email or password. Please try again.";
+      const errorMessage =
+        (result.payload as string) ||
+        "Invalid email or password. Please try again.";
       showError("Login Failed", errorMessage);
     }
   };
@@ -227,7 +229,7 @@ const LoginPage = () => {
                 />
               </div>
 
-              <div className="flex items-center gap-2 px-1">
+              {/* <div className="flex items-center gap-2 px-1">
                 <input
                   type="checkbox"
                   className="checkbox checkbox-primary checkbox-sm rounded-md"
@@ -239,7 +241,7 @@ const LoginPage = () => {
                 >
                   Keep me logged in for 30 days
                 </label>
-              </div>
+              </div> */}
 
               <button
                 type="submit"

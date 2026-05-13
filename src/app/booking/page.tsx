@@ -303,7 +303,11 @@ const BookingContent = () => {
                     Personal Information
                   </h2>
 
-                  <form className="space-y-10" onSubmit={handleSubmit} noValidate>
+                  <form
+                    className="space-y-10"
+                    onSubmit={handleSubmit}
+                    noValidate
+                  >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-2">
                         <label className="text-[11px] font-black uppercase tracking-widest text-base-content/40 ml-4 flex items-center">
@@ -321,7 +325,8 @@ const BookingContent = () => {
                       </div>
                       <div className="space-y-2">
                         <label className="text-[11px] font-black uppercase tracking-widest text-base-content/40 ml-4 flex items-center">
-                          Email Address <span className="text-error ml-1">*</span>
+                          Email Address{" "}
+                          <span className="text-error ml-1">*</span>
                         </label>
                         <input
                           type="email"
@@ -335,7 +340,8 @@ const BookingContent = () => {
                       </div>
                       <div className="space-y-2">
                         <label className="text-[11px] font-black uppercase tracking-widest text-base-content/40 ml-4 flex items-center">
-                          Phone Number <span className="text-error ml-1">*</span>
+                          Phone Number{" "}
+                          <span className="text-error ml-1">*</span>
                         </label>
                         <input
                           type="tel"
@@ -349,7 +355,8 @@ const BookingContent = () => {
                       </div>
                       <div className="space-y-2">
                         <label className="text-[11px] font-black uppercase tracking-widest text-base-content/40 ml-4 flex items-center">
-                          Emergency Contact <span className="text-error ml-1">*</span>
+                          Emergency Contact{" "}
+                          <span className="text-error ml-1">*</span>
                         </label>
                         <input
                           type="tel"
@@ -363,7 +370,8 @@ const BookingContent = () => {
                       </div>
                       <div className="space-y-2 md:col-span-2">
                         <label className="text-[11px] font-black uppercase tracking-widest text-base-content/40 ml-4 flex items-center">
-                          Full Address <span className="text-error ml-1">*</span>
+                          Full Address{" "}
+                          <span className="text-error ml-1">*</span>
                         </label>
                         <input
                           type="text"
@@ -416,7 +424,8 @@ const BookingContent = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-2">
                           <label className="text-[11px] font-black uppercase tracking-widest text-base-content/40 ml-4 flex items-center">
-                            Joining Date <span className="text-error ml-1">*</span>
+                            Joining Date{" "}
+                            <span className="text-error ml-1">*</span>
                           </label>
                           <input
                             type="date"
@@ -429,17 +438,22 @@ const BookingContent = () => {
                         </div>
                         <div className="space-y-2">
                           <label className="text-[11px] font-black uppercase tracking-widest text-base-content/40 ml-4 flex items-center">
-                            Number of Travelers <span className="text-error ml-1">*</span>
+                            Number of Travelers{" "}
+                            <span className="text-error ml-1">*</span>
                           </label>
                           <div className="flex items-center gap-4 bg-base-200/50 rounded-2xl px-4 h-12">
                             <button
                               type="button"
-                              onClick={() => setTravelers(Math.max(1, travelers - 1))}
+                              onClick={() =>
+                                setTravelers(Math.max(1, travelers - 1))
+                              }
                               className="w-10 h-10 rounded-xl bg-base-100 flex items-center justify-center text-xl font-black hover:bg-primary hover:text-white transition-all shadow-sm"
                             >
                               -
                             </button>
-                            <span className="flex-1 text-center font-black text-xl">{travelers}</span>
+                            <span className="flex-1 text-center font-black text-xl">
+                              {travelers}
+                            </span>
                             <button
                               type="button"
                               onClick={() => setTravelers(travelers + 1)}
@@ -461,7 +475,10 @@ const BookingContent = () => {
                       </h2>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         {["Credit Card", "Mobile Banking"].map((method) => (
-                          <div key={method} className="cursor-pointer group relative">
+                          <div
+                            key={method}
+                            className="cursor-pointer group relative"
+                          >
                             <input
                               type="radio"
                               name="paymentMethod"
@@ -488,7 +505,8 @@ const BookingContent = () => {
                         <div className="mt-12 p-10 rounded-[3rem] bg-base-200/30 border border-base-content/5 space-y-8 animate-in fade-in slide-in-from-top-4 duration-500">
                           <div className="space-y-2">
                             <label className="text-[11px] font-black uppercase tracking-widest text-base-content/40 ml-4 flex items-center">
-                              Cardholder Name <span className="text-error ml-1">*</span>
+                              Cardholder Name{" "}
+                              <span className="text-error ml-1">*</span>
                             </label>
                             <input
                               type="text"
@@ -497,12 +515,15 @@ const BookingContent = () => {
                               onChange={handleInputChange}
                               placeholder="ALEX RIVERA"
                               className={`input input-ghost w-full h-12 rounded-2xl bg-base-100 border-transparent focus:border-primary/20 px-8 font-bold uppercase ${formSubmitted && formData.paymentMethod === "Credit Card" && !formData.cardHolderName ? "border-error/50 bg-error/5" : ""}`}
-                              required={formData.paymentMethod === "Credit Card"}
+                              required={
+                                formData.paymentMethod === "Credit Card"
+                              }
                             />
                           </div>
                           <div className="space-y-2">
                             <label className="text-[11px] font-black uppercase tracking-widest text-base-content/40 ml-4 flex items-center">
-                              Card Number <span className="text-error ml-1">*</span>
+                              Card Number{" "}
+                              <span className="text-error ml-1">*</span>
                             </label>
                             <input
                               type="number"
@@ -511,13 +532,16 @@ const BookingContent = () => {
                               onChange={handleInputChange}
                               placeholder="0000 0000 0000 0000"
                               className={`input input-ghost w-full h-12 rounded-2xl bg-base-100 border-transparent focus:border-primary/20 px-8 font-bold tracking-[0.2em] ${formSubmitted && formData.paymentMethod === "Credit Card" && !formData.cardNumber ? "border-error/50 bg-error/5" : ""}`}
-                              required={formData.paymentMethod === "Credit Card"}
+                              required={
+                                formData.paymentMethod === "Credit Card"
+                              }
                             />
                           </div>
                           <div className="grid grid-cols-2 gap-8">
                             <div className="space-y-2">
                               <label className="text-[11px] font-black uppercase tracking-widest text-base-content/40 ml-4 flex items-center">
-                                Expiry Date <span className="text-error ml-1">*</span>
+                                Expiry Date{" "}
+                                <span className="text-error ml-1">*</span>
                               </label>
                               <input
                                 type="date"
@@ -526,7 +550,9 @@ const BookingContent = () => {
                                 onChange={handleInputChange}
                                 placeholder="MM / YY"
                                 className={`input input-ghost w-full h-12 rounded-2xl bg-base-100 border-transparent focus:border-primary/20 px-8 font-bold ${formSubmitted && formData.paymentMethod === "Credit Card" && !formData.expiryDate ? "border-error/50 bg-error/5" : ""}`}
-                                required={formData.paymentMethod === "Credit Card"}
+                                required={
+                                  formData.paymentMethod === "Credit Card"
+                                }
                               />
                             </div>
                             <div className="space-y-2">
@@ -535,12 +561,14 @@ const BookingContent = () => {
                               </label>
                               <input
                                 type="number"
-                                name="cvc"
+                                name="cvv"
                                 value={formData.cvv}
                                 onChange={handleInputChange}
-                                placeholder="***"
+                                placeholder="123"
                                 className={`input input-ghost w-full h-12 rounded-2xl bg-base-100 border-transparent focus:border-primary/20 px-8 font-bold ${formSubmitted && formData.paymentMethod === "Credit Card" && !formData.cvv ? "border-error/50 bg-error/5" : ""}`}
-                                required={formData.paymentMethod === "Credit Card"}
+                                required={
+                                  formData.paymentMethod === "Credit Card"
+                                }
                               />
                             </div>
                           </div>
@@ -552,18 +580,29 @@ const BookingContent = () => {
                         <div className="mt-12 p-10 rounded-[3rem] bg-base-200/30 border border-base-content/5 space-y-8 animate-in fade-in slide-in-from-top-4 duration-500">
                           <div className="flex items-center gap-4 p-6 rounded-2xl bg-primary/5 border border-primary/10 mb-4">
                             <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                  clipRule="evenodd"
+                                />
                               </svg>
                             </div>
                             <div className="text-xs font-bold text-primary/80 leading-relaxed">
-                              Please send the total amount to our merchant number and provide the details below.
+                              Please send the total amount to our merchant
+                              number and provide the details below.
                             </div>
                           </div>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-2">
                               <label className="text-[11px] font-black uppercase tracking-widest text-base-content/40 ml-4 flex items-center">
-                                Mobile Number <span className="text-error ml-1">*</span>
+                                Mobile Number{" "}
+                                <span className="text-error ml-1">*</span>
                               </label>
                               <input
                                 type="tel"
@@ -572,12 +611,15 @@ const BookingContent = () => {
                                 onChange={handleInputChange}
                                 placeholder="01XXX-XXXXXX"
                                 className={`input input-ghost w-full h-12 rounded-2xl bg-base-100 border-transparent focus:border-primary/20 px-8 font-bold ${formSubmitted && formData.paymentMethod === "Mobile Banking" && !formData.mobileNo ? "border-error/50 bg-error/5" : ""}`}
-                                required={formData.paymentMethod === "Mobile Banking"}
+                                required={
+                                  formData.paymentMethod === "Mobile Banking"
+                                }
                               />
                             </div>
                             <div className="space-y-2">
                               <label className="text-[11px] font-black uppercase tracking-widest text-base-content/40 ml-4 flex items-center">
-                                Transaction ID <span className="text-error ml-1">*</span>
+                                Transaction ID{" "}
+                                <span className="text-error ml-1">*</span>
                               </label>
                               <input
                                 type="text"
@@ -586,7 +628,9 @@ const BookingContent = () => {
                                 onChange={handleInputChange}
                                 placeholder="TRX123456789"
                                 className={`input input-ghost w-full h-12 rounded-2xl bg-base-100 border-transparent focus:border-primary/20 px-8 font-bold uppercase ${formSubmitted && formData.paymentMethod === "Mobile Banking" && !formData.transactionId ? "border-error/50 bg-error/5" : ""}`}
-                                required={formData.paymentMethod === "Mobile Banking"}
+                                required={
+                                  formData.paymentMethod === "Mobile Banking"
+                                }
                               />
                             </div>
                           </div>
@@ -606,43 +650,70 @@ const BookingContent = () => {
             <div className="space-y-8 sticky top-28">
               <div className="bg-base-200/50 rounded-[4rem] border border-base-content/5 p-12 overflow-hidden relative">
                 <div className="absolute top-0 left-0 w-full h-2 bg-primary"></div>
-                <h3 className="text-2xl font-black text-base-content mb-8">Booking Summary</h3>
+                <h3 className="text-2xl font-black text-base-content mb-8">
+                  Booking Summary
+                </h3>
 
                 {selectedPackage && (
                   <div className="space-y-8">
                     <div className="relative h-48 rounded-[2.5rem] overflow-hidden shadow-xl">
-                      <Image src={selectedPackage.image} alt={selectedPackage.title} fill className="object-cover" />
+                      <Image
+                        src={selectedPackage.image}
+                        alt={selectedPackage.title}
+                        fill
+                        className="object-cover"
+                      />
                     </div>
 
                     <div className="space-y-4">
                       <div className="flex justify-between items-end">
                         <div className="space-y-1">
-                          <div className="text-[10px] font-black uppercase tracking-widest text-base-content/30">Package</div>
-                          <div className="text-lg font-black text-base-content leading-tight">{selectedPackage.title}</div>
+                          <div className="text-[10px] font-black uppercase tracking-widest text-base-content/30">
+                            Package
+                          </div>
+                          <div className="text-lg font-black text-base-content leading-tight">
+                            {selectedPackage.title}
+                          </div>
                         </div>
-                        <div className="text-primary font-black">{selectedPackage.duration}</div>
+                        <div className="text-primary font-black">
+                          {selectedPackage.duration}
+                        </div>
                       </div>
 
                       <div className="h-px bg-base-content/5"></div>
 
                       <div className="space-y-4">
                         <div className="flex justify-between text-sm font-bold">
-                          <span className="text-base-content/50">Base Price ({travelers} travelers)</span>
-                          <span className="text-base-content">${selectedPackage.price * travelers}</span>
+                          <span className="text-base-content/50">
+                            Base Price ({travelers} travelers)
+                          </span>
+                          <span className="text-base-content">
+                            ${selectedPackage.price * travelers}
+                          </span>
                         </div>
                         <div className="flex justify-between text-sm font-bold">
-                          <span className="text-base-content/50">Taxes & Fees (10%)</span>
-                          <span className="text-base-content">${(totalPrice * 0.1).toFixed(2)}</span>
+                          <span className="text-base-content/50">
+                            Taxes & Fees (10%)
+                          </span>
+                          <span className="text-base-content">
+                            ${(totalPrice * 0.1).toFixed(2)}
+                          </span>
                         </div>
                         <div className="flex justify-between text-sm font-bold">
-                          <span className="text-base-content/50">Service Charge</span>
+                          <span className="text-base-content/50">
+                            Service Charge
+                          </span>
                           <span className="text-base-content">$25.00</span>
                         </div>
                       </div>
 
                       <div className="pt-6 border-t-2 border-dashed border-base-content/10 flex justify-between items-center">
-                        <div className="text-xs font-black uppercase tracking-widest text-base-content/40">Total Amount</div>
-                        <div className="text-4xl font-black text-primary tracking-tighter">${(totalPrice * 1.1 + 25).toFixed(2)}</div>
+                        <div className="text-xs font-black uppercase tracking-widest text-base-content/40">
+                          Total Amount
+                        </div>
+                        <div className="text-4xl font-black text-primary tracking-tighter">
+                          ${(totalPrice * 1.1 + 25).toFixed(2)}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -653,25 +724,55 @@ const BookingContent = () => {
               <div className="space-y-4">
                 <div className="flex items-center gap-4 p-6 rounded-3xl bg-success/5 border border-success/10">
                   <div className="w-12 h-12 rounded-2xl bg-success/20 flex items-center justify-center text-success">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2.5"
+                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                      />
                     </svg>
                   </div>
                   <div>
-                    <div className="text-xs font-black uppercase tracking-widest text-success">Secure Payment</div>
-                    <div className="text-[10px] font-bold text-success/60">SSL Encrypted Transaction</div>
+                    <div className="text-xs font-black uppercase tracking-widest text-success">
+                      Secure Payment
+                    </div>
+                    <div className="text-[10px] font-bold text-success/60">
+                      SSL Encrypted Transaction
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-4 p-6 rounded-3xl bg-secondary/5 border border-secondary/10">
                   <div className="w-12 h-12 rounded-2xl bg-secondary/20 flex items-center justify-center text-secondary">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2.5"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
                     </svg>
                   </div>
                   <div>
-                    <div className="text-xs font-black uppercase tracking-widest text-secondary">Free Cancellation</div>
-                    <div className="text-[10px] font-bold text-secondary/60">Up to 5 days before trip</div>
+                    <div className="text-xs font-black uppercase tracking-widest text-secondary">
+                      Free Cancellation
+                    </div>
+                    <div className="text-[10px] font-bold text-secondary/60">
+                      Up to 5 days before trip
+                    </div>
                   </div>
                 </div>
               </div>
@@ -686,11 +787,13 @@ const BookingContent = () => {
 const BookingPage = () => {
   return (
     <PrivateRoutes>
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-base-100">
-          <span className="loading loading-spinner loading-lg text-primary"></span>
-        </div>
-      }>
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex items-center justify-center bg-base-100">
+            <span className="loading loading-spinner loading-lg text-primary"></span>
+          </div>
+        }
+      >
         <BookingContent />
       </Suspense>
     </PrivateRoutes>

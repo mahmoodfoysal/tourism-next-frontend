@@ -1,15 +1,127 @@
 "use client";
-
-import React from "react";
+import React, { useState, useRef, ChangeEvent, FormEvent } from "react";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import Image from "next/image";
+import axios from "axios";
+import {
+  showError,
+  showConfirmation,
+  showSuccess,
+} from "@/components/pages/Alert";
+
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+}
+
+interface FormErrors {
+  name: boolean;
+  email: boolean;
+  message: boolean;
+}
 
 const ContactPage = () => {
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const [errors, setErrors] = useState<FormErrors>({
+    name: false,
+    email: false,
+    message: false,
+  });
+
+  const [isSending, setIsSending] = useState(false);
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({ ...prev, [name]: false }));
+    }
+  };
+
+  const handleSendEmail = async (e: FormEvent) => {
+    if (e) e.preventDefault();
+
+    const newErrors = {
+      name: !formData.name.trim(),
+      email: !formData.email.trim() || !formData.email.includes("@"),
+      message: !formData.message.trim(),
+    };
+
+    setErrors(newErrors);
+
+    if (newErrors.name || newErrors.email || newErrors.message) {
+      showError(
+        "Oops...",
+        "Please fill in the required fields (Name, Email, and Message).",
+      );
+      return;
+    }
+
+    const confirmation = await showConfirmation(
+      "Are you sure?",
+      "Do you want to send this message?",
+      "Yes, send it!",
+      "Abort",
+    );
+
+    if (!confirmation.isConfirmed) return;
+
+    try {
+      setIsSending(true);
+
+      const serviceId = "service_8velmx9";
+      const templateId = "template_a0wk1gc";
+      const publicKey = "BzozWlALRBbkLIfg1";
+
+      const data = {
+        service_id: serviceId,
+        template_id: templateId,
+        user_id: publicKey,
+        template_params: {
+          platform: "Aura Tourism Website.",
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+        },
+      };
+
+      const response = await axios.post(
+        "https://api.emailjs.com/api/v1.0/email/send",
+        data,
+      );
+
+      if (response.status === 200) {
+        await showSuccess("Sent!", "Your message has been sent successfully.");
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      }
+    } catch (error: any) {
+      showError(
+        "Error!",
+        `Failed to send: ${error.response?.data || error.message || "Communication disrupted."}`,
+      );
+    } finally {
+      setIsSending(false);
+    }
+  };
+
   const contactInfo = [
     {
       title: "Direct Call",
-      value: "+1 (555) 000-1234",
-      subValue: "Mon-Fri: 9am - 6pm",
+      value: "+8801714-226177",
+      subValue: "All Day: 9am - 10pm",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -30,7 +142,7 @@ const ContactPage = () => {
     },
     {
       title: "Email Support",
-      value: "hello@auratrip.com",
+      value: "foysalcse033@gmail.com",
       subValue: "24/7 Online Support",
       icon: (
         <svg
@@ -52,8 +164,8 @@ const ContactPage = () => {
     },
     {
       title: "Global Office",
-      value: "123 Discovery Way",
-      subValue: "San Francisco, CA 94103",
+      value: "Cantonment Road, Rajshahi, Bangladesh",
+      subValue: "All Day: 9am - 10pm",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -107,7 +219,7 @@ const ContactPage = () => {
                     </p>
                   </div>
 
-                  <form className="space-y-6">
+                  <form className="space-y-6" onSubmit={handleSendEmail}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <label className="text-[11px] font-black uppercase tracking-widest text-base-content/40 ml-4">
@@ -115,8 +227,11 @@ const ContactPage = () => {
                         </label>
                         <input
                           type="text"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
                           placeholder="John Doe"
-                          className="input input-ghost w-full rounded-2xl bg-base-200/50 border-transparent focus:bg-base-100 focus:border-primary/20 px-6 font-bold h-16"
+                          className={`input input-ghost w-full rounded-2xl bg-base-200/50 border-transparent focus:bg-base-100 focus:border-primary/20 px-6 font-bold h-16 ${errors.name ? "border-error bg-error/5" : ""}`}
                         />
                       </div>
                       <div className="space-y-2">
@@ -125,8 +240,11 @@ const ContactPage = () => {
                         </label>
                         <input
                           type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
                           placeholder="john@example.com"
-                          className="input input-ghost w-full rounded-2xl bg-base-200/50 border-transparent focus:bg-base-100 focus:border-primary/20 px-6 font-bold h-16"
+                          className={`input input-ghost w-full rounded-2xl bg-base-200/50 border-transparent focus:bg-base-100 focus:border-primary/20 px-6 font-bold h-16 ${errors.email ? "border-error bg-error/5" : ""}`}
                         />
                       </div>
                     </div>
@@ -137,6 +255,9 @@ const ContactPage = () => {
                       </label>
                       <input
                         type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
                         placeholder="+1 (555) 000-0000"
                         className="input input-ghost w-full rounded-2xl bg-base-200/50 border-transparent focus:bg-base-100 focus:border-primary/20 px-6 font-bold h-16"
                       />
@@ -147,13 +268,27 @@ const ContactPage = () => {
                         Message
                       </label>
                       <textarea
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
                         placeholder="Tell us about your travel plans..."
-                        className="textarea textarea-ghost w-full h-48 rounded-[2rem] bg-base-200/50 border-transparent focus:bg-base-100 focus:border-primary/20 px-6 py-6 font-bold leading-relaxed resize-none"
+                        className={`textarea textarea-ghost w-full h-48 rounded-[2rem] bg-base-200/50 border-transparent focus:bg-base-100 focus:border-primary/20 px-6 py-6 font-bold leading-relaxed resize-none ${errors.message ? "border-error bg-error/5" : ""}`}
                       ></textarea>
                     </div>
 
-                    <button className="btn btn-primary w-full h-20 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.01] transition-all text-sm">
-                      Send Message
+                    <button
+                      type="submit"
+                      disabled={isSending}
+                      className="btn btn-primary w-full h-20 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.01] transition-all text-sm disabled:opacity-70"
+                    >
+                      {isSending ? (
+                        <span className="flex items-center gap-3">
+                          <span className="loading loading-spinner loading-sm"></span>
+                          Transmitting...
+                        </span>
+                      ) : (
+                        "Send Message"
+                      )}
                     </button>
                   </form>
                 </div>
@@ -215,13 +350,13 @@ const ContactPage = () => {
                     the ground.
                   </p>
                   <div className="text-2xl font-black tracking-tight">
-                    +1 (800) AURA-SOS
+                    +8801714-226177
                   </div>
                 </div>
               </div>
 
               {/* Social Proof Section */}
-              <div className="bg-base-200/50 p-10 rounded-[4rem] border border-base-content/5">
+              {/* <div className="bg-base-200/50 p-10 rounded-[4rem] border border-base-content/5">
                 <h3 className="text-sm font-black uppercase tracking-widest text-base-content/30 mb-6">
                   Online Now
                 </h3>
@@ -250,7 +385,7 @@ const ContactPage = () => {
                     </span>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

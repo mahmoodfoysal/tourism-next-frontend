@@ -227,7 +227,7 @@ const CustomerReview = () => {
                               d="M9 12l2 2 4-4"
                             />
                           </svg>
-                          Verified Trip to {review.tour_place}
+                          {review.tour_place}
                         </div>
                       </div>
                     </div>

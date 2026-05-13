@@ -18,11 +18,84 @@ import {
   closeAlert,
 } from "@/components/pages/Alert";
 
+const Modal = ({
+  isOpen,
+  onClose,
+  title,
+  children,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+}) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto">
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-300"
+        onClick={onClose}
+      ></div>
+      <div className="bg-base-100 w-full max-w-2xl rounded-[3rem] shadow-2xl relative z-10 overflow-hidden animate-in fade-in zoom-in-95 duration-300 border border-base-content/5">
+        <div className="p-8 pb-4 flex items-center justify-between sticky top-0 bg-base-100/80 backdrop-blur-md z-20">
+          <h3 className="text-2xl font-black uppercase tracking-tight text-primary">
+            {title}
+          </h3>
+          <button
+            onClick={onClose}
+            className="btn btn-ghost btn-circle hover:bg-primary/10 hover:text-primary transition-all"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="3"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <div className="p-8 pt-4 max-h-[60vh] overflow-y-auto custom-scrollbar text-base-content/70 leading-relaxed font-medium space-y-4">
+          {children}
+        </div>
+        <div className="p-8 pt-4 border-t border-base-content/5 flex justify-end bg-base-200/30">
+          <button
+            onClick={onClose}
+            className="btn btn-primary rounded-2xl px-10 h-14 font-black uppercase tracking-widest text-xs"
+          >
+            I Understand
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const RegisterPage = () => {
   const [wasSubmitted, setWasSubmitted] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showTerms, setShowTerms] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
   const { user, loading, error } = useSelector(
@@ -62,13 +135,15 @@ const RegisterPage = () => {
     const result = await dispatch(
       registerUser({ email, password, fullName: name }),
     );
-    
+
     if (registerUser.fulfilled.match(result)) {
       closeAlert();
       showSuccess("Welcome!", "Your account has been created successfully.");
     } else if (registerUser.rejected.match(result)) {
       closeAlert();
-      const errorMessage = result.payload as string || "Could not create your account. Please try again.";
+      const errorMessage =
+        (result.payload as string) ||
+        "Could not create your account. Please try again.";
       showError("Registration Failed", errorMessage);
     }
   };
@@ -93,7 +168,7 @@ const RegisterPage = () => {
         ></div>
       </div>
 
-      <div className="w-full max-w-6xl flex flex-col lg:flex-row bg-base-100 rounded-[2rem] shadow-2xl overflow-hidden border border-base-content/5 glass-effect">
+      <div className="w-full max-w-6xl flex flex-col lg:flex-row bg-base-100 rounded-[2.5rem] shadow-2xl overflow-hidden border border-base-content/5 glass-effect">
         {/* Left Side: Branding/Image */}
         <div className="lg:w-1/2 relative hidden lg:block overflow-hidden">
           <Image
@@ -145,7 +220,7 @@ const RegisterPage = () => {
         <div className="lg:w-1/2 p-8 sm:p-12 md:p-16 flex flex-col justify-center">
           <div className="w-full max-w-md mx-auto space-y-8">
             <div className="text-center lg:text-left space-y-2">
-              <h1 className="text-3xl font-black tracking-tight">
+              <h1 className="text-3xl font-black tracking-tight text-base-content">
                 Create Account
               </h1>
               <p className="text-base-content/60 font-medium">
@@ -247,19 +322,21 @@ const RegisterPage = () => {
                   className="text-sm font-medium text-base-content/60 cursor-pointer select-none"
                 >
                   I agree to the{" "}
-                  <Link
-                    href="#"
+                  <button
+                    type="button"
+                    onClick={() => setShowTerms(true)}
                     className="text-primary font-bold hover:underline"
                   >
                     Terms
-                  </Link>{" "}
+                  </button>{" "}
                   &{" "}
-                  <Link
-                    href="#"
+                  <button
+                    type="button"
+                    onClick={() => setShowPrivacy(true)}
                     className="text-primary font-bold hover:underline"
                   >
                     Privacy
-                  </Link>
+                  </button>
                 </label>
               </div>
 
@@ -284,6 +361,104 @@ const RegisterPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showTerms}
+        onClose={() => setShowTerms(false)}
+        title="Terms & Conditions"
+      >
+        <p className="font-bold text-base-content">
+          Welcome to AuraTrip. By using our services, you agree to the following
+          terms:
+        </p>
+        <div className="space-y-4">
+          <section>
+            <h4 className="font-black text-primary text-sm uppercase">
+              1. User Agreement
+            </h4>
+            <p>
+              You must be at least 18 years old to use this platform. All
+              account information must be accurate and truthful.
+            </p>
+          </section>
+          <section>
+            <h4 className="font-black text-primary text-sm uppercase">
+              2. Booking Policy
+            </h4>
+            <p>
+              All bookings are subject to availability. Prices may fluctuate
+              based on seasonal demand and local provider adjustments.
+            </p>
+          </section>
+          <section>
+            <h4 className="font-black text-primary text-sm uppercase">
+              3. Cancellation
+            </h4>
+            <p>
+              Cancellations must be made at least 72 hours before the scheduled
+              departure to be eligible for a partial refund.
+            </p>
+          </section>
+          <section>
+            <h4 className="font-black text-primary text-sm uppercase">
+              4. Code of Conduct
+            </h4>
+            <p>
+              We maintain a zero-tolerance policy for harassment or illegal
+              activities during our tours.
+            </p>
+          </section>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showPrivacy}
+        onClose={() => setShowPrivacy(false)}
+        title="Privacy Policy"
+      >
+        <p className="font-bold text-base-content">
+          Your privacy is our tactical priority. Here is how we handle your
+          data:
+        </p>
+        <div className="space-y-4">
+          <section>
+            <h4 className="font-black text-primary text-sm uppercase">
+              1. Data Collection
+            </h4>
+            <p>
+              We collect your name, email, and travel preferences to provide a
+              personalized experience.
+            </p>
+          </section>
+          <section>
+            <h4 className="font-black text-primary text-sm uppercase">
+              2. Security Measures
+            </h4>
+            <p>
+              All data is encrypted and stored in secure cloud environments.
+            </p>
+          </section>
+          <section>
+            <h4 className="font-black text-primary text-sm uppercase">
+              3. Third-Party Sharing
+            </h4>
+            <p>
+              We only share necessary information with our trusted travel
+              partners (hotels, airlines) to facilitate your bookings.
+            </p>
+          </section>
+          <section>
+            <h4 className="font-black text-primary text-sm uppercase">
+              4. Your Rights
+            </h4>
+            <p>
+              You have the right to request access to or deletion of your
+              personal data at any time via your account settings.
+            </p>
+          </section>
+        </div>
+      </Modal>
     </main>
   );
 };

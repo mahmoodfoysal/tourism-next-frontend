@@ -57,6 +57,26 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       ),
     },
     {
+      name: "Add Package",
+      path: "/dashboard/add-package",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+          />
+        </svg>
+      ),
+    },
+    {
       name: "My Bookings",
       path: "/dashboard/my-bookings",
       icon: (
@@ -247,7 +267,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
             <div className="flex items-center gap-6">
               {/* Search Placeholder */}
-              <div className="hidden md:flex items-center gap-3 px-6 h-12 rounded-2xl bg-base-200/50 border border-base-content/5 text-base-content/40 w-80">
+              {/* <div className="hidden md:flex items-center gap-3 px-6 h-12 rounded-2xl bg-base-200/50 border border-base-content/5 text-base-content/40 w-80">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5"
@@ -265,7 +285,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 <span className="text-sm font-bold">
                   Search destinations...
                 </span>
-              </div>
+              </div> */}
 
               {/* Notifications */}
               <button className="relative w-12 h-12 rounded-2xl bg-base-200/50 border border-base-content/5 flex items-center justify-center text-base-content/60 hover:text-primary transition-colors">

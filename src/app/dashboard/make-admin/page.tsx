@@ -9,7 +9,6 @@ import {
   showConfirmation,
   showProcessing,
   showSuccess,
-  closeAlert,
 } from "@/components/pages/Alert";
 
 interface AdminUser {
@@ -94,7 +93,9 @@ const MakeAdminPage = () => {
 
   useEffect(() => {
     if (user?.email) {
-      fetchAdmins();
+      setTimeout(() => {
+        fetchAdmins();
+      }, 0);
     }
   }, [user?.email, axiosSecure]);
 
@@ -144,11 +145,11 @@ const MakeAdminPage = () => {
 
     const result = await showConfirmation(
       editingAdmin ? "Update Clearance?" : "Authorize Admin?",
-      editingAdmin 
+      editingAdmin
         ? "This will synchronize new administrative privileges for this operative."
         : "This will grant new administrative access levels.",
       "Authorize",
-      "Cancel"
+      "Cancel",
     );
 
     if (result.isConfirmed) {
@@ -431,10 +432,12 @@ const MakeAdminPage = () => {
                     </option>
                     {accessList.map((role) => (
                       <option key={role.role_id} value={role.role}>
-                        [{role.role_id}] {role.role} — {
-                          role.role === "Super Admin" ? "Full Authorization" :
-                          role.role === "Admin" ? "Standard Access" : "Limited Management"
-                        }
+                        [{role.role_id}] {role.role} —{" "}
+                        {role.role === "Super Admin"
+                          ? "Full Authorization"
+                          : role.role === "Admin"
+                            ? "Standard Access"
+                            : "Limited Management"}
                       </option>
                     ))}
                   </select>

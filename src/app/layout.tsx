@@ -6,6 +6,7 @@ import Footer from "@/components/shared/Footer/Footer";
 import ReduxProvider from "@/store/ReduxProvider";
 import NextTopLoader from "nextjs-toploader";
 import ScrollToTop from "@/components/shared/ScrollToTop/ScrollToTop";
+import GeminiChat from "@/components/shared/GeminiChat/GeminiChat";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
           {children}
           <Footer />
           <ScrollToTop />
+          <GeminiChat />
         </ReduxProvider>
         </body>
     </html>

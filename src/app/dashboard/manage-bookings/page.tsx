@@ -13,6 +13,7 @@ import {
 } from "@/components/pages/Alert";
 import Pagination from "@/components/pages/Pagination";
 import Invoice from "@/components/pages/Invoice";
+import DashboardSkeleton from "@/components/pages/DashboardSkeleton";
 
 interface BookingItem {
   _id: string;
@@ -196,13 +197,12 @@ const ManageBookingsPage = () => {
     }
   };
 
+  const handleClearSearch = () => {
+    setSearchQuery("");
+  };
+
   if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="h-20 bg-base-200/50 rounded-2xl animate-pulse"></div>
-        <div className="h-96 bg-base-200/50 rounded-2xl animate-pulse"></div>
-      </div>
-    );
+    return <DashboardSkeleton></DashboardSkeleton>;
   }
 
   return (
@@ -227,7 +227,7 @@ const ManageBookingsPage = () => {
           <div className="relative w-full md:w-96 group">
             <input
               type="text"
-              placeholder="Search by voyager, package or ID..."
+              placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full h-12 pl-12 pr-6 rounded-2xl bg-base-100 border border-base-content/5 text-xs font-bold focus:outline-none focus:border-primary/30 transition-all shadow-sm group-hover:shadow-md"
@@ -249,16 +249,6 @@ const ManageBookingsPage = () => {
               </svg>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="px-4 py-2 bg-base-200/50 rounded-xl border border-base-content/5">
-              <span className="text-[10px] font-black uppercase tracking-widest text-base-content/40 mr-2">
-                Total Manifests:
-              </span>
-              <span className="text-sm font-black text-primary">
-                {bookings.length}
-              </span>
-            </div>
-          </div>
         </div>
 
         {/* Booking Table */}
@@ -268,13 +258,13 @@ const ManageBookingsPage = () => {
               <thead>
                 <tr className="border-b border-base-content/5 h-14">
                   <th className="pl-10 text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40">
-                    Voyager Identity
+                    Identity
                   </th>
                   <th className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40">
-                    Expedition
+                    Package
                   </th>
                   <th className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40">
-                    Financials
+                    Costing
                   </th>
                   <th className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40">
                     Status
@@ -285,65 +275,150 @@ const ManageBookingsPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentItems.map((booking) => (
-                  <tr
-                    key={booking._id}
-                    className="hover:bg-base-200/30 transition-colors border-b border-base-content/5 group"
-                  >
-                    <td className="pl-10 py-6">
-                      <div className="flex flex-col gap-1">
-                        <span className="text-sm font-black text-base-content uppercase tracking-tight">
-                          {booking.full_name}
-                        </span>
-                        <span className="text-[10px] font-bold text-base-content/40">
-                          {booking.email}
-                        </span>
-                        <span className="text-[9px] font-black text-primary/60 uppercase tracking-widest mt-1">
-                          ID: {booking._id.slice(-8).toUpperCase()}
-                        </span>
-                      </div>
+                {currentItems.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="text-center py-20 text-base-content/30 font-black uppercase tracking-widest"
+                    >
+                      No bookings found
+                      <button
+                        onClick={handleClearSearch}
+                        className="ml-2 px-3 py-2 rounded-xl font-bold text-primary hover:text-secondary hover:bg-primary/10"
+                      >
+                        Clear Filter
+                      </button>
                     </td>
-                    <td>
-                      <div className="flex items-center gap-4">
-                        <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-base-content/5">
-                          <Image
-                            src={booking.package_info.image}
-                            alt="Pkg"
-                            fill
-                            className="object-cover"
-                            unoptimized
-                          />
+                  </tr>
+                ) : (
+                  currentItems.map((booking) => (
+                    <tr
+                      key={booking._id}
+                      className="hover:bg-base-200/30 transition-colors border-b border-base-content/5 group"
+                    >
+                      <td className="pl-10 py-6">
+                        <div className="flex flex-col gap-1">
+                          <span className="text-sm font-black text-base-content uppercase tracking-tight">
+                            {booking.full_name}
+                          </span>
+                          <span className="text-[10px] font-bold text-base-content/40">
+                            {booking.email}
+                          </span>
+                          <span className="text-[9px] font-black text-primary/60 uppercase tracking-widest mt-1">
+                            ID: {booking.order_id}
+                          </span>
                         </div>
+                      </td>
+                      <td>
+                        <div className="flex items-center gap-4">
+                          <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-base-content/5">
+                            <Image
+                              src={booking.package_info.image}
+                              alt="Pkg"
+                              fill
+                              className="object-cover"
+                              unoptimized
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[11px] font-black text-base-content uppercase tracking-tight line-clamp-1 max-w-[200px]">
+                              {booking.package_info.title}
+                            </span>
+                            <span className="text-[9px] font-bold text-base-content/40">
+                              Date:{" "}
+                              {new Date(
+                                booking.joining_date,
+                              ).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
                         <div className="flex flex-col">
-                          <span className="text-[11px] font-black text-base-content uppercase tracking-tight line-clamp-1 max-w-[200px]">
-                            {booking.package_info.title}
+                          <span className="text-sm font-black text-primary">
+                            ${booking.grand_total.toFixed(2)}
                           </span>
-                          <span className="text-[9px] font-bold text-base-content/40">
-                            Date:{" "}
-                            {new Date(
-                              booking.joining_date,
-                            ).toLocaleDateString()}
+                          <span className="text-[9px] font-bold text-base-content/40 uppercase tracking-widest">
+                            {booking.person} Persons
                           </span>
                         </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-black text-primary">
-                          ${booking.grand_total.toFixed(2)}
-                        </span>
-                        <span className="text-[9px] font-bold text-base-content/40 uppercase tracking-widest">
-                          {booking.person} Voyagers
-                        </span>
-                      </div>
-                    </td>
-                    <td>{getStatusBadge(booking.order_status)}</td>
-                    <td className="pr-10 text-right">
-                      <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                        <div className="dropdown dropdown-left">
-                          <label
-                            tabIndex={0}
-                            className="w-9 h-9 rounded-xl bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all shadow-sm cursor-pointer"
+                      </td>
+                      <td>{getStatusBadge(booking.order_status)}</td>
+                      <td className="pr-10 text-right">
+                        <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                          <div className="dropdown dropdown-left">
+                            <label
+                              tabIndex={0}
+                              className="w-9 h-9 rounded-xl bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all shadow-sm cursor-pointer"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2.5"
+                                  d="M9 5l7 7-7 7"
+                                />
+                              </svg>
+                            </label>
+                            <ul
+                              tabIndex={0}
+                              className="dropdown-content z-[50] menu p-2 shadow-2xl bg-base-100 rounded-xl border border-base-content/5 w-44 space-y-1"
+                            >
+                              <li>
+                                <button
+                                  onClick={() =>
+                                    handleStatusUpdate(booking._id, "BP")
+                                  }
+                                  className="text-[10px] font-black uppercase tracking-widest py-2.5 hover:bg-base-content/5"
+                                >
+                                  Set Processing
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  onClick={() =>
+                                    handleStatusUpdate(booking._id, "B")
+                                  }
+                                  className="text-[10px] font-black uppercase tracking-widest py-2.5 hover:bg-success/5 hover:text-success"
+                                >
+                                  Set Booking Confirm
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  onClick={() =>
+                                    handleStatusUpdate(booking._id, "C")
+                                  }
+                                  className="text-[10px] font-black uppercase tracking-widest py-2.5 hover:bg-info/5 hover:text-info"
+                                >
+                                  Set Completed
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  onClick={() =>
+                                    handleStatusUpdate(booking._id, "R")
+                                  }
+                                  className="text-[10px] font-black uppercase tracking-widest py-2.5 hover:bg-error/5 hover:text-error"
+                                >
+                                  Set Cancelled
+                                </button>
+                              </li>
+                            </ul>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setSelectedBooking(booking);
+                              setIsModalOpen(true);
+                            }}
+                            className="w-9 h-9 rounded-xl bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-accent hover:text-white transition-all shadow-sm"
+                            title="View Manifest"
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -356,132 +431,64 @@ const ManageBookingsPage = () => {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                                 strokeWidth="2.5"
-                                d="M9 5l7 7-7 7"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2.5"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                               />
                             </svg>
-                          </label>
-                          <ul
-                            tabIndex={0}
-                            className="dropdown-content z-[50] menu p-2 shadow-2xl bg-base-100 rounded-xl border border-base-content/5 w-44 space-y-1"
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedBooking(booking);
+                              setTimeout(() => window.print(), 100);
+                            }}
+                            className="w-9 h-9 rounded-xl bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all shadow-sm"
+                            title="Print Strategic Manifest"
                           >
-                            <li>
-                              <button
-                                onClick={() =>
-                                  handleStatusUpdate(booking._id, "BP")
-                                }
-                                className="text-[10px] font-black uppercase tracking-widest py-2.5 hover:bg-base-content/5"
-                              >
-                                Set Processing
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                onClick={() =>
-                                  handleStatusUpdate(booking._id, "B")
-                                }
-                                className="text-[10px] font-black uppercase tracking-widest py-2.5 hover:bg-success/5 hover:text-success"
-                              >
-                                Set Booking Confirm
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                onClick={() =>
-                                  handleStatusUpdate(booking._id, "C")
-                                }
-                                className="text-[10px] font-black uppercase tracking-widest py-2.5 hover:bg-info/5 hover:text-info"
-                              >
-                                Set Completed
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                onClick={() =>
-                                  handleStatusUpdate(booking._id, "R")
-                                }
-                                className="text-[10px] font-black uppercase tracking-widest py-2.5 hover:bg-error/5 hover:text-error"
-                              >
-                                Set Cancelled
-                              </button>
-                            </li>
-                          </ul>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2.5"
+                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(booking._id)}
+                            className="w-9 h-9 rounded-xl bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-error hover:text-white transition-all shadow-sm"
+                            title="Delete Record"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2.5"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
+                            </svg>
+                          </button>
                         </div>
-                        <button
-                          onClick={() => {
-                            setSelectedBooking(booking);
-                            setIsModalOpen(true);
-                          }}
-                          className="w-9 h-9 rounded-xl bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-accent hover:text-white transition-all shadow-sm"
-                          title="View Manifest"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2.5"
-                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                            />
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2.5"
-                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                            />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedBooking(booking);
-                            setTimeout(() => window.print(), 100);
-                          }}
-                          className="w-9 h-9 rounded-xl bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all shadow-sm"
-                          title="Print Strategic Manifest"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2.5"
-                              d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-                            />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() => handleDelete(booking._id)}
-                          className="w-9 h-9 rounded-xl bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-error hover:text-white transition-all shadow-sm"
-                          title="Delete Record"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2.5"
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -633,7 +640,7 @@ const ManageBookingsPage = () => {
                         </div>
                         <div>
                           <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30 mb-1">
-                            Voyagers
+                            Persons
                           </p>
                           <p className="text-xs font-black text-base-content/70">
                             {selectedBooking.person} Adults

@@ -12,6 +12,7 @@ import {
   showSuccess,
 } from "@/components/pages/Alert";
 import Pagination from "@/components/pages/Pagination";
+import DashboardSkeleton from "@/components/pages/DashboardSkeleton";
 
 interface TourPackage {
   _id: string;
@@ -342,13 +343,12 @@ const AddPackagePage = () => {
     }
   };
 
+  const handleClearSearch = () => {
+    setSearchQuery("");
+  };
+
   if (loading) {
-    return (
-      <div className="flex flex-col gap-6">
-        <div className="h-20 bg-base-200/50 rounded-2xl animate-pulse"></div>
-        <div className="h-96 bg-base-200/50 rounded-2xl animate-pulse"></div>
-      </div>
-    );
+    return <DashboardSkeleton></DashboardSkeleton>;
   }
 
   return (
@@ -415,160 +415,181 @@ const AddPackagePage = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((pkg, index) => (
-                <tr
-                  key={index}
-                  className="hover:bg-base-200/30 transition-colors border-b border-base-content/5 group"
-                >
-                  <td className="pl-10 text-[10px] font-black text-base-content/20 uppercase tracking-widest">
-                    {(indexOfFirstItem + index + 1).toString().padStart(2, "0")}
-                  </td>
-                  <td className="py-4">
-                    <div className="flex items-center gap-4">
-                      <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-base-200 border border-base-content/5 shrink-0">
-                        {pkg.image ? (
-                          <Image
-                            src={pkg.image}
-                            alt={pkg.title}
-                            fill
-                            className="object-cover"
-                            unoptimized
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary font-black text-[10px]">
-                            {pkg.title.charAt(0)}
-                          </div>
-                        )}
-                      </div>
-                      <div>
-                        <div className="font-black text-base-content uppercase tracking-tight line-clamp-1">
-                          {pkg.title}
-                        </div>
-                        <div className="text-[10px] font-bold text-base-content/40 uppercase tracking-widest">
-                          {pkg.package_id}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex flex-col">
-                      <span className="text-[11px] font-black uppercase tracking-widest text-base-content/70">
-                        {pkg.location}
-                      </span>
-                      <span className="text-[9px] font-bold text-base-content/40 uppercase tracking-widest">
-                        {pkg.duration}
-                      </span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-black text-primary">
-                        ${pkg.price}
-                      </span>
-                      {pkg.discount > 0 && (
-                        <span className="text-[9px] font-bold text-error uppercase tracking-widest">
-                          -{pkg.discount}% OFF
-                        </span>
-                      )}
-                    </div>
-                  </td>
-                  <td>
-                    <span
-                      className={`px-3 py-1 text-[8px] font-black uppercase tracking-[0.2em] rounded-md border ${
-                        pkg.status === 1
-                          ? "bg-success/10 text-success border-success/20"
-                          : "bg-error/10 text-error border-error/20"
-                      }`}
+              {currentItems.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="text-center py-20 text-base-content/30 font-black uppercase tracking-widest"
+                  >
+                    No packages found
+                    <button
+                      onClick={handleClearSearch}
+                      className="ml-2 px-3 py-2 rounded-xl font-bold text-primary hover:text-secondary hover:bg-primary/10"
                     >
-                      {pkg.status === 1 ? "Active" : "Inactive"}
-                    </span>
-                  </td>
-                  <td className="pr-10 text-right">
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        onClick={() => handleOpenDrawer(pkg)}
-                        className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all shadow-sm"
-                        title="Edit Package"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-3.5 w-3.5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(pkg._id)}
-                        className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-error hover:text-white transition-all shadow-sm"
-                        title="Delete Package"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-3.5 w-3.5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => handleStatusChange(pkg._id, pkg.status)}
-                        className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-info hover:text-white transition-all shadow-sm"
-                        title="Change Status"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-3.5 w-3.5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => handleOpenDetails(pkg)}
-                        className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-accent hover:text-white transition-all shadow-sm"
-                        title="Detailed Manifest"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-3.5 w-3.5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </button>
-                    </div>
+                      Clear Filter
+                    </button>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                currentItems.map((pkg, index) => (
+                  <tr
+                    key={index}
+                    className="hover:bg-base-200/30 transition-colors border-b border-base-content/5 group"
+                  >
+                    <td className="pl-10 text-[10px] font-black text-base-content/20 uppercase tracking-widest">
+                      {(indexOfFirstItem + index + 1)
+                        .toString()
+                        .padStart(2, "0")}
+                    </td>
+                    <td className="py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-base-200 border border-base-content/5 shrink-0">
+                          {pkg.image ? (
+                            <Image
+                              src={pkg.image}
+                              alt={pkg.title}
+                              fill
+                              className="object-cover"
+                              unoptimized
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary font-black text-[10px]">
+                              {pkg.title.charAt(0)}
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-black text-base-content uppercase tracking-tight line-clamp-1">
+                            {pkg.title}
+                          </div>
+                          <div className="text-[10px] font-bold text-base-content/40 uppercase tracking-widest">
+                            {pkg.package_id}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="flex flex-col">
+                        <span className="text-[11px] font-black uppercase tracking-widest text-base-content/70">
+                          {pkg.location}
+                        </span>
+                        <span className="text-[9px] font-bold text-base-content/40 uppercase tracking-widest">
+                          {pkg.duration}
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-black text-primary">
+                          ${pkg.price}
+                        </span>
+                        {pkg.discount > 0 && (
+                          <span className="text-[9px] font-bold text-error uppercase tracking-widest">
+                            -{pkg.discount}% OFF
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td>
+                      <span
+                        className={`px-3 py-1 text-[8px] font-black uppercase tracking-[0.2em] rounded-md border ${
+                          pkg.status === 1
+                            ? "bg-success/10 text-success border-success/20"
+                            : "bg-error/10 text-error border-error/20"
+                        }`}
+                      >
+                        {pkg.status === 1 ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+                    <td className="pr-10 text-right">
+                      <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => handleOpenDrawer(pkg)}
+                          className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all shadow-sm"
+                          title="Edit Package"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-3.5 w-3.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(pkg._id)}
+                          className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-error hover:text-white transition-all shadow-sm"
+                          title="Delete Package"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-3.5 w-3.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleStatusChange(pkg._id, pkg.status)
+                          }
+                          className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-info hover:text-white transition-all shadow-sm"
+                          title="Change Status"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-3.5 w-3.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleOpenDetails(pkg)}
+                          className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center text-base-content/60 hover:bg-accent hover:text-white transition-all shadow-sm"
+                          title="Detailed Manifest"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-3.5 w-3.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

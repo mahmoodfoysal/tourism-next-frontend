@@ -12,6 +12,7 @@ import {
   showSuccess,
 } from "@/components/pages/Alert";
 import Pagination from "@/components/pages/Pagination";
+import DashboardSkeleton from "@/components/pages/DashboardSkeleton";
 
 interface Blog {
   _id: string;
@@ -292,13 +293,12 @@ const AddBlogPage = () => {
     }
   };
 
+  const handleClearSearch = () => {
+    setSearchQuery("");
+  };
+
   if (loading) {
-    return (
-      <div className="flex flex-col gap-6 p-8">
-        <div className="h-20 bg-base-200/50 rounded-2xl animate-pulse"></div>
-        <div className="h-96 bg-base-200/50 rounded-2xl animate-pulse"></div>
-      </div>
-    );
+    return <DashboardSkeleton></DashboardSkeleton>;
   }
 
   return (
@@ -362,175 +362,192 @@ const AddBlogPage = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((blog, index) => (
-                <tr
-                  key={blog._id}
-                  className="hover:bg-base-200/40 transition-all border-b border-base-content/5 group"
-                >
-                  <td className="pl-10">
-                    <span className="text-[10px] font-black text-base-content/20 tracking-widest">
-                      {(indexOfFirstItem + index + 1)
-                        .toString()
-                        .padStart(2, "0")}
-                    </span>
-                  </td>
-                  <td className="py-6">
-                    <div className="flex items-center gap-4">
-                      <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-base-200 border border-base-content/5 shrink-0 shadow-sm">
-                        {blog.image && (
-                          <Image
-                            src={blog.image}
-                            alt={blog.title}
-                            fill
-                            className="object-cover transition-transform group-hover:scale-110 duration-500"
-                            unoptimized
-                          />
-                        )}
-                      </div>
-                      <div>
-                        <div className="font-black text-sm text-base-content uppercase tracking-tight line-clamp-1 group-hover:text-primary transition-colors">
-                          {blog.title}
-                        </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[8px] font-black uppercase tracking-widest">
-                            {blog.category}
-                          </span>
-                          <span className="text-[9px] font-bold text-base-content/30 uppercase tracking-widest">
-                            ID: {blog.id}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-2">
-                        <div className="relative w-5 h-5 rounded-full overflow-hidden border border-base-content/10">
-                          <Image
-                            src={
-                              blog.authorImage || "https://i.pravatar.cc/150"
-                            }
-                            alt={blog.author}
-                            fill
-                            className="object-cover"
-                            unoptimized
-                          />
-                        </div>
-                        <span className="text-[11px] font-black uppercase tracking-tight text-base-content/70">
-                          {blog.author}
-                        </span>
-                      </div>
-                      <span className="text-[9px] font-bold text-base-content/30 uppercase tracking-widest mt-1">
-                        {new Date(blog.date).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}{" "}
-                        • {blog.readingTime}
-                      </span>
-                    </div>
-                  </td>
-                  <td>
-                    <span
-                      className={`px-4 py-1.5 text-[8px] font-black uppercase tracking-[0.2em] rounded-lg border ${
-                        blog.status === 1
-                          ? "bg-success/10 text-success border-success/20 shadow-[0_0_20px_rgba(34,197,94,0.1)]"
-                          : "bg-warning/10 text-warning border-warning/20 shadow-[0_0_20px_rgba(234,179,8,0.1)]"
-                      }`}
+              {currentItems.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="text-center py-20 text-base-content/30 font-black uppercase tracking-widest"
+                  >
+                    No blogs found
+                    <button
+                      onClick={handleClearSearch}
+                      className="ml-2 px-3 py-2 rounded-xl font-bold text-primary hover:text-secondary hover:bg-primary/10"
                     >
-                      {blog.status === 1 ? "Published" : "Draft"}
-                    </span>
-                  </td>
-                  <td className="pr-10 text-right">
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
-                      <button
-                        onClick={() => handleOpenDrawer(blog)}
-                        className="w-9 h-9 rounded-xl bg-base-100 shadow-xl flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all border border-base-content/5"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(blog._id)}
-                        className="w-9 h-9 rounded-xl bg-base-100 shadow-xl flex items-center justify-center text-base-content/60 hover:bg-error hover:text-white transition-all border border-base-content/5"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleStatusChange(blog._id, blog.status)
-                        }
-                        className="w-9 h-9 rounded-xl bg-base-100 shadow-xl flex items-center justify-center text-base-content/60 hover:bg-info hover:text-white transition-all border border-base-content/5"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => handleOpenDetails(blog)}
-                        className="w-9 h-9 rounded-xl bg-base-100 shadow-xl flex items-center justify-center text-base-content/60 hover:bg-accent hover:text-white transition-all border border-base-content/5"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </button>
-                    </div>
+                      Clear Filter
+                    </button>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                currentItems.map((blog, index) => (
+                  <tr
+                    key={blog._id}
+                    className="hover:bg-base-200/40 transition-all border-b border-base-content/5 group"
+                  >
+                    <td className="pl-10">
+                      <span className="text-[10px] font-black text-base-content/20 tracking-widest">
+                        {(indexOfFirstItem + index + 1)
+                          .toString()
+                          .padStart(2, "0")}
+                      </span>
+                    </td>
+                    <td className="py-6">
+                      <div className="flex items-center gap-4">
+                        <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-base-200 border border-base-content/5 shrink-0 shadow-sm">
+                          {blog.image && (
+                            <Image
+                              src={blog.image}
+                              alt={blog.title}
+                              fill
+                              className="object-cover transition-transform group-hover:scale-110 duration-500"
+                              unoptimized
+                            />
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-black text-sm text-base-content uppercase tracking-tight line-clamp-1 group-hover:text-primary transition-colors">
+                            {blog.title}
+                          </div>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[8px] font-black uppercase tracking-widest">
+                              {blog.category}
+                            </span>
+                            <span className="text-[9px] font-bold text-base-content/30 uppercase tracking-widest">
+                              ID: {blog.id}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                          <div className="relative w-5 h-5 rounded-full overflow-hidden border border-base-content/10">
+                            <Image
+                              src={
+                                blog.authorImage || "https://i.pravatar.cc/150"
+                              }
+                              alt={blog.author}
+                              fill
+                              className="object-cover"
+                              unoptimized
+                            />
+                          </div>
+                          <span className="text-[11px] font-black uppercase tracking-tight text-base-content/70">
+                            {blog.author}
+                          </span>
+                        </div>
+                        <span className="text-[9px] font-bold text-base-content/30 uppercase tracking-widest mt-1">
+                          {new Date(blog.date).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}{" "}
+                          • {blog.readingTime}
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <span
+                        className={`px-4 py-1.5 text-[8px] font-black uppercase tracking-[0.2em] rounded-lg border ${
+                          blog.status === 1
+                            ? "bg-success/10 text-success border-success/20 shadow-[0_0_20px_rgba(34,197,94,0.1)]"
+                            : "bg-warning/10 text-warning border-warning/20 shadow-[0_0_20px_rgba(234,179,8,0.1)]"
+                        }`}
+                      >
+                        {blog.status === 1 ? "Published" : "Draft"}
+                      </span>
+                    </td>
+                    <td className="pr-10 text-right">
+                      <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+                        <button
+                          onClick={() => handleOpenDrawer(blog)}
+                          className="w-9 h-9 rounded-xl bg-base-100 shadow-xl flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all border border-base-content/5"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(blog._id)}
+                          className="w-9 h-9 rounded-xl bg-base-100 shadow-xl flex items-center justify-center text-base-content/60 hover:bg-error hover:text-white transition-all border border-base-content/5"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleStatusChange(blog._id, blog.status)
+                          }
+                          className="w-9 h-9 rounded-xl bg-base-100 shadow-xl flex items-center justify-center text-base-content/60 hover:bg-info hover:text-white transition-all border border-base-content/5"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleOpenDetails(blog)}
+                          className="w-9 h-9 rounded-xl bg-base-100 shadow-xl flex items-center justify-center text-base-content/60 hover:bg-accent hover:text-white transition-all border border-base-content/5"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

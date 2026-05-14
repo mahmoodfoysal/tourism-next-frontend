@@ -11,6 +11,7 @@ import {
   showSuccess,
 } from "@/components/pages/Alert";
 import Pagination from "@/components/pages/Pagination";
+import DashboardSkeleton from "@/components/pages/DashboardSkeleton";
 
 interface Coupon {
   _id: string;
@@ -194,14 +195,12 @@ const ManageCouponPage = () => {
       }
     }
   };
+  const handleClearSearch = () => {
+    setSearchQuery("");
+  };
 
   if (loading) {
-    return (
-      <div className="p-8 space-y-6">
-        <div className="h-20 bg-base-200 animate-pulse rounded-3xl"></div>
-        <div className="h-96 bg-base-200 animate-pulse rounded-3xl"></div>
-      </div>
-    );
+    return <DashboardSkeleton></DashboardSkeleton>;
   }
 
   return (
@@ -265,102 +264,119 @@ const ManageCouponPage = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((coupon, index) => (
-                <tr
-                  key={coupon._id}
-                  className="hover:bg-base-200/40 transition-all group border-b border-base-content/5"
-                >
-                  <td className="pl-10">
-                    <span className="text-[10px] font-black text-base-content/20 tracking-widest">
-                      {(indexOfFirstItem + index + 1)
-                        .toString()
-                        .padStart(2, "0")}
-                    </span>
-                  </td>
-                  <td className="py-3">
-                    <div className="flex flex-col">
-                      <span className="text-sm font-black text-base-content uppercase tracking-tighter group-hover:text-primary transition-colors">
-                        {coupon.coupon_code}
-                      </span>
-                      <span className="text-[9px] font-bold text-base-content/30 uppercase tracking-[0.2em] mt-1">
-                        Registry Code
-                      </span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex flex-col">
-                      <span className="text-[11px] font-black text-base-content/70 uppercase tracking-tight">
-                        {coupon.email}
-                      </span>
-                      <span className="text-[9px] font-bold text-base-content/30 uppercase tracking-widest mt-1">
-                        Authorised Entity
-                      </span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-black text-accent uppercase tracking-tighter">
-                        {coupon.per_dis_amt}
-                      </span>
-                      <span className="text-[9px] font-bold text-base-content/30 uppercase tracking-widest mt-1">
-                        Benefit Value
-                      </span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-black text-primary uppercase tracking-tighter">
-                        {coupon.operator}
-                      </span>
-                      <span className="text-[9px] font-bold text-base-content/30 uppercase tracking-widest mt-1">
-                        Calc Operator
-                      </span>
-                    </div>
-                  </td>
-                  <td className="pr-10 text-right">
-                    <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
-                      <button
-                        onClick={() => handleOpenDrawer(coupon)}
-                        className="w-10 h-10 rounded-full bg-base-100 shadow-xl flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all border border-base-content/5"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(coupon._id)}
-                        className="w-10 h-10 rounded-full bg-base-100 shadow-xl flex items-center justify-center text-base-content/60 hover:bg-error hover:text-white transition-all border border-base-content/5"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
-                      </button>
-                    </div>
+              {currentItems.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="text-center py-20 text-base-content/30 font-black uppercase tracking-widest"
+                  >
+                    No coupons found
+                    <button
+                      onClick={handleClearSearch}
+                      className="ml-2 px-3 py-2 rounded-xl font-bold text-primary hover:text-secondary hover:bg-primary/10"
+                    >
+                      Clear Filter
+                    </button>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                currentItems.map((coupon, index) => (
+                  <tr
+                    key={coupon._id}
+                    className="hover:bg-base-200/40 transition-all group border-b border-base-content/5"
+                  >
+                    <td className="pl-10">
+                      <span className="text-[10px] font-black text-base-content/20 tracking-widest">
+                        {(indexOfFirstItem + index + 1)
+                          .toString()
+                          .padStart(2, "0")}
+                      </span>
+                    </td>
+                    <td className="py-3">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-black text-base-content uppercase tracking-tighter group-hover:text-primary transition-colors">
+                          {coupon.coupon_code}
+                        </span>
+                        <span className="text-[9px] font-bold text-base-content/30 uppercase tracking-[0.2em] mt-1">
+                          Registry Code
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="flex flex-col">
+                        <span className="text-[11px] font-black text-base-content/70 uppercase tracking-tight">
+                          {coupon.email}
+                        </span>
+                        <span className="text-[9px] font-bold text-base-content/30 uppercase tracking-widest mt-1">
+                          Authorised Entity
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-black text-accent uppercase tracking-tighter">
+                          {coupon.per_dis_amt}
+                        </span>
+                        <span className="text-[9px] font-bold text-base-content/30 uppercase tracking-widest mt-1">
+                          Benefit Value
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-black text-primary uppercase tracking-tighter">
+                          {coupon.operator}
+                        </span>
+                        <span className="text-[9px] font-bold text-base-content/30 uppercase tracking-widest mt-1">
+                          Calc Operator
+                        </span>
+                      </div>
+                    </td>
+                    <td className="pr-10 text-right">
+                      <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+                        <button
+                          onClick={() => handleOpenDrawer(coupon)}
+                          className="w-10 h-10 rounded-full bg-base-100 shadow-xl flex items-center justify-center text-base-content/60 hover:bg-primary hover:text-white transition-all border border-base-content/5"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(coupon._id)}
+                          className="w-10 h-10 rounded-full bg-base-100 shadow-xl flex items-center justify-center text-base-content/60 hover:bg-error hover:text-white transition-all border border-base-content/5"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

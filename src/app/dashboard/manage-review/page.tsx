@@ -12,6 +12,7 @@ import {
   showSuccess,
 } from "@/components/pages/Alert";
 import Pagination from "@/components/pages/Pagination";
+import DashboardSkeleton from "@/components/pages/DashboardSkeleton";
 
 interface Review {
   _id: string;
@@ -226,6 +227,12 @@ const ManageReviewPage = () => {
     }
   };
 
+  const handleClearSearch = () => {
+    setSearchQuery("");
+  };
+
+  if (loading) return <DashboardSkeleton></DashboardSkeleton>;
+
   return (
     <div className="p-8 animate-in fade-in slide-in-from-bottom-10 duration-700">
       {/* Header & Search */}
@@ -255,6 +262,7 @@ const ManageReviewPage = () => {
             </svg>
           </div>
         </div>
+
         <button
           onClick={() => handleOpenDrawer()}
           className="w-full md:w-auto btn btn-primary h-11 px-8 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-primary/20"
@@ -290,19 +298,19 @@ const ManageReviewPage = () => {
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={6} className="text-center py-20">
-                    <span className="loading loading-spinner loading-lg text-primary"></span>
-                  </td>
-                </tr>
-              ) : currentItems.length === 0 ? (
+              {currentItems.length === 0 ? (
                 <tr>
                   <td
                     colSpan={6}
                     className="text-center py-20 text-base-content/30 font-black uppercase tracking-widest"
                   >
                     No reviews found
+                    <button
+                      onClick={handleClearSearch}
+                      className="ml-2 px-3 py-2 rounded-xl font-bold text-primary hover:text-secondary hover:bg-primary/10"
+                    >
+                      Clear Filter
+                    </button>
                   </td>
                 </tr>
               ) : (

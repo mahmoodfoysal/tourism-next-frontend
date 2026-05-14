@@ -10,7 +10,7 @@ import {
   showProcessing,
   showSuccess,
 } from "@/components/pages/Alert";
-import DashboardLoader from "@/components/pages/DashboardLoader";
+import DashboardSkeleton from "@/components/pages/DashboardSkeleton";
 
 interface AdminUser {
   _id: string;
@@ -212,7 +212,7 @@ const MakeAdminPage = () => {
   };
 
   if (loading) {
-    return <DashboardLoader></DashboardLoader>;
+    return <DashboardSkeleton></DashboardSkeleton>;
   }
 
   return (

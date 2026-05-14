@@ -12,6 +12,7 @@ import {
   showSuccess,
 } from "@/components/pages/Alert";
 import Pagination from "@/components/pages/Pagination";
+import DashboardSkeleton from "@/components/pages/DashboardSkeleton";
 
 interface PopularDestination {
   _id: string;
@@ -385,14 +386,11 @@ const AddDestination = () => {
       }
     }
   };
-
+  const handleClearSearch = () => {
+    setSearchQuery("");
+  };
   if (loading) {
-    return (
-      <div className="flex flex-col gap-6 p-8">
-        <div className="h-20 bg-base-200/50 rounded-2xl animate-pulse"></div>
-        <div className="h-96 bg-base-200/50 rounded-2xl animate-pulse"></div>
-      </div>
-    );
+    return <DashboardSkeleton></DashboardSkeleton>;
   }
 
   return (
@@ -459,145 +457,166 @@ const AddDestination = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((dest, index) => (
-                <tr
-                  key={dest._id}
-                  className="hover:bg-base-200/30 transition-colors border-b border-base-content/5 group"
-                >
-                  <td className="pl-10 text-[10px] font-black text-base-content/20">
-                    {(indexOfFirstItem + index + 1).toString().padStart(2, "0")}
-                  </td>
-                  <td className="py-4">
-                    <div className="flex items-center gap-4">
-                      <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-base-200 border border-base-content/5">
-                        {dest.image && (
-                          <Image
-                            src={dest.image}
-                            alt={dest.name}
-                            fill
-                            className="object-cover"
-                            unoptimized
-                          />
-                        )}
-                      </div>
-                      <div>
-                        <div className="font-black text-base-content uppercase tracking-tight">
-                          {dest.name}
-                        </div>
-                        <div className="text-[9px] font-bold text-base-content/40 uppercase">
-                          {dest.location}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex flex-col">
-                      <span className="text-[10px] font-black uppercase text-accent">
-                        {dest.badge}
-                      </span>
-                      <span className="text-[10px] font-bold text-base-content/40">
-                        ⭐ {dest.rating}
-                      </span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="font-black text-primary">${dest.price}</div>
-                  </td>
-                  <td>
-                    <span
-                      className={`px-3 py-1 text-[8px] font-black uppercase tracking-widest rounded-md border ${
-                        dest.status === 1
-                          ? "bg-success/10 text-success border-success/20"
-                          : "bg-error/10 text-error border-error/20"
-                      }`}
+              {currentItems.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="text-center py-20 text-base-content/30 font-black uppercase tracking-widest"
+                  >
+                    No Destination found
+                    <button
+                      onClick={handleClearSearch}
+                      className="ml-2 px-3 py-2 rounded-xl font-bold text-primary hover:text-secondary hover:bg-primary/10"
                     >
-                      {dest.status === 1 ? "Active" : "Inactive"}
-                    </span>
-                  </td>
-                  <td className="pr-10 text-right">
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        onClick={() => handleOpenDrawer(dest)}
-                        className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center hover:bg-primary hover:text-white transition-all"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-3.5 w-3.5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(dest._id)}
-                        className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center hover:bg-error hover:text-white transition-all"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-3.5 w-3.5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleStatusChange(dest._id, dest.status)
-                        }
-                        className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center hover:bg-info hover:text-white transition-all"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-3.5 w-3.5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => handleOpenDetails(dest)}
-                        className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center hover:bg-accent hover:text-white transition-all"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-3.5 w-3.5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </button>
-                    </div>
+                      Clear Filter
+                    </button>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                currentItems.map((dest, index) => (
+                  <tr
+                    key={dest._id}
+                    className="hover:bg-base-200/30 transition-colors border-b border-base-content/5 group"
+                  >
+                    <td className="pl-10 text-[10px] font-black text-base-content/20">
+                      {(indexOfFirstItem + index + 1)
+                        .toString()
+                        .padStart(2, "0")}
+                    </td>
+                    <td className="py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-base-200 border border-base-content/5">
+                          {dest.image && (
+                            <Image
+                              src={dest.image}
+                              alt={dest.name}
+                              fill
+                              className="object-cover"
+                              unoptimized
+                            />
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-black text-base-content uppercase tracking-tight">
+                            {dest.name}
+                          </div>
+                          <div className="text-[9px] font-bold text-base-content/40 uppercase">
+                            {dest.location}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black uppercase text-accent">
+                          {dest.badge}
+                        </span>
+                        <span className="text-[10px] font-bold text-base-content/40">
+                          ⭐ {dest.rating}
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="font-black text-primary">
+                        ${dest.price}
+                      </div>
+                    </td>
+                    <td>
+                      <span
+                        className={`px-3 py-1 text-[8px] font-black uppercase tracking-widest rounded-md border ${
+                          dest.status === 1
+                            ? "bg-success/10 text-success border-success/20"
+                            : "bg-error/10 text-error border-error/20"
+                        }`}
+                      >
+                        {dest.status === 1 ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+                    <td className="pr-10 text-right">
+                      <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => handleOpenDrawer(dest)}
+                          className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center hover:bg-primary hover:text-white transition-all"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-3.5 w-3.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(dest._id)}
+                          className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center hover:bg-error hover:text-white transition-all"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-3.5 w-3.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleStatusChange(dest._id, dest.status)
+                          }
+                          className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center hover:bg-info hover:text-white transition-all"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-3.5 w-3.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleOpenDetails(dest)}
+                          className="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center hover:bg-accent hover:text-white transition-all"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-3.5 w-3.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

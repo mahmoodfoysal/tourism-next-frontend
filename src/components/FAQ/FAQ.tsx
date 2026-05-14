@@ -1,4 +1,5 @@
 import React from "react";
+import AIDescriptionGenerator from "./AIDescriptionGenerator";
 
 const FAQ = () => {
   const faqs = [
@@ -35,38 +36,24 @@ const FAQ = () => {
   ];
 
   return (
-    <section className="py-24 bg-base-100">
+    <section className="py-10 bg-base-100">
       <div className="section-container">
-        <div className="flex flex-col lg:flex-row gap-16">
-          {/* Left Side: Header */}
-          <div className="lg:w-1/3">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-accent font-bold text-xs uppercase tracking-widest mb-4">
-              Need Help?
-            </div>
-            <h2 className="text-3xl md:text-4xl font-black text-base-content tracking-tight mb-6">
-              Frequently Asked <br />
-              <span className="text-primary">Questions</span>
-            </h2>
-            <p className="text-base text-base-content/60 leading-relaxed mb-10">
-              Everything you need to know about our tours, bookings, and
-              policies. Cant find the answer? Feel free to reach out.
-            </p>
-
-            <div className="p-8 rounded-3xl bg-base-200/50 border border-base-content/5">
-              <h4 className="text-lg font-black text-base-content mb-2">
-                Still have questions?
-              </h4>
-              <p className="text-sm text-base-content/50 mb-6">
-                Our support team is here to help you 24 hours a day, 7 days a
-                week.
-              </p>
-              <button className="btn btn-primary rounded-2xl px-8 w-full shadow-lg shadow-primary/20 text-xs uppercase font-black tracking-widest">
-                Contact Support
-              </button>
-            </div>
+        {/* Left Side: Header */}
+        <div className="lg:w-1/3">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-accent font-bold text-xs uppercase tracking-widest mb-4">
+            Need Help?
           </div>
-
-          {/* Right Side: Accordion */}
+          <h2 className="text-3xl md:text-4xl font-black text-base-content tracking-tight mb-6">
+            Frequently Asked <br />
+            <span className="text-primary">Questions</span>
+          </h2>
+          <p className="text-base text-base-content/60 leading-relaxed mb-10">
+            Everything you need to know about our tours, bookings, and policies.
+            Cant find the answer? Feel free to reach out.
+          </p>
+        </div>
+        <div className="flex flex-col lg:flex-row gap-16">
+          {/* left Side: Accordion */}
           <div className="lg:w-2/3 space-y-4">
             {faqs.map((faq, index) => (
               <div
@@ -89,6 +76,8 @@ const FAQ = () => {
               </div>
             ))}
           </div>
+          {/* right Side: ai */}
+          <AIDescriptionGenerator />
         </div>
       </div>
     </section>

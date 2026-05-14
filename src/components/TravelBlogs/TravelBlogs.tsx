@@ -5,6 +5,7 @@ import Image from "next/image";
 import SkeletonCard from "../pages/SkeletonCard";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
 import Link from "next/link";
+import BlogCard from "../pages/BlogCard";
 
 interface Blog {
   _id: string | number;
@@ -65,7 +66,7 @@ const TravelBlogs = () => {
               expert advice from our professional explorers.
             </p>
           </div>
-          <Link 
+          <Link
             href="/blogs"
             className="btn btn-primary rounded-2xl px-8 h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px] hidden md:flex items-center"
           >
@@ -83,98 +84,7 @@ const TravelBlogs = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {blogs.map((blog) => (
-              <div
-                key={blog.id || blog._id}
-                className="group flex flex-col bg-base-100 rounded-[2.5rem] overflow-hidden border border-base-content/5 shadow-xl hover:shadow-2xl transition-all duration-500"
-              >
-                {/* Image */}
-                <div className="relative h-64 overflow-hidden">
-                  <Image
-                    src={blog.image}
-                    alt={blog.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
-                  <div className="absolute top-6 left-6">
-                    <span className="bg-primary px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white shadow-lg">
-                      {blog.category}
-                    </span>
-                  </div>
-                  <div className="absolute top-6 right-6">
-                    <span className="glass-effect px-3 py-1 rounded-lg text-[10px] font-bold text-white border-white/20">
-                      {blog.readingTime}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-8 flex flex-col flex-1">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full relative overflow-hidden border border-primary/20">
-                        <Image
-                          src={
-                            blog.authorImage ||
-                            `https://ui-avatars.com/api/?name=${blog.author}&background=random`
-                          }
-                          alt={blog.author}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <span className="text-sm font-bold text-base-content/70">
-                        {blog.author}
-                      </span>
-                    </div>
-                    <span className="text-xs font-medium text-base-content/40">
-                      {blog.date}
-                    </span>
-                  </div>
-
-                  <h3 className="text-2xl font-black text-base-content mb-4 group-hover:text-primary transition-colors leading-tight line-clamp-2">
-                    {blog.title}
-                  </h3>
-
-                  <p className="text-base-content/60 leading-relaxed mb-8 flex-1 line-clamp-3">
-                    {blog.excerpt}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {blog.tags?.map((tag: string, i: number) => (
-                      <span
-                        key={i}
-                        className="text-[10px] font-bold text-primary/60 bg-primary/5 px-2 py-0.5 rounded-md"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="pt-6 border-t border-base-content/5 mt-auto">
-                    <Link 
-                      href={`/blogs/details/${blog._id}`}
-                      className="flex items-center gap-2 text-primary font-black group-hover:gap-4 transition-all"
-                    >
-                      Read Full Article
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="3"
-                          d="M17 8l4 4m0 0l-4 4m4-4H3"
-                        />
-                      </svg>
-                    </Link>
-                  </div>
-                </div>
-              </div>
+              <BlogCard key={blog._id} info={blog} />
             ))}
           </div>
         )}

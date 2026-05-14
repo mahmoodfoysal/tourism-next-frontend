@@ -18,7 +18,10 @@ const CommonHeader: React.FC<CommonHeaderProps> = ({
   className = "",
 }) => {
   const pathname = usePathname();
-  const pathSegments = pathname.split("/").filter((segment) => segment !== "");
+  const pathSegments = pathname
+    .split("/")
+    .filter((segment) => segment !== "")
+    .slice(0, 2);
 
   return (
     <section

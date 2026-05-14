@@ -248,7 +248,35 @@ const ManageBookingsPage = () => {
                 />
               </svg>
             </div>
+            </div>
           </div>
+
+        {/* Information Row */}
+        <div className="flex flex-wrap items-center gap-4 mb-10">
+          <div className="px-6 py-3 bg-base-100 rounded-2xl border border-base-content/5 flex items-center gap-3 shadow-sm">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40">
+              Total Manifests:
+            </span>
+            <span className="text-sm font-black text-primary">
+              {bookings.length}
+            </span>
+          </div>
+          {searchQuery && (
+            <div className="px-6 py-3 bg-primary/5 rounded-2xl border border-primary/10 flex items-center gap-3 shadow-sm animate-in fade-in zoom-in duration-300">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
+                Filtered Results:
+              </span>
+              <span className="text-sm font-black text-primary">
+                {filteredBookings.length}
+              </span>
+              <button
+                onClick={handleClearSearch}
+                className="ml-2 text-[10px] font-black uppercase tracking-widest text-base-content/40 hover:text-error transition-colors"
+              >
+                [Clear Filter]
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Booking Table */}

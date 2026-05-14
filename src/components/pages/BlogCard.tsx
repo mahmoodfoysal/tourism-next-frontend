@@ -25,13 +25,18 @@ const BlogCard: React.FC<BlogCardProps> = ({ info }) => {
     <div className="group flex flex-col bg-base-100 rounded-[2.5rem] overflow-hidden border border-base-content/5 shadow-xl hover:shadow-2xl transition-all duration-500">
       {/* Image Container */}
       <div className="relative h-64 overflow-hidden">
-        <Image
-          src={info.image}
-          alt={info.title}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
+        <Link
+          href={`/blogs/details/${info._id}`}
+          className="block w-full h-full"
+        >
+          <Image
+            src={info.image}
+            alt={info.title}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </Link>
         <div className="absolute top-6 left-6">
           <span className="bg-primary/90 backdrop-blur-md px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white shadow-lg shadow-primary/20">
             {info.category}

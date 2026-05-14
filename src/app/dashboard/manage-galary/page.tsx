@@ -12,6 +12,7 @@ import {
   showSuccess,
 } from "@/components/pages/Alert";
 import Pagination from "@/components/pages/Pagination";
+import DashboardSkeleton from "@/components/pages/DashboardSkeleton";
 
 interface GalleryItem {
   _id: string;
@@ -47,7 +48,7 @@ const ManageGalleryPage = () => {
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
+  const itemsPerPage = 8;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -248,19 +249,7 @@ const ManageGalleryPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col gap-6 p-8">
-        <div className="h-20 bg-base-200/50 rounded-2xl animate-pulse"></div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={i}
-              className="aspect-square bg-base-200/50 rounded-2xl animate-pulse"
-            ></div>
-          ))}
-        </div>
-      </div>
-    );
+    return <DashboardSkeleton></DashboardSkeleton>;
   }
 
   return (
@@ -298,6 +287,42 @@ const ManageGalleryPage = () => {
         >
           Add New Photo
         </button>
+      </div>
+
+      {/* Information Row */}
+      <div className="flex flex-wrap items-center gap-4 mb-10">
+        <div className="px-6 py-3 bg-base-100 rounded-2xl border border-base-content/5 flex items-center gap-3 shadow-sm">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40">
+            Total Assets:
+          </span>
+          <span className="text-sm font-black text-primary">
+            {galleryItems.length}
+          </span>
+        </div>
+        <div className="px-6 py-3 bg-base-100 rounded-2xl border border-base-content/5 flex items-center gap-3 shadow-sm">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40">
+            Active Media:
+          </span>
+          <span className="text-sm font-black text-success">
+            {galleryItems.filter((i) => i.status === 1).length}
+          </span>
+        </div>
+        {searchQuery && (
+          <div className="px-6 py-3 bg-primary/5 rounded-2xl border border-primary/10 flex items-center gap-3 shadow-sm animate-in fade-in zoom-in duration-300">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
+              Matched Media:
+            </span>
+            <span className="text-sm font-black text-primary">
+              {filteredItems.length}
+            </span>
+            <button
+              onClick={handleClearSearch}
+              className="ml-2 text-[10px] font-black uppercase tracking-widest text-base-content/40 hover:text-error transition-colors"
+            >
+              [Clear Filter]
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Gallery Grid */}

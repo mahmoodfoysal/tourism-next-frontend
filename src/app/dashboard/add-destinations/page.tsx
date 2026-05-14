@@ -430,6 +430,42 @@ const AddDestination = () => {
         </button>
       </div>
 
+      {/* Information Row */}
+      <div className="flex flex-wrap items-center gap-4 mb-10">
+        <div className="px-6 py-3 bg-base-100 rounded-2xl border border-base-content/5 flex items-center gap-3 shadow-sm">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40">
+            Total Destinations:
+          </span>
+          <span className="text-sm font-black text-primary">
+            {destinations.length}
+          </span>
+        </div>
+        <div className="px-6 py-3 bg-base-100 rounded-2xl border border-base-content/5 flex items-center gap-3 shadow-sm">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40">
+            Active Records:
+          </span>
+          <span className="text-sm font-black text-success">
+            {destinations.filter((d) => d.status === 1).length}
+          </span>
+        </div>
+        {searchQuery && (
+          <div className="px-6 py-3 bg-primary/5 rounded-2xl border border-primary/10 flex items-center gap-3 shadow-sm animate-in fade-in zoom-in duration-300">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
+              Matched Findings:
+            </span>
+            <span className="text-sm font-black text-primary">
+              {filteredDestinations.length}
+            </span>
+            <button
+              onClick={handleClearSearch}
+              className="ml-2 text-[10px] font-black uppercase tracking-widest text-base-content/40 hover:text-error transition-colors"
+            >
+              [Clear Filter]
+            </button>
+          </div>
+        )}
+      </div>
+
       {/* Table */}
       <div className="bg-base-100 rounded-2xl border border-base-content/5 shadow-xl overflow-hidden">
         <div className="overflow-x-auto">

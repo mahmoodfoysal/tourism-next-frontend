@@ -35,16 +35,21 @@ const PopularCard: React.FC<PopularCardProps> = ({ info }) => {
     >
       {/* Image Section */}
       <div className="relative h-72 overflow-hidden">
-        <Image
-          src={info.image}
-          alt={info.name}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
+        <Link
+          href={`/destinations/details/${info._id}`}
+          className="block w-full h-full"
+        >
+          <Image
+            src={info.image}
+            alt={info.name}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </Link>
 
         {/* Overlay Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
         {/* Floating Badge */}
         <div className="absolute top-5 left-5">

@@ -338,6 +338,42 @@ const AddBlogPage = () => {
         </button>
       </div>
 
+      {/* Information Row */}
+      <div className="flex flex-wrap items-center gap-4 mb-10">
+        <div className="px-6 py-3 bg-base-100 rounded-2xl border border-base-content/5 flex items-center gap-3 shadow-sm">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40">
+            Total Articles:
+          </span>
+          <span className="text-sm font-black text-primary">
+            {blogs.length}
+          </span>
+        </div>
+        <div className="px-6 py-3 bg-base-100 rounded-2xl border border-base-content/5 flex items-center gap-3 shadow-sm">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40">
+            Published Items:
+          </span>
+          <span className="text-sm font-black text-success">
+            {blogs.filter((b) => b.status === 1).length}
+          </span>
+        </div>
+        {searchQuery && (
+          <div className="px-6 py-3 bg-primary/5 rounded-2xl border border-primary/10 flex items-center gap-3 shadow-sm animate-in fade-in zoom-in duration-300">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
+              Filtered Records:
+            </span>
+            <span className="text-sm font-black text-primary">
+              {filteredBlogs.length}
+            </span>
+            <button
+              onClick={handleClearSearch}
+              className="ml-2 text-[10px] font-black uppercase tracking-widest text-base-content/40 hover:text-error transition-colors"
+            >
+              [Clear Filter]
+            </button>
+          </div>
+        )}
+      </div>
+
       {/* Grid Archive */}
       <div className="bg-base-100 rounded-3xl border border-base-content/5 shadow-2xl overflow-hidden">
         <div className="overflow-x-auto">

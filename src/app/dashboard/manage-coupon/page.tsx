@@ -45,7 +45,7 @@ const ManageCouponPage = () => {
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 8;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -240,6 +240,34 @@ const ManageCouponPage = () => {
         </button>
       </div>
 
+      {/* Information Row */}
+      <div className="flex flex-wrap items-center gap-4 mb-10">
+        <div className="px-6 py-3 bg-base-100 rounded-2xl border border-base-content/5 flex items-center gap-3 shadow-sm">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40">
+            Total Inventory:
+          </span>
+          <span className="text-sm font-black text-primary">
+            {coupons.length}
+          </span>
+        </div>
+        {searchQuery && (
+          <div className="px-6 py-3 bg-primary/5 rounded-2xl border border-primary/10 flex items-center gap-3 shadow-sm animate-in fade-in zoom-in duration-300">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
+              Filtered Records:
+            </span>
+            <span className="text-sm font-black text-primary">
+              {filteredCoupons.length}
+            </span>
+            <button
+              onClick={handleClearSearch}
+              className="ml-2 text-[10px] font-black uppercase tracking-widest text-base-content/40 hover:text-error transition-colors"
+            >
+              [Clear Filter]
+            </button>
+          </div>
+        )}
+      </div>
+
       {/* Coupon Registry Table */}
       <div className="bg-base-100 rounded-xl border border-base-content/5 shadow-2xl overflow-hidden">
         <div className="overflow-x-auto">
@@ -247,19 +275,22 @@ const ManageCouponPage = () => {
             <thead>
               <tr className="bg-base-200/20 h-12 border-b border-base-content/5">
                 <th className="pl-10 text-[10px] font-black uppercase tracking-[0.3em] text-base-content/30">
-                  Registry SL
+                  SL
                 </th>
                 <th className="text-[10px] font-black uppercase tracking-[0.3em] text-base-content/30">
-                  Coupon Artifact
+                  Coupon Code
                 </th>
                 <th className="text-[10px] font-black uppercase tracking-[0.3em] text-base-content/30">
-                  Target Audience
+                  User Email
                 </th>
                 <th className="text-[10px] font-black uppercase tracking-[0.3em] text-base-content/30">
                   Value
                 </th>
                 <th className="pr-10 text-right text-[10px] font-black uppercase tracking-[0.3em] text-base-content/30">
-                  Registry Control
+                  Operator
+                </th>
+                <th className="pr-10 text-right text-[10px] font-black uppercase tracking-[0.3em] text-base-content/30">
+                  Actions
                 </th>
               </tr>
             </thead>

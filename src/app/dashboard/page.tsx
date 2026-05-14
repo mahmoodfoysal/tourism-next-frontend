@@ -270,11 +270,14 @@ const DashboardOverview = () => {
       {/* Top row: 3 Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Revenue Trend Area Chart */}
-        <div className="p-8 rounded-[2.5rem] bg-[#0f172a] border border-white/5 shadow-2xl">
+        <div className="p-8 rounded-[2.5rem] bg-base-100 dark:bg-base-300/30 border border-base-content/5 shadow-sm">
           <div className="mb-6">
-            <h3 className="text-xl font-black text-white tracking-tight">
+            <h3 className="text-sm font-black text-base-content uppercase tracking-widest">
               Revenue Trend
             </h3>
+            <p className="text-[9px] font-bold text-base-content/30 tracking-widest uppercase">
+              Financial Performance
+            </p>
           </div>
           <div className="h-[240px]">
             <Chart

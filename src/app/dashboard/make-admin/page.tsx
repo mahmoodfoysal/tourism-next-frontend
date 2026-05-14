@@ -10,6 +10,7 @@ import {
   showProcessing,
   showSuccess,
 } from "@/components/pages/Alert";
+import DashboardLoader from "@/components/pages/DashboardLoader";
 
 interface AdminUser {
   _id: string;
@@ -211,12 +212,7 @@ const MakeAdminPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col gap-6">
-        <div className="h-20 bg-base-200/50 rounded-3xl animate-pulse"></div>
-        <div className="h-96 bg-base-200/50 rounded-3xl animate-pulse"></div>
-      </div>
-    );
+    return <DashboardLoader></DashboardLoader>;
   }
 
   return (
@@ -354,54 +350,53 @@ const MakeAdminPage = () => {
       <div
         className={`fixed inset-0 z-[100] transition-visibility duration-300 ${isDrawerOpen ? "visible" : "invisible"}`}
       >
-        {/* Backdrop */}
         <div
           className={`absolute inset-0 bg-base-300/40 backdrop-blur-sm transition-opacity duration-300 ${isDrawerOpen ? "opacity-100" : "opacity-0"}`}
           onClick={handleCloseDrawer}
         ></div>
-
-        {/* Drawer Content */}
         <div
-          className={`absolute top-0 right-0 h-full w-full max-w-md bg-base-100 shadow-2xl transition-transform duration-500 ease-out border-l border-base-content/5 flex flex-col ${isDrawerOpen ? "translate-x-0" : "translate-x-full"}`}
+          className={`absolute top-0 right-0 h-full w-full max-w-xl bg-base-100 shadow-2xl transition-transform duration-500 ease-out border-l border-base-content/5 flex flex-col ${isDrawerOpen ? "translate-x-0" : "translate-x-full"}`}
         >
-          <div className="h-2 bg-primary w-full"></div>
+          <div className="h-2 bg-primary w-full shrink-0"></div>
 
-          <div className="p-10 flex-1 overflow-y-auto">
-            <div className="flex justify-between items-center mb-12">
+          {/* Exterior Close Button */}
+          <button
+            onClick={handleCloseDrawer}
+            className="absolute -left-14 top-8 w-11 h-11 rounded-xl bg-base-100 shadow-xl flex items-center justify-center hover:text-error transition-all group border border-base-content/5"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="3"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+
+          {/* Fixed Header */}
+          <div className="p-8 pb-0 shrink-0">
+            <div className="flex justify-between items-center">
               <div>
                 <h2 className="text-3xl font-black text-base-content tracking-tighter uppercase leading-none">
-                  {editingAdmin ? "Update" : "Authorize"}
-                  <br />
-                  <span className="text-primary italic">Operative</span>
+                  {editingAdmin ? "Update Operative" : "Authorize Operative"}
                 </h2>
-                <p className="mt-2 text-[9px] font-black uppercase tracking-[0.2em] text-base-content/30">
-                  Administrative Access Portal
-                </p>
               </div>
-              <button
-                onClick={handleCloseDrawer}
-                className="w-12 h-12 rounded-2xl bg-base-200 flex items-center justify-center hover:text-error hover:scale-110 transition-all"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="3"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
             </div>
+            <div className="h-px bg-base-content/5 mt-8"></div>
+          </div>
 
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40 ml-2 flex items-center gap-1">
+          {/* Scrollable Body */}
+          <div className="p-10 pt-8 flex-1 overflow-y-auto custom-scrollbar">
+            <form id="admin-form" onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-1.5">
+                <label className="text-[9px] font-black uppercase tracking-[0.2em] text-base-content/40 ml-1">
                   Email Address <span className="text-error">*</span>
                 </label>
                 <input
@@ -410,13 +405,13 @@ const MakeAdminPage = () => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full h-12 px-6 rounded-2xl bg-base-200/50 border border-base-content/5 text-sm font-bold focus:outline-none focus:border-primary/30 focus:bg-base-100 transition-all"
+                  className="w-full h-11 px-5 rounded-xl bg-base-200/50 border border-base-content/5 text-xs font-bold focus:outline-none focus:border-primary/30"
                   placeholder="operative@auratrip.com"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40 ml-2 flex items-center gap-1">
+              <div className="space-y-1.5">
+                <label className="text-[9px] font-black uppercase tracking-[0.2em] text-base-content/40 ml-1">
                   Clearance Level <span className="text-error">*</span>
                 </label>
                 <div className="relative">
@@ -425,7 +420,7 @@ const MakeAdminPage = () => {
                     required
                     value={formData.role}
                     onChange={handleInputChange}
-                    className="w-full h-12 px-6 rounded-xl bg-base-200/50 border border-base-content/5 text-sm font-bold focus:outline-none focus:border-primary/30 focus:bg-base-100 appearance-none transition-all cursor-pointer pr-12"
+                    className="w-full h-11 px-5 rounded-xl bg-base-200/50 border border-base-content/5 text-xs font-bold focus:outline-none focus:border-primary/30 appearance-none transition-all cursor-pointer pr-12"
                   >
                     <option value="" disabled>
                       Select Clearance Level
@@ -441,7 +436,7 @@ const MakeAdminPage = () => {
                       </option>
                     ))}
                   </select>
-                  <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-base-content/20">
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-base-content/20">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-4 w-4"
@@ -459,31 +454,28 @@ const MakeAdminPage = () => {
                   </div>
                 </div>
               </div>
-
-              <div className="pt-10">
-                <button
-                  type="submit"
-                  className="w-full btn btn-primary h-12 rounded-xl font-black uppercase tracking-[0.4em] text-xs shadow-2xl shadow-primary/30 group"
-                >
-                  <span className="group-hover:scale-110 transition-transform">
-                    {editingAdmin
-                      ? "Synchronize Access"
-                      : "Grant Authorization"}
-                  </span>
-                </button>
-              </div>
             </form>
           </div>
 
-          {/* Footer Branding in Drawer */}
-          <div className="p-10 border-t border-base-content/5 bg-base-200/20">
-            <div className="flex items-center gap-3 grayscale opacity-30">
-              <div className="w-8 h-8 bg-base-content rounded-xl flex items-center justify-center">
-                <span className="text-base-100 font-black text-sm">A</span>
-              </div>
-              <span className="text-xs font-black tracking-tighter uppercase">
-                Aura<span className="text-primary">Trip</span> Security
-              </span>
+          {/* Fixed Footer with Actions */}
+          <div className="p-10 border-t border-base-content/5 bg-base-100 shrink-0 space-y-6 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={handleCloseDrawer}
+                className="flex-1 btn btn-ghost h-12 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] border border-base-content/10"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                form="admin-form"
+                className="flex-[2] btn btn-primary h-12 rounded-xl font-black uppercase tracking-[0.4em] text-[10px] shadow-2xl shadow-primary/30 group"
+              >
+                <span className="group-hover:scale-110 transition-transform">
+                  {editingAdmin ? "Give Access" : "Update Access"}
+                </span>
+              </button>
             </div>
           </div>
         </div>

@@ -154,12 +154,12 @@ const BookingHistoryPage = () => {
         <section className="pb-32 -mt-16 print:hidden">
           <div className="route-container max-w-7xl">
             {/* Filter Bar */}
-            <div className="flex justify-center gap-2 mb-16 bg-base-100 p-2 rounded-2xl shadow-xl w-fit mx-auto border border-base-content/5">
+            <div className="flex justify-center gap-1 mb-16 bg-base-100 py-3 rounded-2xl shadow-xl w-full max-w-sm sm:w-fit mx-auto border border-base-content/5">
               {["active", "completed", "cancelled", "all"].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveFilter(tab as FilterStatus)}
-                  className={`px-6 py-2.5 rounded-xl font-black uppercase tracking-widest text-[9px] transition-all duration-300 ${
+                  className={`px-3 py-2.5 rounded-xl font-black uppercase tracking-widest text-[9px] transition-all duration-300 ${
                     activeFilter === tab
                       ? "bg-primary text-white shadow-lg shadow-primary/20"
                       : "text-base-content/40 hover:text-primary hover:bg-primary/5"

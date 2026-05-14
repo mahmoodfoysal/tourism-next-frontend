@@ -1,6 +1,6 @@
 # Aura Tour - A Tourism Website
 
-A full-stack tourism website featuring Redux state management, Firebase auth, and a robust admin dashboard.
+A full-stack tourism website. This website tourbooking, gathering information and see blogs. Here a dashboard for admin control. Dashboard menu are accessable role basis. Using redux state management. Authentication system using firebase authentication. User auto logout after 10 days and expire his login token.
 
 ## Live Demo
 
@@ -15,7 +15,7 @@ A full-stack tourism website featuring Redux state management, Firebase auth, an
 ## Technologies Used
 
 - Next.js
-- Redux
+- Redux Toolkit
 - Firebase
 - Node.js
 - Express.js
@@ -23,6 +23,7 @@ A full-stack tourism website featuring Redux state management, Firebase auth, an
 - Tailwind CSS
 - Daisy UI
 - ApexCharts
+- Gemini AI for description and chat feature.
 
 ## Key Features
 
@@ -39,11 +40,11 @@ A full-stack tourism website featuring Redux state management, Firebase auth, an
 - Dashboard Overview
 - Why Choose Us Section
 - Customer Review Section
-- Why Choose Us Section
-- FAQ Section
+- FAQ Section and also ai description generate section.
 - Coupon Claim Section
 - Coupon show in client profile and that coupon only used one user one time. and show total used coupon.
 - New member get 10% off coupon if they claim from landing page newsletter.
+- Booking status section
 
 ## Protected Routes
 
@@ -65,24 +66,24 @@ A full-stack tourism website featuring Redux state management, Firebase auth, an
 - Customer Review
 - FAQ
 - Coupon Claim
+- Using all AI features
 
 ## Short Description
 
-- Navbar: switching routing and user information
-- Landing Page: A attractive standard landing page for the tourism website. Where customer can see popular destinations, Featured tour packages, Blogs, Offers, Coupon codes, services
-- Tour Package Page: This page show all tour packages. Here category, price and search filter.
-- Tour Package Details Page: This page show specific tour package details. Related products also show in the bottom.
-- Customer Authentication: Secure login and registration using Firebase authentication.
-- Booking Management: Track and manage bookings with detailed status updates.
-- Customer Profile: View and edit profile information with booking history.
+- Navbar: Here define all routes and user menu. After login user menu come. If click user menu show dropdown list. In dropdown have profile, dashboard, logout. Admin dashboard route show only admin. When Admin go to dashboard client NavBar and footer hide autometically. then show only dashboard.
+- Landing Page: A attractive standard landing page for the tourism website. Here Where customer can see popular destinations, Featured tour packages, Blogs, Offers, Coupon codes, services, AI generate descript and AI chat
+- Tour Package Page: This page show all tour packages. Here show features, package details price, basic information also here filter user can see applying filters and sorting options and pagination.
+- Tour Package Details Page: This page show specific tour package details. Here client can see all the includes facilitis
+- Customer Authentication: Secure login and registration using Firebase authentication and JWT token for stay login. After 10 days later token will expire and set auto logout.
+- Booking History: After successful booking user can see his booking history. And user can cancel his booking if the status is not confirmed..
+- Customer Profile: View and edit profile information, update password and see his coupon.
 - Blog System: Read and interact with blog posts.
 - Blog Details Page: This page show specific blog details. In the bottom show related blog
-- Dashboard Overview: Get insights into sales, orders, add products, add categories add coupon, add admin, add blog.
+- Dashboard Overview: Get insights into sales, booking, active pending booking and total booking revinue.
 - Pagination: It add where many data comes.
-- Products, category, blogs all have a status. If status 1 then only product show. If 0 then product is inactive.
-- Footer have full functional. Footer email address use for promotional massage.
-- Customer profile customer can update info and see his coupon.
+- Footer have full functional.
 - New member get 10% off coupon if they claim from landing page newsletter and if they already registered then they can claim from their profile. after claim they can not claim again.
+- Using Ai Description and Ai chat for help to customer.
 
 ## Setup and Installation
 

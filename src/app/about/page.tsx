@@ -40,7 +40,7 @@ const AboutPage = () => {
       value:
         reviewCount > 1000
           ? `${(reviewCount / 1000).toFixed(1)}k+`
-          : `${reviewCount}+`,
+          : `${reviewCount}K+`,
       color: "secondary",
     },
     { label: "Destinations", value: "50+", color: "accent" },

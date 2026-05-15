@@ -2,7 +2,7 @@ import React from "react";
 
 const ComponentLoader = () => {
   return (
-    <div className="flex flex-col justify-center items-center py-48 space-y-8">
+    <div className="flex flex-col justify-center items-center py-50 space-y-10">
       <div className="relative">
         {/* Pulsing Rings */}
         <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping scale-150"></div>
@@ -41,7 +41,7 @@ const ComponentLoader = () => {
           Please Wait
         </p>
         <p className="text-sm font-medium text-base-content/40 max-w-[250px] pt-2">
-          Finding the perfect spots for your next journey...
+          Page is loading, please wait...
         </p>
       </div>
     </div>

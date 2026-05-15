@@ -3,48 +3,28 @@
 import React, { useEffect, useState } from "react";
 import PackageCard from "../pages/PackageCard";
 import SkeletonCard from "../pages/SkeletonCard";
-import { axiosPublic } from "@/hooks/useAxiosPublic";
 import Link from "next/link";
+import { PackageInfo } from "@/app/page";
 
-interface TourPackage {
-  _id: string | number;
-  package_id: string | number;
-  image: string;
-  title: string;
-  duration: string;
-  category: string;
-  discount: number | string;
-  location: string;
-  features: string[];
-  originalPrice: number;
-  price: number;
+interface TourPackageProps {
+  packageList: PackageInfo[];
+  loading: boolean;
 }
 
-const TourPackage = () => {
-  const [packages, setPackages] = useState<TourPackage[]>([]);
-  const [loading, setLoading] = useState(true);
+const TourPackage = ({ packageList, loading }: TourPackageProps) => {
+  const [displayPackages, setDisplayPackages] = useState<PackageInfo[]>([]);
 
   useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        const response = await axiosPublic.get("/api/tourism/get-package-list");
-        const data = response.data?.list_data;
-        // Handle both direct array and nested data object
-        const result = Array.isArray(data) ? data : data?.data || [];
-        // Shuffle and take 4 random items
-        const shuffled = [...result]
-          .sort(() => 0.5 - Math.random())
-          .slice(0, 4);
-        setPackages(shuffled);
-      } catch (error) {
-        console.error("Error fetching tour packages:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPackages();
-  }, []);
+    if (packageList && packageList.length > 0) {
+      // Shuffle and take 4 random items for the homepage
+      const shuffled = [...packageList]
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 4);
+      setTimeout(() => {
+        setDisplayPackages(shuffled);
+      }, 0);
+    }
+  }, [packageList]);
 
   return (
     <section className="py-24 bg-base-200/30">
@@ -59,11 +39,11 @@ const TourPackage = () => {
               Amazing <span className="text-primary">Tour Packages</span>
             </h2>
             <p className="text-lg text-base-content/60 leading-relaxed">
-              Discover our most sought-after adventures, hand-picked for their 
+              Discover our most sought-after adventures, hand-picked for their
               exceptional value and unforgettable experiences across the globe.
             </p>
           </div>
-          <Link 
+          <Link
             href="/packages"
             className="btn btn-primary rounded-2xl px-8 h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px] hidden md:flex items-center"
           >
@@ -80,7 +60,7 @@ const TourPackage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            {packages.map((item, index) => (
+            {displayPackages.map((item, index) => (
               <PackageCard
                 key={item.package_id || item._id || index}
                 info={item}
@@ -91,7 +71,7 @@ const TourPackage = () => {
 
         {/* Mobile View All Bottom CTA */}
         <div className="mt-12 text-center md:hidden">
-          <Link 
+          <Link
             href="/packages"
             className="btn btn-primary w-full rounded-2xl h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px]"
           >

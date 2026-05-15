@@ -14,28 +14,28 @@ interface PackageDetails {
   _id: string | number;
   package_id: string | number;
   title: string;
-  duration: string;
   location: string;
+  duration: string;
   category: string;
   status: number;
-  is_popular?: number;
+  is_popular: number;
   image: string;
   moreImage: string[];
   price: number;
   originalPrice: number;
+  rating: number;
+  badge: string;
   features: string[];
   discount: string;
-  shortDescription?: string;
+  shortDescription: string;
   longDescription: string;
-  itinerary: {
-    day: number;
-    title: string;
-    activities: string[];
-  }[];
-  // Optional fields
-  rating?: number;
-  bestTimeToVisit?: string;
-  nearbyAttractions?: string[];
+  bestTimeToVisit: string;
+  nearbyAttractions: string[];
+  itinerary: { day: number; title: string; activities: string[] }[];
+  tour_date: string;
+  modifiedAt: string;
+  user_info: string;
+  // Policy & Inclusions
   inclusions?: string[];
   exclusions?: string[];
   cancellationPolicy?: string;
@@ -103,27 +103,7 @@ const PackageDetailsPage = ({ params }: PageProps) => {
                     className="object-cover transition-all duration-700 group-hover:scale-105"
                     priority
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-
-                  {/* Overlay Info */}
-                  <div className="absolute bottom-10 left-10 right-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-                    <div>
-                      <div className="flex items-center gap-2 mb-4">
-                        <span className="bg-primary px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest text-white shadow-lg">
-                          {details.duration}
-                        </span>
-                        <span className="bg-accent px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest text-white shadow-lg">
-                          {details.discount}
-                        </span>
-                        <span className="bg-secondary px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest text-white shadow-lg">
-                          {details.category}
-                        </span>
-                      </div>
-                      <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
-                        {details.title}
-                      </h1>
-                    </div>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                 </div>
 
                 {/* Thumbnails Row */}
@@ -146,6 +126,61 @@ const PackageDetailsPage = ({ params }: PageProps) => {
                       />
                     </button>
                   ))}
+                </div>
+              </div>
+
+              {/* Title & Badges Section */}
+              <div className="px-4 md:px-0 py-8 border-b border-base-content/5">
+                <div className="flex flex-wrap items-center gap-2 mb-8">
+                  <span className="bg-primary/10 text-primary px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest border border-primary/20">
+                    {details.duration}
+                  </span>
+                  <span className="bg-accent/10 text-accent px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest border border-accent/20">
+                    {details.discount}
+                  </span>
+                  <span className="bg-secondary/10 text-secondary px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest border border-secondary/20">
+                    {details.category}
+                  </span>
+                  {details.badge && (
+                    <span className="bg-orange-500/10 text-orange-500 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest border border-orange-500/20">
+                      {details.badge}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                  <h1 className="text-4xl md:text-6xl font-black text-base-content tracking-tight leading-tight">
+                    {details.title}
+                  </h1>
+                  <div className="flex items-center gap-4 bg-base-200/50 p-4 rounded-3xl border border-base-content/5 shrink-0">
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-black uppercase text-base-content/30 tracking-widest">
+                        Rating
+                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 text-amber-500"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <span className="text-lg font-black text-base-content">
+                          {details.rating}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="w-px h-10 bg-base-content/10 mx-2"></div>
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-black uppercase text-base-content/30 tracking-widest">
+                        Departure
+                      </span>
+                      <span className="text-sm font-black text-base-content uppercase">
+                        {details.tour_date}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -180,9 +215,84 @@ const PackageDetailsPage = ({ params }: PageProps) => {
                   </div>
                 </div>
 
-                <p className="text-lg text-base-content/60 leading-relaxed">
-                  {details.longDescription}
-                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <p className="text-lg text-base-content/60 leading-relaxed italic border-l-4 border-primary/20 pl-6 py-2">
+                      {details.shortDescription}
+                    </p>
+                    <p className="text-lg text-base-content/60 leading-relaxed">
+                      {details.longDescription}
+                    </p>
+                  </div>
+
+                  {/* Key Info Card */}
+                  <div className="bg-base-200/30 rounded-[2.5rem] p-8 border border-base-content/5 space-y-6">
+                    <h3 className="text-sm font-black uppercase tracking-widest text-base-content/40">
+                      Travel Wisdom
+                    </h3>
+                    <div className="space-y-6">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.95 16.95l.707.707M7.05 7.05l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"
+                            />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black uppercase text-base-content/30 tracking-widest mb-1">
+                            Best Time to Visit
+                          </p>
+                          <p className="font-bold text-base-content">
+                            {details.bestTimeToVisit}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary shrink-0">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                            />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black uppercase text-base-content/30 tracking-widest mb-1">
+                            Nearby Attractions
+                          </p>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {details.nearbyAttractions?.map((attr, idx) => (
+                              <span
+                                key={idx}
+                                className="bg-base-100 px-3 py-1 rounded-lg text-xs font-bold text-base-content/60 border border-base-content/5"
+                              >
+                                {attr}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Features Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8">
@@ -212,6 +322,27 @@ const PackageDetailsPage = ({ params }: PageProps) => {
                       </span>
                     </div>
                   ))}
+                </div>
+                {/* Meta Footer */}
+                <div className="mt-12 pt-8 border-t border-base-content/5 flex flex-col md:flex-row justify-between items-center gap-6 px-4 md:px-0">
+                  <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-base-content/30">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2.5"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Last Updated:{" "}
+                    {new Date(details.modifiedAt).toLocaleDateString()}
+                  </div>
                 </div>
               </div>
 

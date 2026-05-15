@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
 import PackageCard from "@/components/pages/PackageCard";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
@@ -21,9 +22,11 @@ interface TourPackage {
   price: number;
   rating?: number;
   category: string;
+  status: number;
+  is_popular: number;
 }
 
-const PackagesPage = () => {
+const PackagesContent = () => {
   const [allPackages, setAllPackages] = useState<TourPackage[]>([]);
   const [filteredPackages, setFilteredPackages] = useState<TourPackage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,6 +39,7 @@ const PackagesPage = () => {
   const [priceRange, setPriceRange] = useState(10000);
   const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [popularityFilter, setPopularityFilter] = useState<string>("All");
   const [sortBy, setSortBy] = useState("Featured");
 
   // Pagination State
@@ -54,8 +58,9 @@ const PackagesPage = () => {
           data,
         );
         const result = Array.isArray(data) ? data : data?.data || [];
-        setAllPackages(result);
-        setFilteredPackages(result);
+        const activePackages = result.filter((pkg: any) => pkg.status === 1);
+        setAllPackages(activePackages);
+        setFilteredPackages(activePackages);
       } catch (error) {
         console.error("❌ PackagesPage: API call failed:", error);
       } finally {
@@ -65,9 +70,21 @@ const PackagesPage = () => {
     fetchAll();
   }, []);
 
+  const searchParams = useSearchParams();
+  const filterType = searchParams.get("type");
+
+  // Sync URL params with local filter state
+  useEffect(() => {
+    if (filterType === "popular") {
+      setTimeout(() => {
+        setPopularityFilter("Popular");
+      }, 0);
+    }
+  }, [filterType]);
+
   // Filter Logic
   useEffect(() => {
-    let filtered = allPackages;
+    let filtered = allPackages.filter((pkg) => pkg.status === 1);
 
     // Search filter (searches title, location, and features)
     if (searchQuery) {
@@ -101,6 +118,13 @@ const PackagesPage = () => {
       );
     }
 
+    // Popularity filter
+    if (popularityFilter === "Popular") {
+      filtered = filtered.filter((pkg) => pkg.is_popular === 1);
+    } else if (popularityFilter === "Standard") {
+      filtered = filtered.filter((pkg) => pkg.is_popular === 0);
+    }
+
     // Sort Logic
     const sorted = [...filtered];
     if (sortBy === "Price: Low to High") {
@@ -126,6 +150,7 @@ const PackagesPage = () => {
     priceRange,
     selectedDurations,
     selectedCategories,
+    popularityFilter,
     sortBy,
     allPackages,
   ]);
@@ -173,6 +198,7 @@ const PackagesPage = () => {
     priceRange !== 10000 ||
     selectedDurations.length > 0 ||
     selectedCategories.length > 0 ||
+    popularityFilter !== "All" ||
     sortBy !== "Featured";
 
   const resetFilters = () => {
@@ -180,6 +206,7 @@ const PackagesPage = () => {
     setPriceRange(10000);
     setSelectedDurations([]);
     setSelectedCategories([]);
+    setPopularityFilter("All");
     setSortBy("Featured");
   };
 
@@ -318,6 +345,64 @@ const PackagesPage = () => {
                         ${priceRange}
                       </span>
                     </div>
+                  </div>
+                </div>
+
+                {/* Popularity Filter Card */}
+                <div className="bg-base-100 rounded-[2.5rem] border border-base-content/5 p-8 shadow-sm hover:shadow-md transition-all duration-300">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2.5"
+                            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.175 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                          />
+                        </svg>
+                      </div>
+                      <h3 className="text-sm font-black uppercase tracking-widest text-base-content">
+                        Tier Level
+                      </h3>
+                    </div>
+                    {popularityFilter !== "All" && (
+                      <button
+                        onClick={() => setPopularityFilter("All")}
+                        className="text-[10px] font-black uppercase text-primary hover:underline"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    {["All", "Standard", "Popular"].map((type) => (
+                      <button
+                        key={type}
+                        onClick={() => setPopularityFilter(type)}
+                        className={`flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-300 ${
+                          popularityFilter === type
+                            ? "bg-primary/10 text-primary border border-primary/20"
+                            : "bg-base-200/50 text-base-content/50 hover:bg-base-200 border border-transparent"
+                        }`}
+                      >
+                        <span>{type} Packages</span>
+                        <span className="text-[10px] opacity-40 font-black">
+                          {type === "Popular"
+                            ? "1"
+                            : type === "Standard"
+                              ? "0"
+                              : ""}
+                        </span>
+                      </button>
+                    ))}
                   </div>
                 </div>
 
@@ -576,5 +661,19 @@ const PackagesPage = () => {
     </main>
   );
 };
+
+const PackagesPage = () => {
+  return (
+    <Suspense fallback={<DashboardSkeleton />}>
+      <PackagesContent />
+    </Suspense>
+  );
+};
+
+const DashboardSkeleton = () => (
+  <div className="min-h-screen bg-base-100 flex items-center justify-center">
+    <span className="loading loading-spinner loading-lg text-primary"></span>
+  </div>
+);
 
 export default PackagesPage;

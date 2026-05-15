@@ -45,7 +45,6 @@ const BookingContent = () => {
   );
   const { user } = useSelector((state: RootState) => state.auth);
 
-  const [packages, setPackages] = useState<TourPackage[]>([]);
   const [selectedPackage, setSelectedPackage] = useState<TourPackage | null>(
     null,
   );
@@ -110,24 +109,7 @@ const BookingContent = () => {
               return;
             }
           } catch (e) {
-            console.log("Not a standard package, trying destinations...");
-          }
-
-          // Attempt 2: Popular Destination Endpoint
-          const destRes = await axiosPublic.get(
-            `/api/tourism/get-popular-dest-list/${packageId}`,
-          );
-          const destData = destRes.data?.details_data;
-
-          if (destData) {
-            // Map destination structure to TourPackage structure
-            setSelectedPackage({
-              ...destData,
-              title: destData.name || destData.title,
-              duration: destData.duration || "Flexible",
-              category: destData.category || "Popular Destination",
-              features: destData.features || ["Top Rated", "Best Experience"],
-            });
+            console.error("❌ BookingPage: Error fetching package details:", e);
           }
         } else {
           // Fallback: Default package if no ID
@@ -242,13 +224,14 @@ const BookingContent = () => {
         grand_total: Number((totalPriceValue * 1.1 + 25).toFixed(2)),
         order_status: "BP",
         package_info: {
-          package_id: selectedPackage.package_id || selectedPackage.pop_id,
+          _id: selectedPackage._id,
+          package_id: selectedPackage.package_id,
           price: selectedPackage.price,
           category: selectedPackage.category,
           features: selectedPackage.features,
           image: selectedPackage.image,
-          originalPrice: selectedPackage.originalPrice || 0,
-          title: selectedPackage.title || selectedPackage.name,
+          originalPrice: selectedPackage.originalPrice,
+          title: selectedPackage.title,
           tour_date: selectedPackage.tour_date,
         },
       };

@@ -17,6 +17,7 @@ import DashboardSkeleton from "@/components/pages/DashboardSkeleton";
 interface GalleryItem {
   _id: string;
   title: string;
+  category: string;
   poster_image: string;
   more_image?: string[];
   status: number;
@@ -58,6 +59,7 @@ const ManageGalleryPage = () => {
   // Form State
   const [formData, setFormData] = useState({
     title: "",
+    category: "",
     poster_image: "",
     more_image: [] as string[],
     status: 1,
@@ -91,6 +93,7 @@ const ManageGalleryPage = () => {
       setEditingItem(item);
       setFormData({
         title: item.title,
+        category: item.category || "",
         poster_image: item.poster_image,
         more_image: item.more_image || [],
         status: item.status,
@@ -99,6 +102,7 @@ const ManageGalleryPage = () => {
       setEditingItem(null);
       setFormData({
         title: "",
+        category: "",
         poster_image: "",
         more_image: [],
         status: 1,
@@ -152,7 +156,7 @@ const ManageGalleryPage = () => {
     if (!user?.email) return;
 
     // Client-side validation
-    if (!formData.title || !formData.poster_image) {
+    if (!formData.title || !formData.category || !formData.poster_image) {
       showError("Validation Error", "Invalid or missing required fields");
       return;
     }
@@ -174,6 +178,7 @@ const ManageGalleryPage = () => {
         const payload = {
           _id: editingItem ? editingItem._id : null,
           title: formData.title,
+          category: formData.category,
           poster_image: formData.poster_image,
           more_image: formData.more_image.filter(Boolean),
           status: Number(formData.status),
@@ -450,11 +455,15 @@ const ManageGalleryPage = () => {
                 )}
               </div>
 
-              {/* Info Manifest */}
               <div className="px-4 pb-4 space-y-4">
                 <div className="flex justify-between items-start gap-4">
                   <div className="flex flex-col gap-1 flex-1">
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[8px] font-black uppercase tracking-widest">
+                        {item.category}
+                      </span>
+                    </div>
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-base-content/40">
                       Asset Identity
                     </span>
                     <h3 className="text-lg font-black text-base-content uppercase tracking-tighter leading-tight line-clamp-1">
@@ -569,6 +578,21 @@ const ManageGalleryPage = () => {
                   onChange={handleInputChange}
                   className="w-full h-11 px-5 rounded-xl bg-base-200/50 border border-base-content/5 font-black text-xs uppercase tracking-widest focus:border-primary/40 focus:outline-none transition-all"
                   placeholder="E.G. SUNSET OVER THE ALPS"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-base-content/30 ml-1">
+                  Category *
+                </label>
+                <input
+                  type="text"
+                  name="category"
+                  required
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  className="w-full h-11 px-5 rounded-xl bg-base-200/50 border border-base-content/5 font-black text-xs uppercase tracking-widest focus:border-primary/40 focus:outline-none transition-all"
+                  placeholder="E.G. NATURE, CITY, ADVENTURE"
                 />
               </div>
 
@@ -890,6 +914,7 @@ const GalleryDetailsDrawer = ({
               label="Asset Status"
               value={item.status === 1 ? "LIVE / VISIBLE" : "DRAFT / HIDDEN"}
             />
+            <DetailItem label="Asset Category" value={item.category} />
             <DetailItem
               label="Uploader Identity"
               value={item.user_info || "System Admin"}

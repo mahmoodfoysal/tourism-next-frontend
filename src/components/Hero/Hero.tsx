@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 
 const Hero = () => {
   const images = [
@@ -58,12 +59,16 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-2">
-            <button className="btn btn-primary btn-lg rounded-2xl px-10 shadow-2xl shadow-primary/30 hover:scale-105 transition-all duration-300 border-none h-14">
-              Explore Now
-            </button>
-            <button className="btn btn-ghost btn-lg rounded-2xl px-10 border-base-content/30 text-base-content hover:bg-base-content/10 backdrop-blur-md transition-all duration-300 h-14 shadow-lg">
-              Watch Story
-            </button>
+            <Link href="/packages">
+              <button className="btn btn-primary btn-lg rounded-2xl px-10 shadow-2xl shadow-primary/30 hover:scale-105 transition-all duration-300 border-none h-14">
+                Explore Now
+              </button>
+            </Link>
+            <Link href="/gallery">
+              <button className="btn btn-ghost btn-lg rounded-2xl px-10 border-base-content/30 text-base-content hover:bg-base-content/10 backdrop-blur-md transition-all duration-300 h-14 shadow-lg">
+                Watch Story
+              </button>
+            </Link>
           </div>
 
           {/* Stats */}

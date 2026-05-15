@@ -95,6 +95,7 @@ const NavBar = () => {
     { name: "Packages", href: "/packages" },
     { name: "Tour Guides", href: "/travel-guides" },
     { name: "Blogs", href: "/blogs" },
+    { name: "Story", href: "/gallery" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];

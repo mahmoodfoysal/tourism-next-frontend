@@ -26,6 +26,8 @@ export interface PackageInfo {
   price: number;
   status: number;
   is_popular: number;
+  tour_date: string;
+  shortDescription: string;
 }
 
 export default function Home() {

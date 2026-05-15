@@ -109,9 +109,7 @@ const NavBar = () => {
 
   return (
     <>
-      <header
-        className="sticky top-0 left-0 right-0 z-50 transition-all duration-500 print:hidden bg-base-100/40 backdrop-blur-3xl border-b border-base-content/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.1)]"
-      >
+      <header className="sticky top-0 left-0 right-0 z-50 transition-all duration-500 print:hidden bg-base-100/40 backdrop-blur-3xl border-b border-base-content/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.1)]">
         <nav className="navbar w-[95%] lg:w-[85%] mx-auto px-4 sm:px-0 min-h-[4rem]">
           {/* Mobile Menu Button */}
           <div className="navbar-start">
@@ -401,13 +399,6 @@ const NavBar = () => {
                 Login
               </Link>
             )}
-            <Link
-              href="/booking"
-              onClick={() => setIsMenuOpen(false)}
-              className="btn btn-primary btn-block rounded-xl font-bold h-12"
-            >
-              Book Now
-            </Link>
           </div>
         </div>
       </div>

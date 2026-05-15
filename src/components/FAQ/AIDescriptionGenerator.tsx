@@ -154,7 +154,7 @@ const AIDescriptionGenerator = () => {
               Copy Text
             </button>
           </div>
-          <div className="p-5 rounded-2xl bg-base-100 border border-base-content/5 text-sm text-base-content/70 leading-relaxed font-medium max-h-48 overflow-y-auto custom-scrollbar">
+          <div className="p-5 rounded-2xl bg-base-100 border border-base-content/5 text-sm text-base-content/70 leading-relaxed font-medium max-h-64 overflow-y-auto custom-scrollbar whitespace-pre-wrap break-words">
             {description}
           </div>
         </div>

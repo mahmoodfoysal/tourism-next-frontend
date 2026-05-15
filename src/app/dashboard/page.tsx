@@ -13,6 +13,7 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 const DashboardOverview = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const axiosSecure = useAxiosSecure();
+  const [theme, setTheme] = useState("dark");
   const [stats, setStats] = useState({
     totalBookings: 0,
     totalSpent: 0,
@@ -24,6 +25,22 @@ const DashboardOverview = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Detect theme
+    const isDark = document.documentElement.classList.contains("dark");
+    setTimeout(() => {
+      setTheme(isDark ? "dark" : "light");
+    });
+
+    const observer = new MutationObserver(() => {
+      const isDarkNow = document.documentElement.classList.contains("dark");
+      setTheme(isDarkNow ? "dark" : "light");
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme"],
+    });
+
     const fetchDashboardData = async () => {
       if (!user?.email) return;
       try {
@@ -70,6 +87,7 @@ const DashboardOverview = () => {
     };
 
     fetchDashboardData();
+    return () => observer.disconnect();
   }, [user, axiosSecure]);
 
   // Data processing for charts
@@ -154,7 +172,7 @@ const DashboardOverview = () => {
       id: "revenue-trend",
       toolbar: { show: false },
       background: "transparent",
-      foreColor: "#94a3b8",
+      foreColor: theme === "dark" ? "#94a3b8" : "#64748b",
       fontFamily: "Inter, sans-serif",
     },
     xaxis: {
@@ -188,13 +206,16 @@ const DashboardOverview = () => {
       hover: { size: 8 },
     },
     grid: {
-      borderColor: "rgba(148, 163, 184, 0.1)",
+      borderColor:
+        theme === "dark"
+          ? "rgba(148, 163, 184, 0.1)"
+          : "rgba(100, 116, 139, 0.1)",
       strokeDashArray: 5,
       xaxis: { lines: { show: false } },
       yaxis: { lines: { show: true } },
     },
-    theme: { mode: "dark" },
-    tooltip: { theme: "dark", x: { show: true } },
+    theme: { mode: theme as "light" | "dark" },
+    tooltip: { theme: theme as "light" | "dark", x: { show: true } },
   };
 
   const barChartOptions: any = {
@@ -202,12 +223,12 @@ const DashboardOverview = () => {
       id: "monthly-volume",
       toolbar: { show: false },
       background: "transparent",
-      foreColor: "#94a3b8",
+      foreColor: theme === "dark" ? "#94a3b8" : "#64748b",
     },
     xaxis: { categories: chartData.bar.categories },
     plotOptions: { bar: { borderRadius: 6, columnWidth: "60%" } },
     colors: ["#10b981"],
-    theme: { mode: "dark" },
+    theme: { mode: theme as "light" | "dark" },
     grid: { show: false },
   };
 
@@ -215,11 +236,11 @@ const DashboardOverview = () => {
     chart: {
       id: "revenue-pie",
       background: "transparent",
-      foreColor: "#94a3b8",
+      foreColor: theme === "dark" ? "#94a3b8" : "#64748b",
     },
     labels: chartData.pie.labels,
     colors: ["#22d3ee", "#8b5cf6", "#f59e0b"],
-    theme: { mode: "dark" },
+    theme: { mode: theme as "light" | "dark" },
     stroke: { show: false },
     legend: { position: "bottom", fontSize: "10px" },
     tooltip: { y: { formatter: (val: number) => `$${val.toFixed(2)}` } },

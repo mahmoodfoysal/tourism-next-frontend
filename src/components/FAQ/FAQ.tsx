@@ -77,7 +77,9 @@ const FAQ = () => {
             ))}
           </div>
           {/* right Side: ai */}
-          <AIDescriptionGenerator />
+          <div className="lg:w-1/3">
+            <AIDescriptionGenerator />
+          </div>
         </div>
       </div>
     </section>

@@ -24,6 +24,8 @@ interface TourPackage {
   category: string;
   status: number;
   is_popular: number;
+  tour_date: string;
+  shortDescription: string;
 }
 
 const PackagesContent = () => {

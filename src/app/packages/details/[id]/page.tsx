@@ -18,16 +18,20 @@ interface PackageDetails {
   location: string;
   category: string;
   status: number;
+  is_popular?: number;
   image: string;
   moreImage: string[];
   price: number;
   originalPrice: number;
   features: string[];
   discount: string;
-  details: {
-    description: string;
-    itinerary: string[];
-  };
+  shortDescription?: string;
+  longDescription: string;
+  itinerary: {
+    day: number;
+    title: string;
+    activities: string[];
+  }[];
   // Optional fields
   rating?: number;
   bestTimeToVisit?: string;
@@ -177,7 +181,7 @@ const PackageDetailsPage = ({ params }: PageProps) => {
                 </div>
 
                 <p className="text-lg text-base-content/60 leading-relaxed">
-                  {details.details.description}
+                  {details.longDescription}
                 </p>
 
                 {/* Features Grid */}
@@ -212,44 +216,44 @@ const PackageDetailsPage = ({ params }: PageProps) => {
               </div>
 
               {/* Itinerary Section */}
-              {details.details.itinerary &&
-                details.details.itinerary.length > 0 && (
-                  <div className="space-y-8 pt-12">
-                    <h2 className="text-3xl font-black text-base-content tracking-tight px-4 md:px-0">
-                      Your <span className="text-secondary">Itinerary</span>
-                    </h2>
-                    <div className="space-y-4 px-4 md:px-0">
-                      {details.details.itinerary.map((item, i) => {
-                        const [day, ...titleParts] = item.split(":");
-                        const title = titleParts.join(":").trim();
-
-                        return (
-                          <div
-                            key={i}
-                            className="collapse collapse-arrow bg-base-100 border border-base-content/5 rounded-3xl hover:border-secondary/20 transition-all shadow-sm"
-                          >
-                            <input type="checkbox" />
-                            <div className="collapse-title flex items-center gap-6 p-6">
-                              <div className="w-16 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary font-black shrink-0 text-sm">
-                                {day.trim()}
-                              </div>
-                              <span className="text-xl font-black text-base-content">
-                                {title || day}
-                              </span>
-                            </div>
-                            <div className="collapse-content px-6 pb-6">
-                              <p className="text-base-content/60 font-medium pl-22">
-                                {title
-                                  ? `Full schedule for ${day.trim()}`
-                                  : item}
-                              </p>
-                            </div>
+              {details.itinerary && details.itinerary.length > 0 && (
+                <div className="space-y-8 pt-12">
+                  <h2 className="text-3xl font-black text-base-content tracking-tight px-4 md:px-0">
+                    Your <span className="text-secondary">Itinerary</span>
+                  </h2>
+                  <div className="space-y-4 px-4 md:px-0">
+                    {details.itinerary.map((item, i) => (
+                      <div
+                        key={i}
+                        className="collapse collapse-arrow bg-base-100 border border-base-content/5 rounded-3xl hover:border-secondary/20 transition-all shadow-sm"
+                      >
+                        <input type="checkbox" />
+                        <div className="collapse-title flex items-center gap-6 p-6">
+                          <div className="w-16 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary font-black shrink-0 text-sm">
+                            Day {item.day}
                           </div>
-                        );
-                      })}
-                    </div>
+                          <span className="text-xl font-black text-base-content">
+                            {item.title}
+                          </span>
+                        </div>
+                        <div className="collapse-content px-6 pb-6">
+                          <ul className="space-y-2 pl-22">
+                            {item.activities.map((activity, idx) => (
+                              <li
+                                key={idx}
+                                className="flex items-center gap-3 text-base-content/60 font-medium"
+                              >
+                                <div className="w-1.5 h-1.5 rounded-full bg-secondary/40"></div>
+                                {activity}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                )}
+                </div>
+              )}
 
               {/* Inclusions & Exclusions */}
               {(details.inclusions || details.exclusions) && (

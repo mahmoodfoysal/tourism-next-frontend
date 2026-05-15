@@ -18,23 +18,31 @@ interface TourPackage {
   _id: string;
   package_id: number;
   title: string;
-  duration: string;
   location: string;
+  duration: string;
+  category: string;
+  status: number;
+  is_popular: number;
   image: string;
   moreImage: string[];
   price: number;
   originalPrice: number;
+  rating: number;
+  badge: string;
   features: string[];
-  discount: number;
-  status: number;
-  category: string;
-  tour_date?: string;
-  details?: {
-    description: string;
-    itinerary: string[];
-  };
+  discount: string;
+  shortDescription: string;
+  longDescription: string;
+  bestTimeToVisit: string;
+  nearbyAttractions: string[];
+  itinerary: {
+    day: number;
+    title: string;
+    activities: string[];
+  }[];
+  tour_date: string;
+  modifiedAt?: string;
   user_info?: string;
-  createdAt?: string;
 }
 
 const AddPackagePage = () => {
@@ -86,19 +94,25 @@ const AddPackagePage = () => {
   const [formData, setFormData] = useState({
     package_id: "",
     title: "",
-    duration: "",
     location: "",
+    duration: "",
+    category: "",
+    status: 1,
+    is_popular: 0,
     image: "",
     moreImage: [] as string[],
     price: "",
     originalPrice: "",
+    rating: "5.0",
+    badge: "",
     features: [] as string[],
     discount: "",
-    status: 1,
-    category: "",
+    shortDescription: "",
+    longDescription: "",
+    bestTimeToVisit: "",
+    nearbyAttractions: [] as string[],
+    itinerary: [] as { day: number; title: string; activities: string[] }[],
     tour_date: "",
-    description: "",
-    itinerary: [] as string[],
   });
 
   const statusList = [
@@ -133,38 +147,50 @@ const AddPackagePage = () => {
       setFormData({
         package_id: pkg.package_id.toString(),
         title: pkg.title,
-        duration: pkg.duration,
         location: pkg.location,
+        duration: pkg.duration,
+        category: pkg.category || "",
+        status: pkg.status,
+        is_popular: pkg.is_popular || 0,
         image: pkg.image,
         moreImage: pkg.moreImage || [],
         price: pkg.price.toString(),
         originalPrice: pkg.originalPrice.toString(),
+        rating: pkg.rating?.toString() || "5.0",
+        badge: pkg.badge || "",
         features: pkg.features || [],
-        discount: pkg?.discount?.toString(),
-        status: pkg.status,
-        category: pkg.category || "",
+        discount: pkg.discount?.toString() || "",
+        shortDescription: pkg.shortDescription || "",
+        longDescription: pkg.longDescription || "",
+        bestTimeToVisit: pkg.bestTimeToVisit || "",
+        nearbyAttractions: pkg.nearbyAttractions || [],
+        itinerary: pkg.itinerary || [],
         tour_date: pkg.tour_date || "",
-        description: pkg.details?.description || "",
-        itinerary: pkg.details?.itinerary || [],
       });
     } else {
       setEditingPackage(null);
       setFormData({
         package_id: "",
         title: "",
-        duration: "",
         location: "",
+        duration: "",
+        category: "",
+        status: 1,
+        is_popular: 0,
         image: "",
         moreImage: [],
         price: "",
         originalPrice: "",
+        rating: "5.0",
+        badge: "",
         features: [],
         discount: "",
-        status: 1,
-        category: "",
-        tour_date: "",
-        description: "",
+        shortDescription: "",
+        longDescription: "",
+        bestTimeToVisit: "",
+        nearbyAttractions: [],
         itinerary: [],
+        tour_date: "",
       });
     }
     setIsDrawerOpen(true);
@@ -186,7 +212,7 @@ const AddPackagePage = () => {
   };
 
   const handleArrayInputChange = (
-    field: "features" | "moreImage" | "itinerary",
+    field: "features" | "moreImage" | "nearbyAttractions",
     index: number,
     value: string,
   ) => {
@@ -196,18 +222,68 @@ const AddPackagePage = () => {
   };
 
   const handleAddArrayField = (
-    field: "features" | "moreImage" | "itinerary",
+    field: "features" | "moreImage" | "nearbyAttractions",
   ) => {
     setFormData((prev) => ({ ...prev, [field]: [...prev[field], ""] }));
   };
 
   const handleRemoveArrayField = (
-    field: "features" | "moreImage" | "itinerary",
+    field: "features" | "moreImage" | "nearbyAttractions",
     index: number,
   ) => {
     const updatedArray = formData[field].filter((_, i) => i !== index);
     setFormData((prev) => ({ ...prev, [field]: updatedArray }));
   };
+
+  // Itinerary Handlers
+  const handleAddDay = () => {
+    setFormData((prev) => ({
+      ...prev,
+      itinerary: [
+        ...prev.itinerary,
+        { day: prev.itinerary.length + 1, title: "", activities: [""] },
+      ],
+    }));
+  };
+
+  const handleRemoveDay = (dayIndex: number) => {
+    const updated = formData.itinerary
+      .filter((_, i) => i !== dayIndex)
+      .map((item, i) => ({ ...item, day: i + 1 }));
+    setFormData((prev) => ({ ...prev, itinerary: updated }));
+  };
+
+  const handleItineraryTitleChange = (dayIndex: number, value: string) => {
+    const updated = [...formData.itinerary];
+    updated[dayIndex].title = value;
+    setFormData((prev) => ({ ...prev, itinerary: updated }));
+  };
+
+  const handleActivityChange = (
+    dayIndex: number,
+    activityIndex: number,
+    value: string,
+  ) => {
+    const updated = [...formData.itinerary];
+    updated[dayIndex].activities[activityIndex] = value;
+    setFormData((prev) => ({ ...prev, itinerary: updated }));
+  };
+
+  const handleAddActivity = (dayIndex: number) => {
+    const updated = [...formData.itinerary];
+    updated[dayIndex].activities.push("");
+    setFormData((prev) => ({ ...prev, itinerary: updated }));
+  };
+
+  const handleRemoveActivity = (dayIndex: number, activityIndex: number) => {
+    const updated = [...formData.itinerary];
+    updated[dayIndex].activities = updated[dayIndex].activities.filter(
+      (_, i) => i !== activityIndex,
+    );
+    setFormData((prev) => ({ ...prev, itinerary: updated }));
+  };
+
+
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -245,24 +321,14 @@ const AddPackagePage = () => {
 
       try {
         const payload = {
+          ...formData,
           package_id: Number(formData.package_id),
-          title: formData.title,
-          duration: formData.duration,
-          location: formData.location,
-          image: formData.image,
-          moreImage: formData.moreImage.filter(Boolean),
           price: Number(formData.price),
           originalPrice: Number(formData.originalPrice),
-          features: formData.features.filter(Boolean),
-          discount: Number(formData.discount),
-          status: Number(formData.status),
+          discount: formData.discount.toString(),
+          rating: Number(formData.rating),
+          is_popular: Number(formData.is_popular),
           user_info: user.email,
-          category: formData.category,
-          tour_date: formData.tour_date,
-          details: {
-            description: formData.description,
-            itinerary: formData.itinerary.filter(Boolean),
-          },
           ...(editingPackage?._id && { _id: editingPackage._id }),
         };
 
@@ -519,7 +585,7 @@ const AddPackagePage = () => {
                         <span className="text-sm font-black text-primary">
                           ${pkg.price}
                         </span>
-                        {pkg.discount > 0 && (
+                        {Number(pkg.discount) > 0 && (
                           <span className="text-[9px] font-bold text-error uppercase tracking-widest">
                             -{pkg.discount}% OFF
                           </span>
@@ -693,7 +759,7 @@ const AddPackagePage = () => {
               onSubmit={handleSubmit}
               className="space-y-6"
             >
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-[9px] font-black uppercase tracking-[0.2em] text-base-content/40 ml-1">
                     Package ID <span className="text-error">*</span>
@@ -723,6 +789,20 @@ const AddPackagePage = () => {
                         {s.label}
                       </option>
                     ))}
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-black uppercase tracking-[0.2em] text-base-content/40 ml-1">
+                    Is Popular?
+                  </label>
+                  <select
+                    name="is_popular"
+                    value={formData.is_popular}
+                    onChange={handleInputChange}
+                    className="w-full h-11 px-5 rounded-xl bg-base-200/50 border border-base-content/5 text-xs font-bold focus:outline-none focus:border-primary/30 appearance-none"
+                  >
+                    <option value={0}>Standard</option>
+                    <option value={1}>Popular</option>
                   </select>
                 </div>
               </div>
@@ -829,6 +909,35 @@ const AddPackagePage = () => {
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[9px] font-black uppercase tracking-[0.2em] text-base-content/40 ml-1">
+                    Badge Text
+                  </label>
+                  <input
+                    type="text"
+                    name="badge"
+                    value={formData.badge}
+                    onChange={handleInputChange}
+                    className="w-full h-11 px-5 rounded-xl bg-base-200/50 border border-base-content/5 text-xs font-bold focus:outline-none focus:border-primary/30"
+                    placeholder="Best Seller"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-black uppercase tracking-[0.2em] text-base-content/40 ml-1">
+                    Best Time To Visit
+                  </label>
+                  <input
+                    type="text"
+                    name="bestTimeToVisit"
+                    value={formData.bestTimeToVisit}
+                    onChange={handleInputChange}
+                    className="w-full h-11 px-5 rounded-xl bg-base-200/50 border border-base-content/5 text-xs font-bold focus:outline-none focus:border-primary/30"
+                    placeholder="November to April"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-black uppercase tracking-[0.2em] text-base-content/40 ml-1">
                     Tour Date
                   </label>
                   <input
@@ -858,27 +967,28 @@ const AddPackagePage = () => {
 
               <div className="space-y-1.5">
                 <label className="text-[9px] font-black uppercase tracking-[0.2em] text-base-content/40 ml-1">
-                  Package Description
+                  Short Description
                 </label>
-                <textarea
-                  name="description"
-                  value={formData.description}
+                <input
+                  type="text"
+                  name="shortDescription"
+                  value={formData.shortDescription}
                   onChange={handleInputChange}
-                  className="w-full h-24 p-5 rounded-xl bg-base-200/50 border border-base-content/5 text-xs font-bold focus:outline-none focus:border-primary/30 resize-none"
-                  placeholder="Experience the ultimate tropical escape..."
+                  className="w-full h-11 px-5 rounded-xl bg-base-200/50 border border-base-content/5 text-xs font-bold focus:outline-none focus:border-primary/30"
+                  placeholder="Brief summary for cards..."
                 />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-[9px] font-black uppercase tracking-[0.2em] text-base-content/40 ml-1">
-                  Tour Itinerary (Comma separated days)
+                  Long Description
                 </label>
                 <textarea
-                  name="itinerary"
-                  value={formData.itinerary}
+                  name="longDescription"
+                  value={formData.longDescription}
                   onChange={handleInputChange}
-                  className="w-full h-24 p-5 rounded-xl bg-base-200/50 border border-base-content/5 text-xs font-bold focus:outline-none focus:border-primary/30 resize-none"
-                  placeholder="Day 1: Arrival, Day 2: Snorkeling..."
+                  className="w-full h-32 p-5 rounded-xl bg-base-200/50 border border-base-content/5 text-xs font-bold focus:outline-none focus:border-primary/30 resize-none"
+                  placeholder="Detailed background and information..."
                 />
               </div>
 
@@ -988,27 +1098,27 @@ const AddPackagePage = () => {
 
               <div className="space-y-3">
                 <label className="text-[9px] font-black uppercase tracking-[0.2em] text-base-content/40 ml-1">
-                  Tour Itinerary
+                  Nearby Attractions
                 </label>
                 <div className="space-y-2">
-                  {formData?.itinerary?.map((step, idx) => (
+                  {formData.nearbyAttractions.map((place, idx) => (
                     <div key={idx} className="flex gap-2">
                       <input
                         type="text"
-                        value={step}
+                        value={place}
                         onChange={(e) =>
                           handleArrayInputChange(
-                            "itinerary",
+                            "nearbyAttractions",
                             idx,
                             e.target.value,
                           )
                         }
                         className="flex-1 h-11 px-5 rounded-xl bg-base-200/50 border border-base-content/5 text-xs font-bold focus:outline-none focus:border-primary/30"
-                        placeholder={`Day ${idx + 1}: Activity`}
+                        placeholder="Eiffel Tower"
                       />
                       <button
                         type="button"
-                        onClick={() => handleRemoveArrayField("itinerary", idx)}
+                        onClick={() => handleRemoveArrayField("nearbyAttractions", idx)}
                         className="w-11 h-11 rounded-xl bg-error/10 text-error hover:bg-error hover:text-white transition-all flex items-center justify-center shrink-0"
                       >
                         <svg
@@ -1030,11 +1140,100 @@ const AddPackagePage = () => {
                   ))}
                   <button
                     type="button"
-                    onClick={() => handleAddArrayField("itinerary")}
+                    onClick={() => handleAddArrayField("nearbyAttractions")}
                     className="w-full h-11 rounded-xl border-2 border-dashed border-base-content/10 text-[10px] font-black uppercase tracking-[0.2em] text-base-content/40 hover:border-primary/40 hover:text-primary transition-all"
                   >
-                    + Add Itinerary Step
+                    + Add Attraction
                   </button>
+                </div>
+              </div>
+
+              {/* Complex Itinerary Builder */}
+              <div className="space-y-6 pt-6 border-t border-base-content/5">
+                <div className="flex justify-between items-center">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/60">
+                    Day-by-Day Itinerary
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleAddDay}
+                    className="btn btn-primary btn-xs h-8 px-4 rounded-lg font-black uppercase tracking-widest text-[9px]"
+                  >
+                    + Add Day
+                  </button>
+                </div>
+
+                <div className="space-y-8">
+                  {formData.itinerary.map((day, dIdx) => (
+                    <div key={dIdx} className="p-6 rounded-[2rem] bg-base-200/30 border border-base-content/5 space-y-4 relative group/day">
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveDay(dIdx)}
+                        className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-error text-white opacity-0 group-hover/day:opacity-100 transition-all shadow-lg flex items-center justify-center"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+
+                      <div className="grid grid-cols-4 gap-4">
+                        <div className="space-y-1">
+                           <label className="text-[8px] font-black uppercase text-base-content/30">Day</label>
+                           <input
+                            type="number"
+                            readOnly
+                            value={day.day}
+                            className="w-full h-10 px-4 rounded-xl bg-base-100 border border-base-content/5 text-xs font-bold focus:outline-none"
+                          />
+                        </div>
+                        <div className="col-span-3 space-y-1">
+                           <label className="text-[8px] font-black uppercase text-base-content/30">Title</label>
+                           <input
+                            type="text"
+                            value={day.title}
+                            onChange={(e) => handleItineraryTitleChange(dIdx, e.target.value)}
+                            className="w-full h-10 px-4 rounded-xl bg-base-100 border border-base-content/5 text-xs font-bold focus:outline-none focus:border-primary/30"
+                            placeholder="Arrival & Briefing"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-[8px] font-black uppercase text-base-content/30 flex justify-between items-center">
+                          Activities
+                          <button
+                            type="button"
+                            onClick={() => handleAddActivity(dIdx)}
+                            className="text-primary hover:underline"
+                          >
+                            Add Activity
+                          </button>
+                        </label>
+                        {day.activities.map((act, aIdx) => (
+                          <div key={aIdx} className="flex gap-2">
+                            <input
+                              type="text"
+                              value={act}
+                              onChange={(e) => handleActivityChange(dIdx, aIdx, e.target.value)}
+                              className="flex-1 h-9 px-4 rounded-lg bg-base-100 border border-base-content/5 text-[11px] font-bold focus:outline-none"
+                              placeholder="Check-in to hotel"
+                            />
+                            {day.activities.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveActivity(dIdx, aIdx)}
+                                className="w-9 h-9 rounded-lg bg-error/5 text-error hover:bg-error hover:text-white transition-all flex items-center justify-center shrink-0"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </form>
@@ -1249,39 +1448,67 @@ const DetailsDrawer = ({
             <DetailItem label="Duration" value={pkg.duration} />
             <DetailItem label="Tour Date" value={pkg.tour_date || "N/A"} />
             <DetailItem label="Current Price" value={`$${pkg.price}`} />
-            <DetailItem label="Discount" value={`${pkg.discount}%`} />
+            <DetailItem label="Discount" value={pkg.discount || "0%"} />
             <DetailItem
               label="Original Price"
               value={`$${pkg.originalPrice}`}
             />
+            <DetailItem label="Popularity" value={pkg.is_popular === 1 ? "POPULAR" : "STANDARD"} />
+            <DetailItem label="Badge" value={pkg.badge || "N/A"} />
+            <DetailItem label="Best Time" value={pkg.bestTimeToVisit || "N/A"} />
             <DetailItem
               label="Creator / Admin"
               value={pkg.user_info || "System"}
             />
             <DetailItem
-              label="Registration Date"
-              value={
-                pkg.createdAt
-                  ? new Date(pkg.createdAt).toLocaleDateString()
-                  : "N/A"
-              }
-            />
-            <DetailItem label="Core Features" value={pkg.features} fullWidth />
-            <DetailItem
-              label="Package Description"
-              value={pkg.details?.description || "N/A"}
+              label="Short Description"
+              value={pkg.shortDescription || "N/A"}
               fullWidth
             />
             <DetailItem
-              label="Tour Itinerary"
-              value={pkg.details?.itinerary || []}
+              label="Long Description"
+              value={pkg.longDescription || "N/A"}
               fullWidth
             />
             <DetailItem
-              label="Gallery References"
-              value={pkg.moreImage}
+              label="Core Features"
+              value={pkg.features}
               fullWidth
             />
+            <DetailItem
+              label="Nearby Attractions"
+              value={pkg.nearbyAttractions}
+              fullWidth
+            />
+          </div>
+
+          {/* Itinerary Preview */}
+          <div className="space-y-4">
+             <label className="text-[9px] font-black uppercase tracking-[0.2em] text-base-content/30 ml-1">
+              Tour Itinerary Manifest
+            </label>
+            <div className="space-y-3">
+              {pkg.itinerary?.map((item, idx) => (
+                <div key={idx} className="p-4 rounded-xl bg-base-200/30 border border-base-content/5 space-y-2">
+                  <div className="flex items-center gap-3">
+                    <span className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent font-black text-[10px]">
+                      D{item.day}
+                    </span>
+                    <span className="text-xs font-black text-base-content/80 uppercase tracking-tight">
+                      {item.title}
+                    </span>
+                  </div>
+                  <div className="pl-11 space-y-1">
+                    {item.activities.map((act, aIdx) => (
+                      <div key={aIdx} className="flex items-center gap-2 text-[10px] font-bold text-base-content/50">
+                        <div className="w-1 h-1 rounded-full bg-accent/30"></div>
+                        {act}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

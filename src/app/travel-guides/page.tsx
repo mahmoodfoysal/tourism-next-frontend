@@ -55,7 +55,7 @@ const TourGuidesPage = () => {
   const ratingLevels = ["4.5+", "4.8+", "5.0"];
 
   useEffect(() => {
-    let filtered = guides;
+    let filtered = guides.filter((pkg) => pkg.status === 1);
 
     if (searchQuery) {
       filtered = filtered.filter(

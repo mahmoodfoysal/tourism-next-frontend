@@ -13,6 +13,7 @@ interface GalleryItem {
   poster_image: string;
   location?: string;
   more_image?: string[];
+  status: number;
 }
 
 const GalleryPage = () => {
@@ -39,7 +40,11 @@ const GalleryPage = () => {
           "/api/tourism/get-galary-photo-list",
         );
         if (response.data?.list_data) {
-          setItems(response.data.list_data);
+          setItems(
+            response.data.list_data?.filter(
+              (pkg: GalleryItem) => pkg.status === 1,
+            ),
+          );
         }
       } catch (error) {
         console.error("Error fetching gallery:", error);

@@ -11,6 +11,7 @@ interface Photo {
   poster_image: string;
   more_image?: string[];
   category?: string;
+  status: number;
 }
 
 const TravelGallary = () => {
@@ -25,7 +26,9 @@ const TravelGallary = () => {
         const response = await axiosPublic.get(
           "/api/tourism/get-galary-photo-list",
         );
-        const listData = response.data?.list_data || [];
+        const listData = response.data?.list_data.filter(
+          (pkg: Photo) => pkg.status === 1,
+        );
 
         // Randomize and take exactly 7
         const shuffled = [...listData].sort(() => 0.5 - Math.random());

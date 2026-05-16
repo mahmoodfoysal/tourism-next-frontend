@@ -66,7 +66,7 @@ const BlogsPage = () => {
 
   // Filter Logic
   useEffect(() => {
-    let filtered = allBlogs;
+    let filtered = allBlogs.filter((pkg) => pkg.status === 1);
 
     // Search filter
     if (searchQuery) {

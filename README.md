@@ -14,6 +14,7 @@ A full-stack tourism website. This website tourbooking, gathering information an
 
 ## Technologies Used
 
+- TypeScript
 - Next.js
 - Redux Toolkit
 - Firebase
@@ -45,11 +46,14 @@ A full-stack tourism website. This website tourbooking, gathering information an
 - Coupon show in client profile and that coupon only used one user one time. and show total used coupon.
 - New member get 10% off coupon if they claim from landing page newsletter.
 - Booking status section
+- After complete tour give review and rating system.
+- See tour guide profile.
+- See coupon and Hostory
 
 ## Protected Routes
 
 - Dashboard
-- Checkout
+- Booking
 - Profile
 - Booking History
 
@@ -60,6 +64,8 @@ A full-stack tourism website. This website tourbooking, gathering information an
 - Tour Package Details
 - Popular Destinations
 - Blogs
+- Story
+- Tour Guide
 - Gallery
 - Contact
 - Why Choose Us
@@ -83,7 +89,14 @@ A full-stack tourism website. This website tourbooking, gathering information an
 - Pagination: It add where many data comes.
 - Footer have full functional.
 - New member get 10% off coupon if they claim from landing page newsletter and if they already registered then they can claim from their profile. after claim they can not claim again.
-- Using Ai Description and Ai chat for help to customer.
+- Tour photo can see from story and photo galary.
+- Using Ai Itinerary generator where give full tour plan.
+- AI chat bot for customer help where client ask any question.
+- Total Used coupon count system. If user give coupon then.
+- Tour guide profile and details.
+- Role base dashboard access.
+
+## note: If you need admin dashboard credentials. Please contact with me.
 
 ## Setup and Installation
 

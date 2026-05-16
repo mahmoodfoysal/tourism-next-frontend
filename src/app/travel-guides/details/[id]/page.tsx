@@ -265,17 +265,17 @@ const GuideDetailsPage = ({ params }: PageProps) => {
                           {guide.tour_type}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between py-4">
+                      {/* <div className="flex items-center justify-between py-4">
                         <span className="text-sm font-bold text-base-content/50 uppercase tracking-widest">
                           Response Time
                         </span>
                         <span className="text-sm font-black text-green-500">
                           Under 1 Hour
                         </span>
-                      </div>
+                      </div> */}
                     </div>
 
-                    <div className="pt-4">
+                    {/* <div className="pt-4">
                       <button className="btn btn-primary w-full h-16 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all flex items-center justify-center gap-3">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -293,7 +293,7 @@ const GuideDetailsPage = ({ params }: PageProps) => {
                         </svg>
                         Message Guide
                       </button>
-                    </div>
+                    </div> */}
 
                     <p className="text-center text-[10px] font-bold text-base-content/30 uppercase tracking-[0.2em]">
                       Secure booking via AuraTrip

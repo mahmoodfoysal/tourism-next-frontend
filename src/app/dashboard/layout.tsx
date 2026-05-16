@@ -23,6 +23,15 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const { isAdmin } = useSelector((state: RootState) => state.admin);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [theme, setTheme] = useState("dark");
+  const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
+
+  const toggleMenu = (name: string) => {
+    setExpandedMenus((prev) =>
+      prev.includes(name)
+        ? prev.filter((n) => n !== name)
+        : [...prev, name],
+    );
+  };
 
   // Toggle theme
   const toggleTheme = () => {
@@ -230,6 +239,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           />
         </svg>
       ),
+      subItems: [
+        { name: "Processing", path: "/dashboard/manage-bookings/processing" },
+        { name: "Booking", path: "/dashboard/manage-bookings/booking" },
+        { name: "Completed", path: "/dashboard/manage-bookings/completed" },
+        { name: "Rejection", path: "/dashboard/manage-bookings/rejection" },
+      ],
     },
   ];
 
@@ -293,33 +308,99 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           {/* Navigation Links */}
           <nav className="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar">
             {menuItems
-              .filter((item) => {
+              .filter((item: any) => {
                 if (item.name === "Admin" && !isAdmin) return false;
                 return true;
               })
-              .map((item) => {
+              .map((item: any) => {
                 const isActive = pathname === item.path;
+                const isExpanded = expandedMenus.includes(item.name);
+                const hasSubItems = item.subItems && item.subItems.length > 0;
+
                 return (
-                  <Link
-                    key={item.name}
-                    href={item.path}
-                    className={`flex items-center gap-4 px-4 h-14 rounded-2xl transition-all duration-300 group ${
-                      isActive
-                        ? "bg-primary text-white shadow-xl shadow-primary/20"
-                        : "text-base-content/50 hover:bg-primary/5 hover:text-primary"
-                    } ${!isSidebarOpen && "justify-center px-0"}`}
-                  >
-                    <div
-                      className={`shrink-0 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-white" : "text-primary/60 group-hover:text-primary"}`}
-                    >
-                      {item.icon}
-                    </div>
-                    {isSidebarOpen && (
-                      <span className="text-[10px] font-black uppercase tracking-widest leading-none">
-                        {item.name}
-                      </span>
+                  <div key={item.name} className="space-y-1">
+                    {hasSubItems ? (
+                      <button
+                        onClick={() => toggleMenu(item.name)}
+                        className={`w-full flex items-center justify-between px-4 h-14 rounded-2xl transition-all duration-300 group ${
+                          pathname.startsWith(item.path)
+                            ? "bg-primary/10 text-primary"
+                            : "text-base-content/50 hover:bg-primary/5 hover:text-primary"
+                        } ${!isSidebarOpen && "justify-center px-0"}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div
+                            className={`shrink-0 transition-transform duration-300 group-hover:scale-110 ${pathname.startsWith(item.path) ? "text-primary" : "text-primary/60 group-hover:text-primary"}`}
+                          >
+                            {item.icon}
+                          </div>
+                          {isSidebarOpen && (
+                            <span className="text-[10px] font-black uppercase tracking-widest leading-none">
+                              {item.name}
+                            </span>
+                          )}
+                        </div>
+                        {isSidebarOpen && (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className={`h-4 w-4 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="3"
+                              d="M19 9l-7 7-7-7"
+                            />
+                          </svg>
+                        )}
+                      </button>
+                    ) : (
+                      <Link
+                        href={item.path}
+                        className={`flex items-center gap-4 px-4 h-14 rounded-2xl transition-all duration-300 group ${
+                          isActive
+                            ? "bg-primary text-white shadow-xl shadow-primary/20"
+                            : "text-base-content/50 hover:bg-primary/5 hover:text-primary"
+                        } ${!isSidebarOpen && "justify-center px-0"}`}
+                      >
+                        <div
+                          className={`shrink-0 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-white" : "text-primary/60 group-hover:text-primary"}`}
+                        >
+                          {item.icon}
+                        </div>
+                        {isSidebarOpen && (
+                          <span className="text-[10px] font-black uppercase tracking-widest leading-none">
+                            {item.name}
+                          </span>
+                        )}
+                      </Link>
                     )}
-                  </Link>
+
+                    {/* Sub Items */}
+                    {hasSubItems && isExpanded && isSidebarOpen && (
+                      <div className="pl-12 space-y-1 animate-in slide-in-from-top-2 duration-300">
+                        {item.subItems.map((sub: any) => {
+                          const isSubActive = pathname === sub.path;
+                          return (
+                            <Link
+                              key={sub.name}
+                              href={sub.path}
+                              className={`flex items-center h-10 px-4 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${
+                                isSubActive
+                                  ? "text-primary bg-primary/5"
+                                  : "text-base-content/40 hover:text-primary hover:bg-primary/5"
+                              }`}
+                            >
+                              {sub.name}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
           </nav>

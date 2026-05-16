@@ -87,18 +87,16 @@ const Footer = () => {
     const fetchDestinations = async () => {
       try {
         const { axiosPublic } = await import("@/hooks/useAxiosPublic");
-        const response = await axiosPublic.get(
-          "/api/tourism/get-popular-dest-list",
-        );
+        const response = await axiosPublic.get("/api/tourism/get-package-list");
         const data = response.data?.list_data;
         const result = Array.isArray(data) ? data : data?.data || [];
-        // Shuffle and take 4 random items
+        // Shuffle and take 5 random packages
         const shuffled = [...result]
           .sort(() => 0.5 - Math.random())
-          .slice(0, 4);
+          .slice(0, 5);
         setDynamicDestinations(shuffled);
       } catch (error) {
-        console.error("Error fetching destinations:", error);
+        console.error("Error fetching footer data:", error);
       } finally {
         setIsDestLoading(false);
       }
@@ -119,9 +117,9 @@ const Footer = () => {
       { name: "Contact Us", href: "/contact" },
       { name: "My Bookings", href: "/my-bookings" },
     ],
-    destinations: dynamicDestinations.map((dest) => ({
-      name: dest.name,
-      href: `/destinations/details/${dest._id}`,
+    destinations: dynamicDestinations.map((pkg) => ({
+      name: pkg.location || pkg.title,
+      href: `/packages?location=${pkg.location || pkg.title}`,
     })),
     support: [
       { name: "Help Center", href: "/help" },

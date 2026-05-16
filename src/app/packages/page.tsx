@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
 import PackageCard from "@/components/pages/PackageCard";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
@@ -32,6 +32,7 @@ const PackagesContent = () => {
   const [allPackages, setAllPackages] = useState<TourPackage[]>([]);
   const [filteredPackages, setFilteredPackages] = useState<TourPackage[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   // Responsive Filter Toggle
   const [showFilters, setShowFilters] = useState(false);
@@ -41,6 +42,7 @@ const PackagesContent = () => {
   const [priceRange, setPriceRange] = useState(10000);
   const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [popularityFilter, setPopularityFilter] = useState<string>("All");
   const [sortBy, setSortBy] = useState("Featured");
 
@@ -69,6 +71,8 @@ const PackagesContent = () => {
 
   const searchParams = useSearchParams();
   const filterType = searchParams.get("type");
+  const urlSearchQuery = searchParams.get("search");
+  const urlLocation = searchParams.get("location");
 
   // Sync URL params with local filter state
   useEffect(() => {
@@ -77,7 +81,17 @@ const PackagesContent = () => {
         setPopularityFilter("Popular");
       }, 0);
     }
-  }, [filterType]);
+    if (urlSearchQuery) {
+      setTimeout(() => {
+        setSearchQuery(urlSearchQuery);
+      }, 0);
+    }
+    if (urlLocation) {
+      setTimeout(() => {
+        setSelectedLocations([urlLocation]);
+      }, 0);
+    }
+  }, [filterType, urlSearchQuery, urlLocation]);
 
   // Filter Logic
   useEffect(() => {
@@ -115,6 +129,13 @@ const PackagesContent = () => {
       );
     }
 
+    // Location filter (multi-select)
+    if (selectedLocations.length > 0) {
+      filtered = filtered.filter(
+        (pkg) => pkg.location && selectedLocations.includes(pkg.location),
+      );
+    }
+
     // Popularity filter
     if (popularityFilter === "Popular") {
       filtered = filtered.filter((pkg) => pkg.is_popular === 1);
@@ -147,12 +168,20 @@ const PackagesContent = () => {
     priceRange,
     selectedDurations,
     selectedCategories,
+    selectedLocations,
     popularityFilter,
     sortBy,
     allPackages,
   ]);
 
   // Toggle helpers
+  const toggleLocation = (location: string) => {
+    setSelectedLocations((prev) =>
+      prev.includes(location)
+        ? prev.filter((l) => l !== location)
+        : [...prev, location],
+    );
+  };
   const toggleDuration = (duration: string) => {
     setSelectedDurations((prev) =>
       prev.includes(duration)
@@ -175,6 +204,11 @@ const PackagesContent = () => {
       allPackages.filter((p) => p.category).map((p) => p.category as string),
     ),
   ];
+  const locations = [
+    ...new Set(
+      allPackages.filter((p) => p.location).map((p) => p.location as string),
+    ),
+  ];
 
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -195,6 +229,7 @@ const PackagesContent = () => {
     priceRange !== 10000 ||
     selectedDurations.length > 0 ||
     selectedCategories.length > 0 ||
+    selectedLocations.length > 0 ||
     popularityFilter !== "All" ||
     sortBy !== "Featured";
 
@@ -203,8 +238,10 @@ const PackagesContent = () => {
     setPriceRange(10000);
     setSelectedDurations([]);
     setSelectedCategories([]);
+    setSelectedLocations([]);
     setPopularityFilter("All");
     setSortBy("Featured");
+    router.push("/packages");
   };
 
   return (
@@ -391,13 +428,6 @@ const PackagesContent = () => {
                         }`}
                       >
                         <span>{type} Packages</span>
-                        <span className="text-[10px] opacity-40 font-black">
-                          {type === "Popular"
-                            ? "1"
-                            : type === "Standard"
-                              ? "0"
-                              : ""}
-                        </span>
                       </button>
                     ))}
                   </div>
@@ -469,6 +499,81 @@ const PackagesContent = () => {
                     ))}
                   </div>
                 </div>
+
+                {/* Location Filter Card */}
+                {locations.length > 0 && (
+                  <div className="bg-base-100 rounded-[2.5rem] border border-base-content/5 p-8 shadow-sm hover:shadow-md transition-all duration-300">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M17.657 16.657L13.414 12.414m0 0L8 7.00003M13.414 12.414l4.243 4.243m-4.243-4.243L19 19m-4.757-4.757l1.414-1.414M13 3c-4.97 0-9 4.03-9 9 0 4.97 4.03 9 9 9 4.97 0 9-4.03 9-9 0-4.97-4.03-9-9-9z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2.5"
+                              d="M13 16a3 3 0 100-6 3 3 0 000 6z"
+                            />
+                          </svg>
+                        </div>
+                        <h3 className="text-sm font-black uppercase tracking-widest text-base-content">
+                          Destinations
+                        </h3>
+                      </div>
+                      {selectedLocations.length > 0 && (
+                        <button
+                          onClick={() => setSelectedLocations([])}
+                          className="text-[10px] font-black uppercase text-primary hover:underline"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+
+                    <div
+                      className={`flex flex-col gap-2 ${locations.length > 4 ? "max-h-[200px] overflow-y-auto pr-2 custom-scrollbar" : ""}`}
+                    >
+                      {locations.map((loc) => (
+                        <button
+                          key={loc}
+                          onClick={() => toggleLocation(loc)}
+                          className={`flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-300 ${
+                            selectedLocations.includes(loc)
+                              ? "bg-primary/10 text-primary border border-primary/20"
+                              : "bg-base-200/50 text-base-content/50 hover:bg-base-200 border border-transparent"
+                          }`}
+                        >
+                          <span>{loc}</span>
+                          {selectedLocations.includes(loc) && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Category Filter Card */}
                 {categories.length > 0 && (
@@ -648,6 +753,7 @@ const PackagesContent = () => {
                     setPriceRange(10000);
                     setSelectedDurations([]);
                     setSelectedCategories([]);
+                    setSelectedLocations([]);
                   }}
                 />
               )}

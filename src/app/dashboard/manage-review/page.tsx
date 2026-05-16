@@ -5,7 +5,6 @@ import AdminRoute from "@/routes/AdminRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
-import Image from "next/image";
 import {
   showError,
   showConfirmation,
@@ -358,12 +357,10 @@ const ManageReviewPage = () => {
                       <div className="flex items-center gap-4">
                         <div className="relative w-10 h-10 rounded-full overflow-hidden bg-base-200 shrink-0">
                           {review.image_url ? (
-                            <Image
+                            <img
                               src={review.image_url}
                               alt={review.full_name}
-                              fill
-                              className="object-cover"
-                              unoptimized
+                              className="w-full h-full object-cover"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-primary font-black text-xs bg-primary/10">

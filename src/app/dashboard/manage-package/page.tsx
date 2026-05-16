@@ -5,7 +5,6 @@ import AdminRoute from "@/routes/AdminRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
-import Image from "next/image";
 import {
   showError,
   showConfirmation,
@@ -549,12 +548,10 @@ const AddPackagePage = () => {
                       <div className="flex items-center gap-4">
                         <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-base-200 border border-base-content/5 shrink-0">
                           {pkg.image ? (
-                            <Image
+                            <img
                               src={pkg.image}
                               alt={pkg.title}
-                              fill
-                              className="object-cover"
-                              unoptimized
+                              className="w-full h-full object-cover"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary font-black text-[10px]">
@@ -1386,12 +1383,10 @@ const DetailsDrawer = ({
           <div className="space-y-4">
             <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-base-200 border border-base-content/5 shadow-inner group">
               {activeImage ? (
-                <Image
+                <img
                   src={activeImage}
                   alt={pkg.title}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  unoptimized
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-4xl font-black text-base-content/10 uppercase tracking-[0.4em]">
@@ -1422,12 +1417,10 @@ const DetailsDrawer = ({
                         : "border-transparent opacity-60 hover:opacity-100"
                     }`}
                   >
-                    <Image
+                    <img
                       src={img}
                       alt={`Gallery ${idx}`}
-                      fill
-                      className="object-cover"
-                      unoptimized
+                      className="w-full h-full object-cover"
                     />
                   </button>
                 ))}

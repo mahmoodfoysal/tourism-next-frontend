@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
-import Image from "next/image";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
 import { useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -662,11 +661,10 @@ const BookingContent = () => {
                 {selectedPackage && (
                   <div className="space-y-8">
                     <div className="relative h-48 rounded-[2.5rem] overflow-hidden shadow-xl">
-                      <Image
+                      <img
                         src={selectedPackage.image}
                         alt={selectedPackage.title}
-                        fill
-                        className="object-cover"
+                        className="w-full h-full object-cover"
                       />
                     </div>
 

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import Link from "next/link";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
@@ -126,11 +125,10 @@ const AboutPage = () => {
         <div className="route-container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <div className="relative h-[600px] rounded-[3rem] overflow-hidden shadow-2xl group">
-              <Image
+              <img
                 src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1000"
                 alt="Our Story"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/40 via-transparent to-transparent"></div>
               <div className="absolute bottom-10 left-10 flex items-center gap-4 bg-white/20 backdrop-blur-xl p-6 rounded-3xl border border-white/20">
@@ -330,11 +328,10 @@ const AboutPage = () => {
         <div className="route-container">
           <div className="relative rounded-[4rem] min-h-[600px] flex items-center justify-center overflow-hidden shadow-2xl">
             {/* Background Image with Parallax-like feel */}
-            <Image
+            <img
               src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000"
               alt="Adventure Background"
-              fill
-              className="object-cover"
+              className="w-full h-full object-cover"
             />
 
             {/* Tactical Overlays */}

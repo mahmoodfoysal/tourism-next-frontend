@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import {
   registerUser,
@@ -171,12 +170,10 @@ const RegisterPage = () => {
       <div className="w-full max-w-6xl flex flex-col lg:flex-row bg-base-100 rounded-[2.5rem] shadow-2xl overflow-hidden border border-base-content/5 glass-effect">
         {/* Left Side: Branding/Image */}
         <div className="lg:w-1/2 relative hidden lg:block overflow-hidden">
-          <Image
+          <img
             src="/login-bg.png"
             alt="Luxury Travel"
-            fill
-            className="object-cover transform hover:scale-105 transition-transform duration-10000 ease-linear"
-            priority
+            className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-10000 ease-linear"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-12">
             <div className="space-y-4 translate-y-0 opacity-100 transition-all duration-700 delay-300">
@@ -197,12 +194,10 @@ const RegisterPage = () => {
                       className="w-10 h-10 rounded-full border-2 border-white bg-base-300 overflow-hidden"
                     >
                       <div className="w-10 h-10 rounded-full relative overflow-hidden">
-                        <Image
+                        <img
                           src={`https://i.pravatar.cc/100?img=${i + 15}`}
                           alt="User"
-                          width={40}
-                          height={40}
-                          className="object-cover"
+                          className="w-full h-full object-cover"
                         />
                       </div>
                     </div>

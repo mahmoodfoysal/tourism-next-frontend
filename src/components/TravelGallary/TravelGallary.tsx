@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
 import SkeletonCard from "../pages/SkeletonCard";
 import Link from "next/link";
@@ -108,12 +107,10 @@ const TravelGallary = () => {
                 onClick={() => setSelectedPhoto(photo)}
                 className={`group relative overflow-hidden rounded-[2rem] shadow-xl cursor-pointer ${photo.span}`}
               >
-                <Image
+                <img
                   src={photo.poster_image}
                   alt={photo.title || "Gallery Photo"}
-                  fill
-                  className="object-cover transition-transform duration-1000 group-hover:scale-125"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-125"
                 />
 
                 {/* Overlay */}
@@ -183,12 +180,10 @@ const TravelGallary = () => {
             >
               {/* Main Poster Display Area */}
               <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-white/10 shadow-2xl group/main bg-white/5">
-                <Image
+                <img
                   src={activeImage}
                   alt={selectedPhoto.title}
-                  fill
-                  className="object-contain transition-all duration-700 animate-in fade-in zoom-in-95"
-                  priority
+                  className="w-full h-full object-contain transition-all duration-700 animate-in fade-in zoom-in-95"
                 />
 
                 {/* Image Meta Info Overlay */}
@@ -210,12 +205,10 @@ const TravelGallary = () => {
                       : "border-white/10 opacity-50 hover:opacity-100 hover:scale-105"
                   }`}
                 >
-                  <Image
+                  <img
                     src={selectedPhoto.poster_image}
                     alt="Cover"
-                    fill
-                    className="object-cover"
-                    sizes="96px"
+                    className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-black/20" />
                 </button>
@@ -231,12 +224,10 @@ const TravelGallary = () => {
                         : "border-white/10 opacity-50 hover:opacity-100 hover:scale-105"
                     }`}
                   >
-                    <Image
+                    <img
                       src={img}
                       alt={`Thumbnail ${idx + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes="96px"
+                      className="w-full h-full object-cover"
                     />
                   </button>
                 ))}

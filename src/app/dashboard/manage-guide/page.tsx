@@ -5,7 +5,6 @@ import AdminRoute from "@/routes/AdminRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
-import Image from "next/image";
 import {
   showError,
   showConfirmation,
@@ -511,12 +510,10 @@ const ManageGuide = () => {
                       <div className="flex items-center gap-4">
                         <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-base-200 border border-base-content/5 shrink-0">
                           {guide.image ? (
-                            <Image
+                            <img
                               src={guide.image}
                               alt={guide.name}
-                              fill
-                              className="object-cover"
-                              unoptimized
+                              className="w-full h-full object-cover"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary font-black text-[10px]">
@@ -1110,12 +1107,10 @@ const GuideDetailsDrawer = ({
         <div className="px-12 py-6 flex-1 overflow-y-auto custom-scrollbar space-y-12">
           {/* Hero Profile Image */}
           <div className="relative aspect-[100/90] rounded-3xl overflow-hidden border border-base-content/5 shadow-inner bg-base-200">
-            <Image
+            <img
               src={guide.image}
               alt={guide.name}
-              fill
-              className="object-cover"
-              unoptimized
+              className="w-full h-full object-cover"
             />
           </div>
 

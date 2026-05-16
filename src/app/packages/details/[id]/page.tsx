@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, use } from "react";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
-import Image from "next/image";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { setBookingPackage } from "@/store/slices/bookingSlice";
@@ -129,12 +128,10 @@ const PackageDetailsPage = ({ params }: PageProps) => {
               {/* Image Gallery Hero */}
               <div className="space-y-6">
                 <div className="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl group bg-base-300">
-                  <Image
+                  <img
                     src={activeImage || details.image}
                     alt={details.title}
-                    fill
-                    className="object-cover transition-all duration-700 group-hover:scale-105"
-                    priority
+                    className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                 </div>
@@ -151,11 +148,10 @@ const PackageDetailsPage = ({ params }: PageProps) => {
                           : "border-transparent opacity-60 hover:opacity-100 hover:scale-105"
                       }`}
                     >
-                      <Image
+                      <img
                         src={img}
                         alt="thumbnail"
-                        fill
-                        className="object-cover"
+                        className="w-full h-full object-cover"
                       />
                     </button>
                   ))}
@@ -460,14 +456,13 @@ const PackageDetailsPage = ({ params }: PageProps) => {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                               <div className="relative w-14 h-14 rounded-2xl overflow-hidden border-2 border-primary/10 group-hover:border-primary/30 transition-colors">
-                                <Image
+                                <img
                                   src={
                                     review.image_url ||
                                     "/images/user-placeholder.png"
                                   }
                                   alt={review.full_name}
-                                  fill
-                                  className="object-cover"
+                                  className="w-full h-full object-cover"
                                 />
                               </div>
                               <div>

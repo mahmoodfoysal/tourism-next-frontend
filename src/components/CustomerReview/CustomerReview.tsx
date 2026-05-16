@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
 import SkeletonCard from "../pages/SkeletonCard";
 
@@ -204,15 +203,13 @@ const CustomerReview = () => {
                     {/* User Info */}
                     <div className="flex items-center gap-4 pt-6 border-t border-base-content/5">
                       <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/20 shadow-lg relative">
-                        <Image
+                        <img
                           src={
                             review.image_url ||
                             `https://ui-avatars.com/api/?name=${review.full_name}&background=random`
                           }
                           alt={review.full_name}
-                          fill
-                          className="object-cover"
-                          sizes="56px"
+                          className="w-full h-full object-cover"
                         />
                       </div>
                       <div>

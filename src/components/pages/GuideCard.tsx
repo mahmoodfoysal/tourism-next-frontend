@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 /**
@@ -41,12 +40,10 @@ const GuideCard: React.FC<GuideCardProps> = ({ guide }) => {
           href={`/travel-guides/details/${guide._id}`}
           className="block w-full h-full"
         >
-          <Image
+          <img
             src={guide.image}
             alt={guide.name}
-            fill
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </Link>
         {/* Rating Badge */}

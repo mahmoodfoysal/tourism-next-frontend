@@ -5,7 +5,6 @@ import AdminRoute from "@/routes/AdminRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
-import Image from "next/image";
 import {
   showError,
   showConfirmation,
@@ -358,12 +357,10 @@ const ManageGalleryPage = () => {
                 onClick={() => handleOpenDetails(item)}
                 className="aspect-square relative overflow-hidden rounded-[2rem] bg-base-200 cursor-pointer mb-6"
               >
-                <Image
+                <img
                   src={item.poster_image}
                   alt={item.title}
-                  fill
-                  className="object-cover transition-transform duration-[2s] group-hover:scale-105"
-                  unoptimized
+                  className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
                 />
 
                 {/* Contextual Action Hub */}
@@ -605,12 +602,10 @@ const ManageGalleryPage = () => {
                 </label>
                 <div className="aspect-video relative rounded-2xl overflow-hidden bg-base-200 border border-base-content/5 shadow-inner flex items-center justify-center">
                   {formData.poster_image ? (
-                    <Image
+                    <img
                       src={formData.poster_image}
                       alt="Preview"
-                      fill
-                      className="object-cover"
-                      unoptimized
+                      className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/20">
@@ -860,12 +855,10 @@ const GalleryDetailsDrawer = ({
           <div className="space-y-4">
             <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden bg-base-200 border border-base-content/5 shadow-inner group">
               {activeImage ? (
-                <Image
+                <img
                   src={activeImage}
                   alt={item.title}
-                  fill
-                  className="object-cover transition-transform duration-700"
-                  unoptimized
+                  className="w-full h-full object-cover transition-transform duration-700"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-4xl font-black text-base-content/10 uppercase tracking-[0.4em]">
@@ -893,12 +886,10 @@ const GalleryDetailsDrawer = ({
                         : "border-transparent opacity-60 hover:opacity-100"
                     }`}
                   >
-                    <Image
+                    <img
                       src={img}
                       alt={`Asset ${idx}`}
-                      fill
-                      className="object-cover"
-                      unoptimized
+                      className="w-full h-full object-cover"
                     />
                   </button>
                 ))}

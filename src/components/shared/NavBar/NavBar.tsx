@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/store";
 import { logoutUser, setUser } from "@/store/slices/authSlice";
@@ -237,11 +236,9 @@ const NavBar = () => {
                   className="btn btn-ghost btn-circle avatar online shadow-primary/20 shadow-md"
                 >
                   <div className="w-10 h-10 rounded-full relative overflow-hidden">
-                    <Image
+                    <img
                       src={profileImg}
                       alt="profile"
-                      width={40}
-                      height={40}
                       className="w-10 h-10 object-cover rounded-full"
                       onError={() => {
                         setProfileImg(
@@ -332,11 +329,9 @@ const NavBar = () => {
               <div className="flex items-center gap-4 p-4 bg-primary/5 rounded-2xl mb-4">
                 <div className="avatar">
                   <div className="w-12 h-12 rounded-xl relative overflow-hidden">
-                    <Image
+                    <img
                       src={profileImg}
                       alt="profile"
-                      width={48}
-                      height={48}
                       className="w-12 h-12 object-cover rounded-xl"
                       onError={() => {
                         setProfileImg(

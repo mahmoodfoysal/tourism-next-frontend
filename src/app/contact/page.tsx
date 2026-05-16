@@ -353,37 +353,7 @@ const ContactPage = () => {
                 </div>
               </div>
 
-              {/* Social Proof Section */}
-              {/* <div className="bg-base-200/50 p-10 rounded-[4rem] border border-base-content/5">
-                <h3 className="text-sm font-black uppercase tracking-widest text-base-content/30 mb-6">
-                  Online Now
-                </h3>
-                <div className="flex items-center gap-4">
-                  <div className="flex -space-x-3">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div
-                        key={i}
-                        className="w-10 h-10 rounded-full border-2 border-base-100 overflow-hidden relative"
-                      >
-                        <Image
-                          src={`https://i.pravatar.cc/100?img=${i + 20}`}
-                          alt="team"
-                          fill
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-xs font-black text-base-content">
-                      Travel Designers
-                    </span>
-                    <span className="text-[10px] font-bold text-success flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 bg-success rounded-full animate-pulse"></span>
-                      Ready to Help
-                    </span>
-                  </div>
-                </div>
-              </div> */}
+
             </div>
           </div>
         </div>

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
-import Image from "next/image";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
 import Pagination from "@/components/pages/Pagination";
 import SkeletonCard from "@/components/pages/SkeletonCard";
@@ -344,12 +343,10 @@ const GalleryPage = () => {
                       }`}
                       style={{ transitionDelay: `${idx * 100}ms` }}
                     >
-                      <Image
+                      <img
                         src={item.poster_image}
                         alt={item.title}
-                        fill
-                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
-                        unoptimized
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                       />
 
                       {/* Overlay */}
@@ -443,13 +440,10 @@ const GalleryPage = () => {
           >
             {/* Main Image Display Area */}
             <div className="relative aspect-[4/3] md:aspect-video w-full rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl bg-white/5">
-              <Image
+              <img
                 src={activeImage}
                 alt={selectedPhoto.title}
-                fill
-                className="object-contain transition-all duration-700 animate-in fade-in zoom-in-95"
-                priority
-                unoptimized
+                className="w-full h-full object-contain transition-all duration-700 animate-in fade-in zoom-in-95"
               />
 
               {/* Info Overlay */}
@@ -482,12 +476,10 @@ const GalleryPage = () => {
                       : "border-white/10 opacity-50 hover:opacity-100 hover:scale-105"
                   }`}
                 >
-                  <Image
+                  <img
                     src={selectedPhoto.poster_image}
                     alt="Cover"
-                    fill
-                    className="object-cover"
-                    unoptimized
+                    className="w-full h-full object-cover"
                   />
                 </button>
 
@@ -502,12 +494,10 @@ const GalleryPage = () => {
                         : "border-white/10 opacity-50 hover:opacity-100 hover:scale-105"
                     }`}
                   >
-                    <Image
+                    <img
                       src={img}
                       alt={`Thumbnail ${idx + 1}`}
-                      fill
-                      className="object-cover"
-                      unoptimized
+                      className="w-full h-full object-cover"
                     />
                   </button>
                 ))}

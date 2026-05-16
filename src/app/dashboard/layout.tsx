@@ -13,7 +13,6 @@ import {
   showProcessing,
   closeAlert,
 } from "@/components/pages/Alert";
-import Image from "next/image";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -281,14 +280,13 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               className={`p-3 rounded-3xl bg-base-100 dark:bg-white/5 border border-base-content/5 flex items-center gap-4 ${!isSidebarOpen && "p-2"}`}
             >
               <div className="relative w-12 h-12 rounded-2xl overflow-hidden border-2 border-primary/20 shrink-0">
-                <Image
+                <img
                   src={
                     user?.photoURL ||
                     `https://ui-avatars.com/api/?name=${user?.displayName || "User"}&background=random`
                   }
                   alt="Profile"
-                  fill
-                  className="object-cover"
+                  className="w-full h-full object-cover"
                 />
               </div>
               {isSidebarOpen && (

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, use } from "react";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
-import Image from "next/image";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import DataVoid from "@/components/pages/DataVoid";
 import SkeletonDetails from "@/components/pages/SkeletonDetails";
@@ -69,12 +68,10 @@ const BlogDetailsPage = ({ params }: PageProps) => {
           <div className="max-w-4xl mx-auto">
             {/* Blog Hero Image */}
             <div className="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl mb-12">
-              <Image
+              <img
                 src={blog.image}
                 alt={blog.title}
-                fill
-                className="object-cover"
-                priority
+                className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
               
@@ -97,14 +94,13 @@ const BlogDetailsPage = ({ params }: PageProps) => {
             <div className="flex flex-wrap items-center justify-between gap-8 py-8 border-b border-base-content/5 mb-12">
               <div className="flex items-center gap-4">
                 <div className="relative w-14 h-14 rounded-2xl overflow-hidden shadow-lg border-2 border-primary/20">
-                  <Image
+                  <img
                     src={
                       blog.authorImage ||
                       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100"
                     }
                     alt={blog.author}
-                    fill
-                    className="object-cover"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <div>

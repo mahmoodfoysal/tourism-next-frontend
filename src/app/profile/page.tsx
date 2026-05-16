@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
 import { setUser } from "@/store/slices/authSlice";
@@ -296,11 +295,9 @@ const ProfilePage = () => {
             <div className="relative group">
               <div className="w-48 h-48 md:w-56 md:h-56 rounded-full border-[6px] border-primary/20 p-2 relative">
                 <div className="w-full h-full rounded-full border-[6px] border-white/10 p-1 relative overflow-hidden">
-                  <Image
+                  <img
                     src={profileImg}
                     alt={profileData.full_name}
-                    width={224}
-                    height={224}
                     className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-700"
                     onError={() => {
                       setProfileImg("https://i.ibb.co/5GzXkwq/user.png");

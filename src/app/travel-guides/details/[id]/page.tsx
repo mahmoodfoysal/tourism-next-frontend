@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, use } from "react";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
-import Image from "next/image";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import DataVoid from "@/components/pages/DataVoid";
 import SkeletonDetails from "@/components/pages/SkeletonDetails";
@@ -59,12 +58,10 @@ const GuideDetailsPage = ({ params }: PageProps) => {
               <div className="flex flex-col md:flex-row bg-base-100 rounded-[3rem] overflow-hidden shadow-2xl border border-base-content/5 group">
                 {/* Image Section */}
                 <div className="md:w-[45%] relative h-[600px] bg-base-300">
-                  <Image
+                  <img
                     src={guide.image}
                     alt={guide.name}
-                    fill
-                    className="object-cover transition-all duration-700 group-hover:scale-105"
-                    priority
+                    className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent md:hidden"></div>
                 </div>

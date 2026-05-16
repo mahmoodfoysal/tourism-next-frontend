@@ -5,7 +5,6 @@ import AdminRoute from "@/routes/AdminRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
-import Image from "next/image";
 import {
   showError,
   showConfirmation,
@@ -432,12 +431,10 @@ const AddBlogPage = () => {
                       <div className="flex items-center gap-4">
                         <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-base-200 border border-base-content/5 shrink-0 shadow-sm">
                           {blog.image && (
-                            <Image
+                            <img
                               src={blog.image}
                               alt={blog.title}
-                              fill
-                              className="object-cover transition-transform group-hover:scale-110 duration-500"
-                              unoptimized
+                              className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500"
                             />
                           )}
                         </div>
@@ -460,14 +457,12 @@ const AddBlogPage = () => {
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2">
                           <div className="relative w-5 h-5 rounded-full overflow-hidden border border-base-content/10">
-                            <Image
+                            <img
                               src={
                                 blog.authorImage || "https://i.pravatar.cc/150"
                               }
                               alt={blog.author}
-                              fill
-                              className="object-cover"
-                              unoptimized
+                              className="w-full h-full object-cover"
                             />
                           </div>
                           <span className="text-[11px] font-black uppercase tracking-tight text-base-content/70">
@@ -936,12 +931,10 @@ const BlogDetailsDrawer = ({
         <div className="px-12 py-6 flex-1 overflow-y-auto custom-scrollbar space-y-12">
           {/* Article Identity */}
           <div className="relative aspect-[21/9] rounded-3xl overflow-hidden border border-base-content/5 shadow-inner bg-base-200">
-            <Image
+            <img
               src={blog.image}
               alt={blog.title}
-              fill
-              className="object-cover"
-              unoptimized
+              className="w-full h-full object-cover"
             />
           </div>
 
@@ -970,12 +963,10 @@ const BlogDetailsDrawer = ({
               <div className="p-8 rounded-3xl bg-base-200/50 border border-base-content/5 space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-accent/20">
-                    <Image
+                    <img
                       src={blog.authorImage || "https://i.pravatar.cc/150"}
                       alt={blog.author}
-                      fill
-                      className="object-cover"
-                      unoptimized
+                      className="w-full h-full object-cover"
                     />
                   </div>
                   <div>

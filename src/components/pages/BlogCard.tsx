@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 interface BlogInfo {
@@ -29,12 +28,10 @@ const BlogCard: React.FC<BlogCardProps> = ({ info }) => {
           href={`/blogs/details/${info._id}`}
           className="block w-full h-full"
         >
-          <Image
+          <img
             src={info.image}
             alt={info.title}
-            fill
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
         </Link>
         <div className="absolute top-6 left-6">
@@ -54,14 +51,13 @@ const BlogCard: React.FC<BlogCardProps> = ({ info }) => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-full relative overflow-hidden border border-primary/20 shrink-0">
-              <Image
+              <img
                 src={
                   info.authorImage ||
                   `https://ui-avatars.com/api/?name=${info.author}&background=random`
                 }
                 alt={info.author}
-                fill
-                className="object-cover"
+                className="w-full h-full object-cover"
               />
             </div>
             <span className="text-[12px] font-bold text-base-content/70 truncate max-w-[100px]">

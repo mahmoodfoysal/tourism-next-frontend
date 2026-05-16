@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { setBookingPackage } from "@/store/slices/bookingSlice";
@@ -71,12 +70,10 @@ const PackageCard: React.FC<PackageCardProps> = ({ info }) => {
           href={`/packages/details/${info._id}`}
           className="block w-full h-full"
         >
-          <Image
+          <img
             src={info.image}
             alt={info.title}
-            fill
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
         </Link>
         <div className="absolute top-6 left-6 flex flex-col gap-2">

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
-import Image from "next/image";
 import {
   showError,
   showConfirmation,
@@ -353,12 +352,10 @@ const BookingManagement = ({ targetStatus, title }: BookingManagementProps) => {
                       <td>
                         <div className="flex items-center gap-4">
                           <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-base-content/5">
-                            <Image
+                            <img
                               src={booking.package_info.image}
                               alt="Pkg"
-                              fill
-                              className="object-cover"
-                              unoptimized
+                              className="w-full h-full object-cover"
                             />
                           </div>
                           <div className="flex flex-col">
@@ -595,12 +592,10 @@ const BookingManagement = ({ targetStatus, title }: BookingManagementProps) => {
                     <div className="p-6 bg-base-200/50 rounded-2xl border border-base-content/5 space-y-4">
                       <div className="flex items-center gap-4">
                         <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-base-content/5">
-                          <Image
+                          <img
                             src={selectedBooking.package_info.image}
                             alt="Pkg"
-                            fill
-                            className="object-cover"
-                            unoptimized
+                            className="w-full h-full object-cover"
                           />
                         </div>
                         <div>

@@ -6,7 +6,12 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
-import { showError } from "@/components/pages/Alert";
+import {
+  showError,
+  showSuccess,
+  showProcessing,
+  showConfirmation,
+} from "@/components/pages/Alert";
 
 interface BookingItem {
   _id: string;
@@ -53,6 +58,66 @@ const BookingHistoryPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterStatus>("active");
 
+  // Review System States
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [reviewBooking, setReviewBooking] = useState<BookingItem | null>(null);
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState("");
+
+  const handleSubmitReview = async () => {
+    if (!reviewBooking) return;
+
+    const result = await showConfirmation(
+      "Submit Review?",
+      "Once submitted, your feedback will be archived in our public manifest.",
+      "Submit",
+      "Cancel",
+    );
+
+    if (!result.isConfirmed) return;
+
+    showProcessing(
+      "Submitting Review",
+      "Sharing your experience with the community...",
+    );
+
+    try {
+      const data = {
+        full_name: reviewBooking.full_name,
+        email: reviewBooking.email,
+        package_id: reviewBooking.package_info.package_id,
+        rating: reviewRating,
+        comment: reviewComment,
+        image_url: user?.photoURL || "",
+      };
+      const result = await axiosSecure.post(
+        "/api/tourism/insert-update-review-list",
+        data,
+      );
+      if (result.data.status) {
+        await axiosSecure.patch(
+          `/api/admin/update-booking-status/${reviewBooking._id}`,
+          { order_status: "CR" },
+        );
+        setBookings((prev) =>
+          prev.map((b) =>
+            b._id === reviewBooking._id ? { ...b, order_status: "CR" } : b,
+          ),
+        );
+        showSuccess("Review Submitted", "Thank you for sharing your journey!");
+        setIsReviewModalOpen(false);
+        setReviewComment("");
+        setReviewRating(0);
+      }
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      showError(
+        "Submission Failed",
+        "We couldn't archive your review at this time.",
+      );
+    }
+  };
+
   useEffect(() => {
     const fetchBookings = async () => {
       if (!user?.email) return;
@@ -89,7 +154,8 @@ const BookingHistoryPage = () => {
     return bookings.filter((booking) => {
       const status = booking.order_status.toUpperCase();
       if (activeFilter === "active") return status === "BP" || status === "B";
-      if (activeFilter === "completed") return status === "C";
+      if (activeFilter === "completed")
+        return status === "C" || status === "CR";
       if (activeFilter === "cancelled") return status === "R";
       return true;
     });
@@ -107,6 +173,12 @@ const BookingHistoryPage = () => {
         return (
           <span className="px-3 py-1 bg-info/20 text-info text-[8px] font-black uppercase tracking-[0.2em] rounded-md border border-info/30">
             Completed
+          </span>
+        );
+      case "CR":
+        return (
+          <span className="px-3 py-1 bg-success/20 text-success text-[8px] font-black uppercase tracking-[0.2em] rounded-md border border-success/30">
+            Reviewed
           </span>
         );
       case "R":
@@ -278,6 +350,31 @@ const BookingHistoryPage = () => {
                         >
                           See Details
                         </button>
+                        {booking.order_status.toUpperCase() === "C" && (
+                          <button
+                            onClick={() => {
+                              setReviewBooking(booking);
+                              setIsReviewModalOpen(true);
+                            }}
+                            className="btn btn-accent w-14 h-14 rounded-2xl border border-base-content/10 flex items-center justify-center hover:bg-accent/10 hover:text-accent hover:border-accent/20 transition-all"
+                            title="Write Review"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                              />
+                            </svg>
+                          </button>
+                        )}
                         <button
                           onClick={() => {
                             setSelectedBooking(booking);
@@ -489,6 +586,113 @@ const BookingHistoryPage = () => {
 
         {/* PRINT-ONLY COMPACT MANIFEST (Optimized for One A4 Page) */}
         {selectedBooking && <Invoice selectedBooking={selectedBooking} />}
+
+        {/* Review Modal */}
+        {isReviewModalOpen && reviewBooking && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6 manifest-modal-wrapper">
+            <div
+              className="absolute inset-0 bg-base-300/80 backdrop-blur-xl"
+              onClick={() => setIsReviewModalOpen(false)}
+            ></div>
+
+            <div className="bg-base-100 w-full max-w-xl rounded-[2.5rem] shadow-2xl border border-base-content/10 relative overflow-hidden animate-in zoom-in-95 duration-500">
+              <div className="h-4 bg-accent w-full"></div>
+
+              <div className="p-10 space-y-8">
+                <div className="flex justify-between items-center">
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-accent">
+                      Travel Experience
+                    </p>
+                    <h2 className="text-2xl font-black text-base-content uppercase tracking-tight">
+                      Share Your{" "}
+                      <span className="text-accent italic">Story</span>
+                    </h2>
+                  </div>
+                  <button
+                    onClick={() => setIsReviewModalOpen(false)}
+                    className="w-10 h-10 rounded-xl bg-base-200 flex items-center justify-center hover:bg-error/10 hover:text-error transition-all"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="3"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="bg-base-200/50 p-6 rounded-2xl border border-base-content/5">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30 mb-2">
+                      Expedition
+                    </p>
+                    <p className="font-black text-base-content uppercase truncate">
+                      {reviewBooking.package_info.title}
+                    </p>
+                  </div>
+
+                  {/* Rating Selector */}
+                  <div className="space-y-4">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-base-content/40 text-center">
+                      Your Rating
+                    </p>
+                    <div className="flex justify-center gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          onClick={() => setReviewRating(star)}
+                          className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
+                            reviewRating >= star
+                              ? "bg-amber-500 text-white shadow-lg shadow-amber-500/20 scale-110"
+                              : "bg-base-200 text-base-content/20 hover:bg-base-300"
+                          }`}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-base-content/40">
+                      Your Experience
+                    </p>
+                    <textarea
+                      value={reviewComment}
+                      onChange={(e) => setReviewComment(e.target.value)}
+                      placeholder="Tell us about your journey..."
+                      className="textarea textarea-bordered w-full h-32 rounded-2xl bg-base-200/30 focus:border-accent border-base-content/10 font-medium resize-none"
+                    ></textarea>
+                  </div>
+
+                  <button
+                    onClick={handleSubmitReview}
+                    disabled={!reviewComment.trim() || reviewRating === 0}
+                    className="btn btn-accent w-full h-16 rounded-2xl font-black uppercase tracking-[0.4em] text-xs shadow-xl shadow-accent/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                  >
+                    Submit Review
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </PrivateRoutes>
   );

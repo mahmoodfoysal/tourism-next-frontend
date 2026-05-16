@@ -42,6 +42,15 @@ interface PackageDetails {
   termsAndConditions?: string;
 }
 
+interface Review {
+  _id: string;
+  full_name: string;
+  email: string;
+  comment: string;
+  image_url: string;
+  rating: number;
+}
+
 interface PageProps {
   params: Promise<{
     id: string;
@@ -54,8 +63,24 @@ const PackageDetailsPage = ({ params }: PageProps) => {
   const { id } = resolvedParams;
 
   const [details, setDetails] = useState<PackageDetails | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState<string>("");
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!details?.package_id) return;
+      try {
+        const response = await axiosPublic.get(
+          `/api/tourism/get-review-list/${details.package_id}`,
+        );
+        setReviews(response.data?.list_data || []);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+    fetchReviews();
+  }, [details]);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -75,6 +100,14 @@ const PackageDetailsPage = ({ params }: PageProps) => {
     };
     fetchDetails();
   }, [id]);
+
+  const averageRating =
+    reviews.length > 0
+      ? (
+          reviews.reduce((acc, curr) => acc + Number(curr.rating), 0) /
+          reviews.length
+        ).toFixed(1)
+      : null;
 
   if (loading) return <SkeletonDetails></SkeletonDetails>;
 
@@ -352,7 +385,13 @@ const PackageDetailsPage = ({ params }: PageProps) => {
                   <h2 className="text-3xl font-black text-base-content tracking-tight px-4 md:px-0">
                     Your <span className="text-secondary">Itinerary</span>
                   </h2>
-                  <div className="space-y-4 px-4 md:px-0">
+                  <div
+                    className={`space-y-4 px-4 md:px-0 ${
+                      details.itinerary.length > 5
+                        ? "max-h-[600px] overflow-y-auto pr-4 custom-scrollbar"
+                        : ""
+                    }`}
+                  >
                     {details.itinerary.map((item, i) => (
                       <div
                         key={i}
@@ -386,8 +425,119 @@ const PackageDetailsPage = ({ params }: PageProps) => {
                 </div>
               )}
 
+              {/* Reviews Section */}
+              <div className="space-y-12 pt-12 border-t border-base-content/5 px-4 md:px-0">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="space-y-2">
+                    <h2 className="text-3xl font-black text-base-content tracking-tight">
+                      Traveler <span className="text-primary">Reviews</span>{" "}
+                      <span className="text-base-content/20 ml-2">
+                        ({reviews.length})
+                      </span>
+                    </h2>
+                    <p className="text-sm font-bold text-base-content/40 uppercase tracking-widest">
+                      Real experiences from our community
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  className={`grid grid-cols-1 gap-6 ${
+                    reviews.length > 4
+                      ? "max-h-[800px] overflow-y-auto pr-4 custom-scrollbar"
+                      : ""
+                  }`}
+                >
+                  {reviews.length > 0 ? (
+                    reviews.map((review) => (
+                      <div
+                        key={review._id}
+                        className="group bg-base-100 p-8 rounded-[2.5rem] border border-base-content/5 hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 relative overflow-hidden"
+                      >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+                        <div className="relative space-y-6">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <div className="relative w-14 h-14 rounded-2xl overflow-hidden border-2 border-primary/10 group-hover:border-primary/30 transition-colors">
+                                <Image
+                                  src={
+                                    review.image_url ||
+                                    "/images/user-placeholder.png"
+                                  }
+                                  alt={review.full_name}
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                              <div>
+                                <h4 className="text-lg font-black text-base-content">
+                                  {review.full_name}
+                                </h4>
+                                <div className="flex gap-1 text-amber-500 mt-1">
+                                  {[...Array(5)].map((_, i) => (
+                                    <svg
+                                      key={i}
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className={`h-3.5 w-3.5 ${
+                                        i < review.rating
+                                          ? "fill-current"
+                                          : "text-base-content/10"
+                                      }`}
+                                      viewBox="0 0 20 20"
+                                      fill="currentColor"
+                                    >
+                                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="hidden md:block">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-10 w-10 text-primary/10"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017C11.4647 12 11.017 11.5523 11.017 11V7C11.017 6.44772 11.4647 6 12.017 6H19.017C20.6739 6 22.017 7.34315 22.017 9V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM3.017 21L3.017 18C3.017 16.8954 3.91243 16 5.017 16H8.017C8.56928 16 9.017 15.5523 9.017 15V9C9.017 8.44772 8.56928 8 8.017 8H4.017C3.46472 8 3.017 8.44772 3.017 9V11C3.017 11.5523 2.56928 12 2.017 12H1.017C0.464722 12 0.017 11.5523 0.017 11V7C0.017 6.44772 0.464722 6 1.017 6H8.017C9.67386 6 11.017 7.34315 11.017 9V15C11.017 18.3137 8.33071 21 5.017 21H3.017Z" />
+                              </svg>
+                            </div>
+                          </div>
+                          <p className="text-lg text-base-content/60 leading-relaxed italic">
+                            {review.comment}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-20 bg-base-200/20 rounded-[3rem] border-2 border-dashed border-base-content/5 space-y-4">
+                      <div className="w-16 h-16 bg-base-200 rounded-full flex items-center justify-center mx-auto text-base-content/20">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-8 w-8"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.827-1.247L3 20l1.391-3.952A8.948 8.948 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                          />
+                        </svg>
+                      </div>
+                      <p className="text-sm font-black uppercase tracking-[0.2em] text-base-content/30">
+                        No reviews yet for this adventure
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Inclusions & Exclusions */}
-              {(details.inclusions || details.exclusions) && (
+              {/* {(details.inclusions || details.exclusions) && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12 border-t border-base-content/5">
                   {details.inclusions && details.inclusions.length > 0 && (
                     <div className="space-y-6">
@@ -458,10 +608,10 @@ const PackageDetailsPage = ({ params }: PageProps) => {
                     </div>
                   )}
                 </div>
-              )}
+              )} */}
 
               {/* Policies Section */}
-              {(details.cancellationPolicy || details.termsAndConditions) && (
+              {/* {(details.cancellationPolicy || details.termsAndConditions) && (
                 <div className="pt-12 border-t border-base-content/5 space-y-8">
                   <h3 className="text-2xl font-black text-base-content tracking-tight">
                     Booking <span className="text-primary">Policies</span>
@@ -491,11 +641,49 @@ const PackageDetailsPage = ({ params }: PageProps) => {
                     )}
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
 
             {/* Right Sidebar (1/3) */}
             <div className="space-y-8">
+              <div className="flex items-center gap-4 bg-primary/5 p-6 rounded-[2rem] border border-primary/10">
+                <div className="flex flex-col">
+                  <span className="text-3xl font-black text-primary leading-none">
+                    {averageRating}
+                  </span>
+                  <span className="text-[10px] font-black uppercase text-primary/40 tracking-widest mt-1">
+                    Average Rating
+                  </span>
+                </div>
+                <div className="w-px h-10 bg-primary/10"></div>
+                <div className="flex text-amber-500 gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`h-5 w-5 ${
+                        i < Math.floor(Number(averageRating))
+                          ? "fill-current"
+                          : "text-base-content/20"
+                      }`}
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <div className="w-px h-10 bg-primary/10 mx-2"></div>
+                <div className="flex flex-col">
+                  <span className="text-xl font-black text-primary leading-none">
+                    {reviews.length}
+                  </span>
+                  <span className="text-[10px] font-black uppercase text-primary/40 tracking-widest mt-1">
+                    Reviews
+                  </span>
+                </div>
+              </div>
+
               <div className="sticky top-28 space-y-8">
                 {/* Booking Card */}
                 <div className="bg-base-100 rounded-[3rem] border border-base-content/5 p-10 shadow-2xl relative overflow-hidden group">

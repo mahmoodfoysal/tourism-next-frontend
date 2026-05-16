@@ -50,15 +50,10 @@ const PackagesContent = () => {
 
   useEffect(() => {
     const fetchAll = async () => {
-      console.log("🚀 PackagesPage: Initiating API call...");
       setLoading(true);
       try {
         const response = await axiosPublic.get("/api/tourism/get-package-list");
         const data = response.data?.list_data;
-        console.log(
-          "✅ PackagesPage: API call successful, data received:",
-          data,
-        );
         const result = Array.isArray(data) ? data : data?.data || [];
         const activePackages = result.filter((pkg: any) => pkg.status === 1);
         setAllPackages(activePackages);

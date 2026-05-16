@@ -61,7 +61,7 @@ const DashboardOverview = () => {
             0,
           );
           const upcoming = bookingsData.filter(
-            (b: any) => b.order_status === "C" || b.order_status === "P",
+            (b: any) => b.order_status === "B" || b.order_status === "BP",
           ).length;
 
           setStats((prev) => ({

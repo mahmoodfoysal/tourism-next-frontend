@@ -47,12 +47,11 @@ const BlogsPage = () => {
 
   useEffect(() => {
     const fetchAll = async () => {
-      console.log("🚀 BlogsPage: Initiating API call...");
       setLoading(true);
       try {
         const response = await axiosPublic.get("/api/tourism/get-blog-list");
         const data = response.data?.list_data;
-        console.log("✅ BlogsPage: API call successful, data received:", data);
+
         const result = Array.isArray(data) ? data : data?.data || [];
         setAllBlogs(result);
         setFilteredBlogs(result);

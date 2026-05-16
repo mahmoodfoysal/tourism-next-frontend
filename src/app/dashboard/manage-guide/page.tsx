@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import AdminRoute from "@/routes/AdminRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
@@ -386,7 +387,8 @@ const ManageGuide = () => {
   }
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-10 duration-700 relative">
+    <AdminRoute>
+      <div className="animate-in fade-in slide-in-from-bottom-10 duration-700 relative">
       {/* Search & Actions Bar */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
         <div className="relative w-full md:w-96 group">
@@ -1043,6 +1045,7 @@ const ManageGuide = () => {
         guide={viewingGuide}
       />
     </div>
+    </AdminRoute>
   );
 };
 

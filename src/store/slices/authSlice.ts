@@ -19,6 +19,7 @@ interface UserState {
     email: string | null;
     displayName: string | null;
     photoURL: string | null;
+    role_id?: number;
   } | null;
   loading: boolean;
   error: string | null;

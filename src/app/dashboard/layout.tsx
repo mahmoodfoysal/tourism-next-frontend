@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import AdminRoute from "@/routes/AdminRoute";
+
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/store";
 import { logoutUser, setUser } from "@/store/slices/authSlice";
@@ -14,6 +14,7 @@ import {
   closeAlert,
 } from "@/components/pages/Alert";
 import Image from "next/image";
+import ProtectedRoute from "@/routes/ProtectedRoute";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -27,9 +28,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   const toggleMenu = (name: string) => {
     setExpandedMenus((prev) =>
-      prev.includes(name)
-        ? prev.filter((n) => n !== name)
-        : [...prev, name],
+      prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name],
     );
   };
 
@@ -249,7 +248,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   ];
 
   return (
-    <AdminRoute>
+    <ProtectedRoute>
       <div className="flex h-screen overflow-hidden bg-base-100 dark:bg-[#0a0f1c] transition-colors duration-500">
         {/* Sidebar */}
         <aside
@@ -585,7 +584,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
         </main>
       </div>
-    </AdminRoute>
+    </ProtectedRoute>
   );
 };
 

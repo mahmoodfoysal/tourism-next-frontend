@@ -9,7 +9,7 @@ import useAxiosSecure from "@/hooks/useAxiosSecure";
 import React from "react";
 import Forbidden from "@/components/pages/Forbidden";
 
-const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+const SuperAdmin = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useSelector((state: RootState) => state.auth);
   const { isAdmin, adminData: storedAdminData } = useSelector(
     (state: RootState) => state.admin,
@@ -32,7 +32,7 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
         if (
           storedAdminData &&
           storedAdminData.email === user.email &&
-          (storedAdminData.role_id === 200 || storedAdminData.role_id === 201)
+          storedAdminData.role_id === 200
         ) {
           setIsSuperVerified(true);
           setVerifying(false);
@@ -55,12 +55,12 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
           if (
             adminData &&
             adminData.email === user.email &&
-            (adminData.role_id === 200 || adminData.role_id === 201)
+            adminData.role_id === 200
           ) {
             setIsSuperVerified(true);
           }
         } catch (error) {
-          console.error("AdminRoute Verification Failed:", error);
+          console.error("SuperAdmin Verification Failed:", error);
         } finally {
           setVerifying(false);
         }
@@ -86,4 +86,4 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   return null;
 };
 
-export default AdminRoute;
+export default SuperAdmin;

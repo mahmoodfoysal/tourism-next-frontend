@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import AdminRoute from "@/routes/AdminRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
@@ -258,7 +259,8 @@ const ManageGalleryPage = () => {
   }
 
   return (
-    <div className="p-8 animate-in fade-in slide-in-from-bottom-10 duration-700">
+    <AdminRoute>
+      <div className="p-8 animate-in fade-in slide-in-from-bottom-10 duration-700">
       {/* Search & Actions */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
         <div className="relative w-full md:w-96 group">
@@ -740,6 +742,7 @@ const ManageGalleryPage = () => {
         item={viewingItem}
       />
     </div>
+    </AdminRoute>
   );
 };
 

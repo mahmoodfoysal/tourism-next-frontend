@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
 import SkeletonCard from "../pages/SkeletonCard";
+import Link from "next/link";
 
 interface Photo {
   _id: string;
@@ -88,9 +89,11 @@ const TravelGallary = () => {
               unforgettable moments from our travelers.
             </p>
           </div>
-          {/* <button className="btn btn-primary rounded-2xl px-8 h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px] hidden md:flex items-center">
-            View All Photos
-          </button> */}
+          <Link href="/gallery">
+            <button className="btn btn-primary rounded-2xl px-8 h-14 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px] hidden md:flex items-center">
+              View All Photos
+            </button>
+          </Link>
         </div>
 
         {/* Mosaic Grid */}

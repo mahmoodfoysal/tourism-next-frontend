@@ -54,7 +54,7 @@ const FAQ = () => {
         </div>
         <div className="flex flex-col lg:flex-row gap-16">
           {/* left Side: Accordion */}
-          <div className="lg:w-2/3 space-y-4">
+          <div className="lg:w-3/5 space-y-4">
             {faqs.map((faq, index) => (
               <div
                 key={faq.id}
@@ -77,7 +77,7 @@ const FAQ = () => {
             ))}
           </div>
           {/* right Side: ai */}
-          <div className="lg:w-1/3">
+          <div className="lg:w-2/5">
             <AIDescriptionGenerator />
           </div>
         </div>

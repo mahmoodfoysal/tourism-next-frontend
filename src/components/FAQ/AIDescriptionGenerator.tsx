@@ -4,33 +4,30 @@ import React, { useState } from "react";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 const AIDescriptionGenerator = () => {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
+  const [destination, setDestination] = useState("");
+  const [days, setDays] = useState("");
+  const [travelType, setTravelType] = useState("");
+  const [itinerary, setItinerary] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !category || !price || isLoading) return;
+    if (!destination || !days || !travelType || isLoading) return;
 
     setIsLoading(true);
     try {
-      const response = await axiosPublic.post(
-        "/api/gemini/generate-description",
-        {
-          title,
-          category,
-          price,
-        },
-      );
+      const response = await axiosPublic.post("/api/ai/generate-itinerary", {
+        destination,
+        days,
+        travelType,
+      });
 
-      if (response.data && response.data.description) {
-        setDescription(response.data.description);
+      if (response.data && response.data.itinerary) {
+        setItinerary(response.data.itinerary);
       }
     } catch (error) {
-      console.error("Error generating description:", error);
+      console.error("Error generating itinerary:", error);
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +54,7 @@ const AIDescriptionGenerator = () => {
         </div>
         <div>
           <h4 className="text-xl font-black text-base-content leading-tight">
-            AI Description <br />
+            AI Itinerary <br />
             <span className="text-primary">Generator</span>
           </h4>
         </div>
@@ -66,13 +63,13 @@ const AIDescriptionGenerator = () => {
       <form onSubmit={handleGenerate} className="space-y-4">
         <div className="space-y-1">
           <label className="text-[10px] font-black uppercase tracking-widest text-base-content/40 ml-1">
-            Package Title
+            Destination
           </label>
           <input
             type="text"
-            placeholder="e.g. Bali Paradise Tour"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            placeholder="e.g. Bali, Indonesia"
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
             className="w-full bg-base-100 border border-base-content/5 rounded-2xl px-5 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
             required
           />
@@ -81,26 +78,26 @@ const AIDescriptionGenerator = () => {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
             <label className="text-[10px] font-black uppercase tracking-widest text-base-content/40 ml-1">
-              Category
+              Duration (Days)
             </label>
             <input
               type="text"
-              placeholder="e.g. Luxury"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              placeholder="e.g. 5 Days"
+              value={days}
+              onChange={(e) => setDays(e.target.value)}
               className="w-full bg-base-100 border border-base-content/5 rounded-2xl px-5 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
               required
             />
           </div>
           <div className="space-y-1">
             <label className="text-[10px] font-black uppercase tracking-widest text-base-content/40 ml-1">
-              Price ($)
+              Travel Type
             </label>
             <input
-              type="number"
-              placeholder="e.g. 500"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              type="text"
+              placeholder="e.g. Honeymoon"
+              value={travelType}
+              onChange={(e) => setTravelType(e.target.value)}
               className="w-full bg-base-100 border border-base-content/5 rounded-2xl px-5 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
               required
             />
@@ -109,7 +106,7 @@ const AIDescriptionGenerator = () => {
 
         <button
           type="submit"
-          disabled={isLoading || !title || !category || !price}
+          disabled={isLoading || !destination || !days || !travelType}
           className="btn btn-primary w-full rounded-2xl h-14 shadow-lg shadow-primary/20 transition-all active:scale-95 disabled:opacity-50"
         >
           {isLoading ? (
@@ -138,7 +135,7 @@ const AIDescriptionGenerator = () => {
         </button>
       </form>
 
-      {description && (
+      {itinerary && (
         <div className="mt-8 pt-8 border-t border-base-content/5 animate-in fade-in slide-in-from-top-4 duration-500">
           <div className="flex items-center justify-between mb-4">
             <h5 className="text-[10px] font-black uppercase tracking-widest text-primary">
@@ -146,7 +143,7 @@ const AIDescriptionGenerator = () => {
             </h5>
             <button
               onClick={() => {
-                navigator.clipboard.writeText(description);
+                navigator.clipboard.writeText(itinerary);
                 // Optionally show a toast
               }}
               className="btn btn-ghost btn-xs rounded-lg text-primary hover:bg-primary/10 font-bold"
@@ -155,7 +152,7 @@ const AIDescriptionGenerator = () => {
             </button>
           </div>
           <div className="p-5 rounded-2xl bg-base-100 border border-base-content/5 text-sm text-base-content/70 leading-relaxed font-medium max-h-64 overflow-y-auto custom-scrollbar whitespace-pre-wrap break-words">
-            {description}
+            {itinerary}
           </div>
         </div>
       )}

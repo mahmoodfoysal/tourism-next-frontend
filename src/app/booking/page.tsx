@@ -48,7 +48,6 @@ const BookingContent = () => {
   const [selectedPackage, setSelectedPackage] = useState<TourPackage | null>(
     null,
   );
-  const [loading, setLoading] = useState(true);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -88,7 +87,6 @@ const BookingContent = () => {
     if (reduxPackage) {
       setTimeout(() => {
         setSelectedPackage(reduxPackage);
-        setLoading(false);
       }, 0);
 
       return;
@@ -105,7 +103,6 @@ const BookingContent = () => {
             const packageData = packageRes.data?.details_data;
             if (packageData) {
               setSelectedPackage(packageData);
-              setLoading(false);
               return;
             }
           } catch (e) {
@@ -127,7 +124,6 @@ const BookingContent = () => {
           "We could not retrieve the tactical details for this voyage. Please check your connection and retry.",
         );
       } finally {
-        setLoading(false);
       }
     };
     fetchData();
@@ -193,7 +189,6 @@ const BookingContent = () => {
 
     if (!isConfirmed.isConfirmed) return;
 
-    setLoading(true);
     showProcessing(
       "Securing Your Spot",
       "Please wait while we process your booking...",
@@ -283,7 +278,6 @@ const BookingContent = () => {
         "We couldn't process your booking. Please check your connection and try again.",
       );
     } finally {
-      setLoading(false);
     }
   };
 
@@ -341,9 +335,10 @@ const BookingContent = () => {
                         <input
                           type="email"
                           name="email"
+                          disabled
                           value={formData.email}
                           onChange={handleInputChange}
-                          placeholder="alex@example.com"
+                          placeholder="Please login first"
                           className={`input input-ghost w-full h-12 rounded-2xl bg-base-200/50 border-transparent focus:bg-base-100 focus:border-primary/20 px-8 font-bold ${formSubmitted && !formData.email ? "border-error/50 bg-error/5" : ""}`}
                           required
                         />

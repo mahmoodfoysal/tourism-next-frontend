@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
 import { setUser } from "@/store/slices/authSlice";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
-import { axiosPublic } from "@/hooks/useAxiosPublic";
 import {
   showSuccess,
   showError,
@@ -19,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 
 import PrivateRoutes from "@/routes/PrivateRoutes";
+import PackageCard from "@/components/pages/PackageCard";
 
 interface ProfileData {
   full_name: string;
@@ -57,12 +57,22 @@ const ProfilePage = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const axiosSecure = useAxiosSecure();
 
-  const [loading, setLoading] = useState(true);
+
   const [activeTab, setActiveTab] = useState("overview");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [pendingItems, setPendingItems] = useState<PendingItem[]>([]);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [wishlistItems] = useState<any[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return JSON.parse(localStorage.getItem("aura_wishlist") || "[]");
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  });
 
   const [profileData, setProfileData] = useState<ProfileData>({
     full_name: user?.displayName || "",
@@ -106,7 +116,7 @@ const ProfilePage = () => {
       if (!user?.email) return;
 
       try {
-        setLoading(true);
+
         const [profileRes, pendingRes, couponRes] = await Promise.all([
           axiosSecure.get(`/api/tourism/get-user-list/${user.email}`),
           axiosSecure.get(`/api/tourism/get-booking-list/${user.email}`),
@@ -159,7 +169,7 @@ const ProfilePage = () => {
           );
         }
       } finally {
-        setLoading(false);
+        // setLoading(false); // Removed as loading state is unused
       }
     };
 
@@ -267,7 +277,12 @@ const ProfilePage = () => {
       icon: "✨",
       color: "text-yellow-500",
     },
-    { label: "WISHLIST", value: 0, icon: "❤️", color: "text-red-500" },
+    {
+      label: "WISHLIST",
+      value: wishlistItems.length,
+      icon: "❤️",
+      color: "text-red-500",
+    },
   ];
 
   return (
@@ -510,25 +525,47 @@ const ProfilePage = () => {
               )}
 
               {activeTab === "wishlist" && (
-                <div className="flex flex-col items-center justify-center text-center space-y-8 py-20 animate-in zoom-in-95 duration-700">
-                  <div className="w-32 h-32 bg-pink-500/10 rounded-full flex items-center justify-center text-5xl">
-                    💖
-                  </div>
+                <div className="space-y-12 animate-in zoom-in-95 duration-700">
                   <div className="space-y-3">
-                    <h3 className="text-3xl font-black uppercase italic">
-                      Wishlist Empty
-                    </h3>
-                    <p className="text-sm font-medium text-white/20">
-                      Save your favorite expeditions to track availability and
-                      price changes.
+                    <h2 className="text-4xl font-black uppercase tracking-tight">
+                      Saved{" "}
+                      <span className="text-primary italic">Expeditions</span>
+                    </h2>
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">
+                      Your curated collection of future adventures
                     </p>
                   </div>
-                  <button
-                    onClick={() => router.push("/packages")}
-                    className="btn btn-ghost border-white/10 h-14 px-10 rounded-2xl font-black uppercase tracking-widest text-[10px]"
-                  >
-                    Explore Packages
-                  </button>
+
+                  {wishlistItems.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {wishlistItems.map((item) => (
+                        <div key={item._id} className="relative group">
+                          <PackageCard info={item} />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-center space-y-8 py-10">
+                      <div className="w-32 h-32 bg-pink-500/10 rounded-full flex items-center justify-center text-5xl">
+                        💖
+                      </div>
+                      <div className="space-y-3">
+                        <h3 className="text-3xl font-black uppercase italic">
+                          Wishlist Empty
+                        </h3>
+                        <p className="text-sm font-medium text-white/20">
+                          Save your favorite expeditions to track availability
+                          and price changes.
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => router.push("/packages")}
+                        className="btn btn-ghost border-white/10 h-14 px-10 rounded-2xl font-black uppercase tracking-widest text-[10px]"
+                      >
+                        Explore Packages
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 

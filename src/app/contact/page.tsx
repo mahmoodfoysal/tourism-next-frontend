@@ -1,7 +1,6 @@
 "use client";
-import React, { useState, useRef, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
-import Image from "next/image";
 import axios from "axios";
 import {
   showError,
@@ -23,7 +22,6 @@ interface FormErrors {
 }
 
 const ContactPage = () => {
-  const formRef = useRef<HTMLFormElement>(null);
 
   const [formData, setFormData] = useState<FormData>({
     name: "",

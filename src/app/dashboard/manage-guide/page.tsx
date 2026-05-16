@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import AdminRoute from "@/routes/AdminRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -108,7 +108,7 @@ const ManageGuide = () => {
     { value: 0, label: "Inactive" },
   ];
 
-  const fetchGuides = async () => {
+  const fetchGuides = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosSecure.get("/api/tourism/get-guide-list");
@@ -121,13 +121,13 @@ const ManageGuide = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [axiosSecure]);
 
   useEffect(() => {
     setTimeout(() => {
       fetchGuides();
     }, 0);
-  }, [axiosSecure]);
+  }, [fetchGuides]);
 
   const handleOpenDrawer = (guide: TourGuide | null = null) => {
     if (guide) {

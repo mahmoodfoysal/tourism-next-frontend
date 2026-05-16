@@ -51,7 +51,6 @@ const BookingHistoryPage = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const axiosSecure = useAxiosSecure();
   const [bookings, setBookings] = useState<BookingItem[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState<BookingItem | null>(
     null,
   );
@@ -123,7 +122,6 @@ const BookingHistoryPage = () => {
       if (!user?.email) return;
 
       try {
-        setLoading(true);
         const response = await axiosSecure.get(
           `/api/tourism/get-booking-list/${user.email}`,
         );
@@ -142,7 +140,6 @@ const BookingHistoryPage = () => {
           "We encountered a synchronization error while accessing your voyage archives. Please refresh the portal to try again.",
         );
       } finally {
-        setLoading(false);
       }
     };
 

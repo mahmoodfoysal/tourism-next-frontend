@@ -109,7 +109,7 @@ export const registerUser = createAsyncThunk(
         displayName,
         photoURL,
       } = userCredential.user;
-      const syncResult = await authenticateAndSync(email, fullName, photoURL || "", true);
+      await authenticateAndSync(email, fullName, photoURL || "", true);
 
       return { uid, email: userEmail, displayName, photoURL };
     } catch (error) {
@@ -134,7 +134,7 @@ export const loginWithGoogle = createAsyncThunk(
 
       // Sync ONLY if the user is logging in for the first time
       const { uid, email, displayName, photoURL } = user;
-      const syncResult = await authenticateAndSync(
+      await authenticateAndSync(
         user.email || "",
         user.displayName || "Google User",
         photoURL || "",
@@ -164,7 +164,7 @@ export const loginWithEmail = createAsyncThunk(
       );
 
       // For standard email login, we just fetch the token (sync was done during register)
-      const syncResult = await authenticateAndSync(email, "", "", false);
+      await authenticateAndSync(email, "", "", false);
 
       const {
         uid,

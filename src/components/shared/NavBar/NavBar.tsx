@@ -15,7 +15,6 @@ import {
 import { useRouter, usePathname } from "next/navigation";
 
 const NavBar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [theme, setTheme] = useState("dark");
 
@@ -45,9 +44,7 @@ const NavBar = () => {
   }, [user]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+
 
     // Initialize theme from local storage or default to dark
     const savedTheme = localStorage.getItem("theme") || "dark";
@@ -61,8 +58,8 @@ const NavBar = () => {
       document.documentElement.classList.remove("dark");
     }
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", () => {}); // No-op scroll listener if needed, or just remove
+    return () => {};
   }, []);
 
   const toggleTheme = () => {

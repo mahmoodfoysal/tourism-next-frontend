@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import AdminRoute from "@/routes/AdminRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -88,7 +88,7 @@ const AddBlogPage = () => {
     content: "",
   });
 
-  const fetchBlogs = async () => {
+  const fetchBlogs = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosSecure.get("/api/tourism/get-blog-list");
@@ -101,13 +101,13 @@ const AddBlogPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [axiosSecure]);
 
   useEffect(() => {
     setTimeout(() => {
       fetchBlogs();
     }, 0);
-  }, [axiosSecure]);
+  }, [fetchBlogs]);
 
   const handleOpenDrawer = (blog: Blog | null = null) => {
     if (blog) {
@@ -288,7 +288,7 @@ const AddBlogPage = () => {
           "Visibility Updated",
           "The blog status has been synchronized.",
         );
-      } catch (error: any) {
+      } catch {
         showError("Update Failed", "Failed to update blog status.");
       }
     }

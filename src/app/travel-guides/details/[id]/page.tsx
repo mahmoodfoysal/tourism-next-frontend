@@ -3,7 +3,6 @@
 import React, { useEffect, useState, use } from "react";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
 import Image from "next/image";
-import Link from "next/link";
 import CommonHeader from "@/components/shared/CommonHeader/CommonHeader";
 import DataVoid from "@/components/pages/DataVoid";
 import SkeletonDetails from "@/components/pages/SkeletonDetails";

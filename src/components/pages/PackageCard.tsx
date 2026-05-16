@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
@@ -30,6 +30,36 @@ interface PackageCardProps {
 
 const PackageCard: React.FC<PackageCardProps> = ({ info }) => {
   const dispatch = useDispatch();
+  const [isLoved, setIsLoved] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const wishlist = JSON.parse(
+          localStorage.getItem("aura_wishlist") || "[]",
+        );
+        return wishlist.some((item: any) => item._id === info._id);
+      } catch {
+        return false;
+      }
+    }
+    return false;
+  });
+
+  const toggleLove = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof window !== "undefined") {
+      const wishlist = JSON.parse(localStorage.getItem("aura_wishlist") || "[]");
+      let newWishlist;
+      if (isLoved) {
+        newWishlist = wishlist.filter((item: any) => item._id !== info._id);
+      } else {
+        newWishlist = [...wishlist, info];
+      }
+      localStorage.setItem("aura_wishlist", JSON.stringify(newWishlist));
+      setIsLoved(!isLoved);
+    }
+  };
+
   return (
     <div
       key={info.package_id}
@@ -70,6 +100,31 @@ const PackageCard: React.FC<PackageCardProps> = ({ info }) => {
             {info.discount}
           </span>
         </div>
+
+        {/* Wishlist Heart Button */}
+        <button
+          onClick={toggleLove}
+          className={`absolute top-6 right-6 w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-lg ${
+            isLoved
+              ? "bg-red-500 text-white scale-110 shadow-red-500/20"
+              : "bg-white/20 backdrop-blur-md text-white hover:bg-white/40 border border-white/20"
+          }`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={`h-5 w-5 transition-all duration-300 ${isLoved ? "fill-current" : "fill-none"}`}
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2.5"
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+            />
+          </svg>
+        </button>
+
         <div className="absolute bottom-6 left-6">
           <div className="flex items-center gap-1 glass-effect px-4 py-2 rounded-2xl text-white">
             <svg

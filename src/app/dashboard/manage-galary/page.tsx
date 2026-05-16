@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import AdminRoute from "@/routes/AdminRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -66,7 +66,7 @@ const ManageGalleryPage = () => {
     status: 1,
   });
 
-  const fetchGallery = async () => {
+  const fetchGallery = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosSecure.get(
@@ -81,13 +81,13 @@ const ManageGalleryPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [axiosSecure]);
 
   useEffect(() => {
     setTimeout(() => {
       fetchGallery();
     }, 0);
-  }, [axiosSecure]);
+  }, [fetchGallery]);
 
   const handleOpenDrawer = (item: GalleryItem | null = null) => {
     if (item) {
@@ -221,7 +221,7 @@ const ManageGalleryPage = () => {
         await axiosSecure.delete(`/api/tourism/delete-galary-image-list/${id}`);
         await fetchGallery();
         showSuccess("Photo Removed", "The photograph has been deleted.");
-      } catch (error: any) {
+      } catch {
         showError("Deletion Failed", "Failed to remove photograph.");
       }
     }
@@ -244,7 +244,7 @@ const ManageGalleryPage = () => {
         });
         await fetchGallery();
         showSuccess("Status Updated", "Visibility has been synchronized.");
-      } catch (error: any) {
+      } catch {
         showError("Update Failed", "Failed to update visibility.");
       }
     }

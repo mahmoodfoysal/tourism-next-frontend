@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import AdminRoute from "@/routes/AdminRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -121,7 +121,7 @@ const AddPackagePage = () => {
     { value: 0, label: "Inactive" },
   ];
 
-  const fetchPackages = async () => {
+  const fetchPackages = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosSecure.get("/api/tourism/get-package-list");
@@ -134,13 +134,13 @@ const AddPackagePage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [axiosSecure]);
 
   useEffect(() => {
     setTimeout(() => {
       fetchPackages();
     }, 0);
-  }, [axiosSecure]);
+  }, [fetchPackages]);
 
   const handleOpenDrawer = (pkg: TourPackage | null = null) => {
     if (pkg) {

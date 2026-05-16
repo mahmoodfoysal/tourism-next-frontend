@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import AdminRoute from "@/routes/AdminRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -73,7 +73,7 @@ const ManageReviewPage = () => {
     package_id: "",
   });
 
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosSecure.get("/api/tourism/get-review-list");
@@ -86,9 +86,9 @@ const ManageReviewPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [axiosSecure]);
 
-  const fetchPackages = async () => {
+  const fetchPackages = useCallback(async () => {
     try {
       const response = await axiosSecure.get("/api/tourism/get-package-list");
       if (response.data && Array.isArray(response.data.list_data)) {
@@ -97,14 +97,14 @@ const ManageReviewPage = () => {
     } catch (error) {
       console.error("Error fetching packages:", error);
     }
-  };
+  }, [axiosSecure]);
 
   useEffect(() => {
     setTimeout(() => {
       fetchReviews();
       fetchPackages();
     }, 0);
-  }, [axiosSecure]);
+  }, [fetchReviews, fetchPackages]);
 
   const handleOpenDrawer = (review: Review | null = null) => {
     if (review) {
@@ -222,7 +222,7 @@ const ManageReviewPage = () => {
         await axiosSecure.delete(`/api/tourism/delete-review-list/${id}`);
         await fetchReviews();
         showSuccess("Review Deleted", "The review has been removed.");
-      } catch (error: any) {
+      } catch {
         showError("Deletion Failed", "Failed to remove review.");
       }
     }

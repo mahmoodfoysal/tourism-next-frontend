@@ -37,13 +37,18 @@ const GuideCard: React.FC<GuideCardProps> = ({ guide }) => {
     <div className="bg-base-100 rounded-[2.5rem] overflow-hidden border border-base-content/5 shadow-xl hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:-translate-y-2">
       {/* Profile Image Container */}
       <div className="relative h-56 overflow-hidden">
-        <Image
-          src={guide.image}
-          alt={guide.name}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
+        <Link
+          href={`/travel-guides/details/${guide._id}`}
+          className="block w-full h-full"
+        >
+          <Image
+            src={guide.image}
+            alt={guide.name}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </Link>
         {/* Rating Badge */}
         <div className="absolute top-6 right-6">
           <div className="flex items-center gap-1.5 glass-effect px-4 py-2 rounded-2xl text-white shadow-lg">
@@ -68,9 +73,11 @@ const GuideCard: React.FC<GuideCardProps> = ({ guide }) => {
       {/* Content */}
       <div className="p-6 flex flex-col flex-1">
         <div className="mb-3">
-          <h3 className="text-xl font-black text-base-content group-hover:text-primary transition-colors leading-tight mb-1 line-clamp-1">
-            {guide.name}
-          </h3>
+          <Link href={`/travel-guides/details/${guide._id}`}>
+            <h3 className="text-xl font-black text-base-content group-hover:text-primary transition-colors leading-tight mb-1 line-clamp-1 cursor-pointer">
+              {guide.name}
+            </h3>
+          </Link>
           <p className="text-[10px] font-bold text-base-content/40 uppercase tracking-widest">
             {guide.experience}+ Years Experience
           </p>

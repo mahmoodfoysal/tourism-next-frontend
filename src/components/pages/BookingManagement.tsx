@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import React, { useState, useEffect, useCallback } from "react";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import Image from "next/image";
 import {
@@ -47,7 +45,6 @@ interface BookingManagementProps {
 }
 
 const BookingManagement = ({ targetStatus, title }: BookingManagementProps) => {
-  const { user } = useSelector((state: RootState) => state.auth);
   const axiosSecure = useAxiosSecure();
   const [bookings, setBookings] = useState<BookingItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -61,7 +58,7 @@ const BookingManagement = ({ targetStatus, title }: BookingManagementProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosSecure.get("/api/tourism/get-booking-list");
@@ -80,13 +77,13 @@ const BookingManagement = ({ targetStatus, title }: BookingManagementProps) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [axiosSecure]);
 
   useEffect(() => {
     setTimeout(() => {
       fetchBookings();
     }, 0);
-  }, [axiosSecure]);
+  }, [fetchBookings]);
 
   const filteredBookings = bookings.filter((booking) => {
     // 1. Status Filter
@@ -267,6 +264,27 @@ const BookingManagement = ({ targetStatus, title }: BookingManagementProps) => {
                 />
               </svg>
             </div>
+            {searchQuery && (
+              <button
+                onClick={handleClearSearch}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-base-content/20 hover:text-error transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="3"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
           </div>
           <h1 className="text-xl font-black uppercase tracking-widest text-base-content/40">
             {title}

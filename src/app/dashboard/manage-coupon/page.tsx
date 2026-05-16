@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import AdminRoute from "@/routes/AdminRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -68,7 +68,7 @@ const ManageCouponPage = () => {
     operator: "",
   });
 
-  const fetchCoupons = async () => {
+  const fetchCoupons = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosSecure.get(
@@ -83,13 +83,13 @@ const ManageCouponPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [axiosSecure]);
 
   useEffect(() => {
     setTimeout(() => {
       fetchCoupons();
     }, 0);
-  }, [axiosSecure]);
+  }, [fetchCoupons]);
 
   const handleOpenDrawer = (coupon: Coupon | null = null) => {
     if (coupon) {
@@ -191,7 +191,7 @@ const ManageCouponPage = () => {
           "Coupon Revoked",
           "The code has been removed from the registry.",
         );
-      } catch (error: any) {
+      } catch {
         showError("Revocation Failed", "Failed to remove coupon.");
       }
     }

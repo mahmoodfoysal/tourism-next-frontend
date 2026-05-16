@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import SuperAdmin from "@/routes/SuperAdmin";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -42,7 +42,7 @@ const ManageAdminPage = () => {
     { role_id: 202, role: "Manager" },
   ];
 
-  const fetchAdmins = async () => {
+  const fetchAdmins = useCallback(async () => {
     if (!user?.email) return;
 
     try {
@@ -91,7 +91,7 @@ const ManageAdminPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, axiosSecure]);
 
   useEffect(() => {
     if (user?.email) {
@@ -99,7 +99,7 @@ const ManageAdminPage = () => {
         fetchAdmins();
       }, 0);
     }
-  }, [user?.email, axiosSecure]);
+  }, [user?.email, fetchAdmins]);
 
   const handleOpenDrawer = (admin: AdminUser | null = null) => {
     if (admin) {

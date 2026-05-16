@@ -20,7 +20,6 @@ const DashboardOverview = () => {
     upcomingTrips: 0,
     totalPackages: 0,
   });
-  const [packages, setPackages] = useState<any[]>([]);
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -73,7 +72,6 @@ const DashboardOverview = () => {
         }
 
         if (Array.isArray(packagesData)) {
-          setPackages(packagesData);
           setStats((prev) => ({
             ...prev,
             totalPackages: packagesData.length,
@@ -119,48 +117,75 @@ const DashboardOverview = () => {
 
     bookings.forEach((b) => {
       const dateObj = new Date(b.createdAt);
+      if (isNaN(dateObj.getTime())) return;
 
-      // Revenue Trend (Daily)
-      const dateFormat = dateObj
-        .toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        })
-        .replace(/ /g, "-");
-      revenueByDate[dateFormat] =
-        (revenueByDate[dateFormat] || 0) + (b.grand_total || 0);
+      // Revenue Trend (Daily) - Use ISO format for internal sorting
+      const dateKey = dateObj.toISOString().split("T")[0];
+      const amount = Number(b.grand_total) || 0;
+      revenueByDate[dateKey] = (revenueByDate[dateKey] || 0) + amount;
 
       // Monthly processing
       const monthIndex = dateObj.getMonth();
-      volumeByMonth[monthIndex] += 1;
+      if (monthIndex >= 0 && monthIndex < 12) {
+        volumeByMonth[monthIndex] += 1;
+      }
 
       // Financial processing
-      subTotal += b.sub_total || 0;
-      taxTotal += b.tax_total || 0;
-      serviceCharge += b.service_charge || 0;
+      subTotal += Number(b.sub_total) || 0;
+      taxTotal += Number(b.tax_total) || 0;
+      serviceCharge += Number(b.service_charge) || 0;
     });
 
     // Pie Chart Specific Calculation: Revenue at 15% of Subtotal
-    const calculatedRevenue = subTotal * 0.15;
+    const calculatedRevenue = Number((subTotal * 0.15).toFixed(2));
 
-    // Sort dates for line chart
-    const sortedDates = Object.keys(revenueByDate).sort(
-      (a, b) => new Date(a).getTime() - new Date(b).getTime(),
+    // Sort dates for line chart using YYYY-MM-DD keys (lexicographical sort)
+    const sortedKeys = Object.keys(revenueByDate).sort();
+    const revenueSeriesData = sortedKeys.map((key) =>
+      Number(revenueByDate[key] || 0),
     );
-    const revenueSeriesData = sortedDates.map((date) => revenueByDate[date]);
+    const displayCategories = sortedKeys.map((key) => {
+      const [y, m, d] = key.split("-");
+      const months_short = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      return `${d}-${months_short[parseInt(m) - 1]}-${y}`;
+    });
 
     return {
       revenueTrend: {
-        categories: sortedDates,
-        series: [{ name: "Revenue", data: revenueSeriesData }],
+        categories: displayCategories,
+        series: [
+          {
+            name: "Revenue",
+            data: revenueSeriesData.map((v) => (isNaN(v) ? 0 : v)),
+          },
+        ],
       },
       bar: {
         categories: months,
-        series: [{ name: "Monthly Bookings", data: volumeByMonth }],
+        series: [
+          {
+            name: "Monthly Bookings",
+            data: volumeByMonth.map((v) => (isNaN(v) ? 0 : v)),
+          },
+        ],
       },
       pie: {
-        series: [calculatedRevenue, serviceCharge, taxTotal],
+        series: [calculatedRevenue, serviceCharge, taxTotal].map((v) =>
+          isNaN(v) ? 0 : v,
+        ),
         labels: ["Platform Revenue (15%)", "Service Charge", "VAT/Tax"],
       },
     };

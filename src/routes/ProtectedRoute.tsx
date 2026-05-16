@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         router.push("/");
       }
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, isAdmin]);
 
   if (loading) {
     return <ComponentLoader></ComponentLoader>;

@@ -1,6 +1,6 @@
-# Aura Tour - A Tourism Website
+# Aura Trip - A Tourism Website
 
-A full-stack tourism website. This website tourbooking, gathering information and see blogs. Here a dashboard for admin control. Dashboard menu are accessable role basis. Using redux state management. Authentication system using firebase authentication. User auto logout after 10 days and expire his login token.
+A full-stack tourism website. This website is for tour booking, gathering information, and seeing blogs. Here is a dashboard for admin control. Dashboard menu are accessable role basis. Using redux state management. Authentication system using Firebase Authentication. User auto logout after 10 days and expires his login token.
 
 ## Live Demo
 
@@ -34,21 +34,21 @@ A full-stack tourism website. This website tourbooking, gathering information an
 - Customer Profile Section
 - Product Review Section
 - Booking Management Section
-- Cupon code system
+- Coupon code system
 - Blog Section
 - Gallery Section
 - Contact Section
 - Dashboard Overview
 - Why Choose Us Section
 - Customer Review Section
-- FAQ Section and also ai description generate section.
+- FAQ Section and also the AI description generation section.
 - Coupon Claim Section
-- Coupon show in client profile and that coupon only used one user one time. and show total used coupon.
-- New member get 10% off coupon if they claim from landing page newsletter.
+- Coupon shows in the client profile, and that coupon can only be used once by one user one time. and show the total used coupon.
+- New members get 10% off coupon if they claim from the landing page newsletter.
 - Booking status section
-- After complete tour give review and rating system.
+- After completing the tour, give a review and rating system.
 - See tour guide profile.
-- See coupon and Hostory
+- See the coupon and the history
 
 ## Protected Routes
 
@@ -76,25 +76,25 @@ A full-stack tourism website. This website tourbooking, gathering information an
 
 ## Short Description
 
-- Navbar: Here define all routes and user menu. After login user menu come. If click user menu show dropdown list. In dropdown have profile, dashboard, logout. Admin dashboard route show only admin. When Admin go to dashboard client NavBar and footer hide autometically. then show only dashboard.
-- Landing Page: A attractive standard landing page for the tourism website. Here Where customer can see popular destinations, Featured tour packages, Blogs, Offers, Coupon codes, services, AI generate descript and AI chat
-- Tour Package Page: This page show all tour packages. Here show features, package details price, basic information also here filter user can see applying filters and sorting options and pagination.
-- Tour Package Details Page: This page show specific tour package details. Here client can see all the includes facilitis
-- Customer Authentication: Secure login and registration using Firebase authentication and JWT token for stay login. After 10 days later token will expire and set auto logout.
-- Booking History: After successful booking user can see his booking history. And user can cancel his booking if the status is not confirmed..
-- Customer Profile: View and edit profile information, update password and see his coupon.
+- Navbar: Here define all routes and the user menu. After login user menu comes. If you click the user menu show dropdown list. In the dropdown have profile, dashboard, and logout. Admin dashboard route shows only admin. When Admin goes to the dashboard, the client's NavBar and footer hide automatically. Then show only the dashboard.
+- Landing Page: An attractive standard landing page for the tourism website. Here, Where customer can see popular destinations, Featured tour packages, Blogs, Offers, Coupon codes, services, AI generate descript, and AI chat
+- Tour Package Page: This page shows all tour packages. Here show features, package details, price, basic information, also here filter user can see applying filters, sorting options, and pagination.
+- Tour Package Details Page: This page shows specific tour package details. Here, the client can see all the includes facilitis
+- Customer Authentication: Secure login and registration using Firebase authentication and JWT token for stay login. After 10 days later token will expire and set the auto logout.
+- Booking History: After a successful booking, the user can see their booking history. And the user can cancel their booking if the status is not confirmed.
+- Customer Profile: View and edit profile information, update password, and see their coupon.
 - Blog System: Read and interact with blog posts.
-- Blog Details Page: This page show specific blog details. In the bottom show related blog
-- Dashboard Overview: Get insights into sales, booking, active pending booking and total booking revinue.
+- Blog Details Page: This page shows specific blog details. At the bottom, show the related blog
+- Dashboard Overview: Get insights into sales, bookings, active pending bookings, and total booking revenue.
 - Pagination: It add where many data comes.
-- Footer have full functional.
-- New member get 10% off coupon if they claim from landing page newsletter and if they already registered then they can claim from their profile. after claim they can not claim again.
-- Tour photo can see from story and photo galary.
-- Using Ai Itinerary generator where give full tour plan.
-- AI chat bot for customer help where client ask any question.
-- Total Used coupon count system. If user give coupon then.
+- The footer has full functionality.
+- New member get 10% off coupon if they claim from the landing page newsletter, and if they have already registered, then they can claim from their profile. After a claim, they can not claim again.
+- The tour photo can be seen from the story and the photo gallery.
+- Using Ai Itinerary generator, where give full tour plan.
+- AI chatbot for customer help, where the client can ask any question.
+- Total Used coupon count system. If the user gives a coupon, then.
 - Tour guide profile and details.
-- Role base dashboard access.
+- Role-based dashboard access.
 
 ## note: If you need admin dashboard credentials. Please contact with me.
 

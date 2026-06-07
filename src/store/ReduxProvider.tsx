@@ -9,6 +9,12 @@ import { setUser } from "@/store/slices/authSlice";
 import { setAdminInfo, clearAdminInfo } from "@/store/slices/adminSlice";
 import { axiosSecure } from "@/hooks/useAxiosSecure";
 import { axiosPublic } from "@/hooks/useAxiosPublic";
+import { useTokenExpiration } from "@/hooks/useTokenExpiration";
+
+function TokenExpirationManager() {
+  useTokenExpiration();
+  return null;
+}
 
 export default function ReduxProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -62,5 +68,10 @@ export default function ReduxProvider({ children }: { children: React.ReactNode 
     return () => unsubscribe();
   }, []);
 
-  return <Provider store={store}>{children}</Provider>;
+  return (
+    <Provider store={store}>
+      <TokenExpirationManager />
+      {children}
+    </Provider>
+  );
 }
